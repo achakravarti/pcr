@@ -59,6 +59,14 @@ typedef int PCR_EXCEPTION;
     } while (0)
 
 
+/* assertion macros */
+
+#define pcr_assert_generic(p, x, id)    \
+    if (pcr_hint_unlikely (!(p))) {     \
+        pcr_exception_throw((x), (id)); \
+    }
+
+
 #if defined (__cplusplus)
 }
 #endif
