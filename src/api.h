@@ -69,6 +69,9 @@ typedef int PCR_EXCEPTION;
 #define pcr_assert_handle(p, x) \
     pcr_assert_generic((p), PCR_EXCEPTION_HANDLE, (x))
 
+#define pcr_assert_state(p, x) \
+    pcr_assert_generic((p), PCR_EXCEPTION_STATE, (x))
+
 
 #if defined (__cplusplus)
 }
