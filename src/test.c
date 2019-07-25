@@ -71,6 +71,9 @@ extern pcr_testsuite *pcr_testsuite_new(const char *name, pcr_exception ex)
 
 extern uint64_t pcr_testsuite_len(const pcr_testsuite *ctx, pcr_exception ex)
 {
+    pcr_assert_handle(ctx, ex);
+
+    return ctx->len;
 }
 
 
