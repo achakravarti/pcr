@@ -47,6 +47,19 @@ struct pcr_testsuite {
 };
 
 
+static void vec_resize(pcr_testsuite *ctx, pcr_exception ex)
+{
+    pcr_exception x;
+    pcr_exception_try (x) {
+        ctx->cap *= 2;
+        ctx->tests = pcr_mempool_realloc(
+                            ctx->tests, sizeof *ctx->tests * ctx->cap, ex);
+    }
+
+    pcr_exception_unwind(ex);
+}
+
+
 extern pcr_testsuite *pcr_testsuite_new(const char *name, pcr_exception ex)
 {
     pcr_assert_handle(name, ex);
@@ -55,9 +68,9 @@ extern pcr_testsuite *pcr_testsuite_new(const char *name, pcr_exception ex)
     pcr_exception_try (x) {
         pcr_testsuite *ts = pcr_mempool_alloc(sizeof *ts, x);
 
-        ts->tests = pcr_mempool_alloc(sizeof *ts->tests, x);
         ts->len = 0;
-        ts->cap = 1;
+        ts->cap = 4;
+        ts->tests = pcr_mempool_alloc(sizeof *ts->tests * ts->cap, x);
 
         const size_t slen = strlen(name);
         ts->name = pcr_mempool_alloc(slen + 1, x);
@@ -80,6 +93,17 @@ extern size_t pcr_testsuite_len(const pcr_testsuite *ctx, pcr_exception ex)
 extern void pcr_testsuite_push(pcr_testsuite *ctx, const pcr_testcase *tc,
                                     pcr_exception ex)
 {
+    pcr_assert_handle(ctx && tc, ex);
+
+    pcr_exception x;
+    pcr_exception_try (x) {
+        if (pcr_hint_unlikely (ctx->len == ctx->cap))
+            vec_resize(ctx, x);
+
+        ctx->tests[ctx->len++] = tc;
+    }
+
+    pcr_exception_unwind(ex);
 }
 
 
