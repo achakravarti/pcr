@@ -32,5 +32,8 @@ extern pcr_testcase *pcr_testcase_new(pcr_unittest *test, const char *desc,
 
 extern bool pcr_testcase_run(pcr_testcase *ctx, pcr_exception ex)
 {
+    pcr_assert_handle(ctx, ex);
+
+    return ctx->test();
 }
 
