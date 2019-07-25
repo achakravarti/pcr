@@ -41,6 +41,7 @@ extern bool pcr_testcase_run(pcr_testcase *ctx, pcr_exception ex)
 
 struct pcr_testsuite {
     pcr_testcase **tests;
+    char *name;
     size_t cap;
     size_t len;
 };
@@ -48,6 +49,23 @@ struct pcr_testsuite {
 
 extern pcr_testsuite *pcr_testsuite_new(const char *name, pcr_exception ex)
 {
+    pcr_assert_handle(name, ex);
+
+    pcr_exception x;
+    pcr_exception_try (x) {
+        pcr_testsuite *ts = pcr_mempool_alloc(sizeof *ts, x);
+
+        ts->tests = pcr_mempool_alloc(sizeof *ts->tests, x);
+        ts->len = 0;
+        ts->cap = 1;
+
+        const size_t slen = strlen(name);
+        ts->name = pcr_mempool_alloc(slen + 1, x);
+        strncpy(ts->name, name, slen);
+        ts->name[slen] = '\0';
+    }
+
+    pcr_exception_unwind(ex);
 }
 
 
