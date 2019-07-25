@@ -96,6 +96,27 @@ extern pcr_testsuite *pcr_testsuite_new(const char *name, pcr_exception ex)
 }
 
 
+extern pcr_testsuite *pcr_testsuite_copy(const pcr_testsuite *ctx,
+                                            pcr_exception ex)
+{
+    pcr_assert_handle(ctx, ex);
+
+    pcr_exception x;
+    pcr_exception_try (x) {
+        pcr_testsuite *cpy = pcr_mempool_alloc(sizeof *cpy, x);
+
+        cpy->len = ctx->len;
+        cpy->cap = ctx->cap;
+        cpy->tests = pcr_mempool_alloc(sizeof *cpy->tests * cpy->cap, x);
+        memcpy(cpy->tests, ctx->tests, sizeof *cpy->tests);
+
+        return cpy;
+    }
+
+    pcr_exception_unwind(ex);
+}
+
+
 extern size_t pcr_testsuite_len(const pcr_testsuite *ctx, pcr_exception ex)
 {
     pcr_assert_handle(ctx, ex);

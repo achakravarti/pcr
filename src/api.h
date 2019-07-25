@@ -99,6 +99,8 @@ extern pcr_testcase *pcr_testcase_copy(const pcr_testcase *ctx,
 extern bool pcr_testcase_run(pcr_testcase *ctx, pcr_exception ex);
 
 extern pcr_testsuite *pcr_testsuite_new(const char *name, pcr_exception ex);
+extern pcr_testsuite *pcr_testsuite_copy(const pcr_testsuite *ctx,
+                                                pcr_exception ex);
 extern size_t pcr_testsuite_len(const pcr_testsuite *ctx, pcr_exception ex);
 extern void pcr_testsuite_push(pcr_testsuite *ctx, const pcr_testcase *tc,
                                     pcr_exception ex);
