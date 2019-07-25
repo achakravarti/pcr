@@ -6,7 +6,7 @@ extern void *pcr_mempool_alloc(size_t sz, pcr_exception ex)
 {
     pcr_assert_range(sz, ex);
 
-    auto void *bfr = GC_MALLOC(sz);
+    void *bfr = GC_MALLOC(sz);
     if (pcr_hint_unlikely (!bfr))
         pcr_exception_throw(ex, PCR_EXCEPTION_MEMPOOL);
 
@@ -16,5 +16,12 @@ extern void *pcr_mempool_alloc(size_t sz, pcr_exception ex)
 
 extern void *pcr_mempool_realloc(void *ptr, size_t sz, pcr_exception ex)
 {
+    pcr_assert_range(sz, ex);
+
+    void *bfr = GC_REALLOC(ptr, sz);
+    if (pcr_hint_unlikely (!bfr))
+        pcr_exception_throw(ex, PCR_EXCEPTION_MEMPOOL);
+
+    return bfr;
 }
 
