@@ -94,6 +94,8 @@ typedef struct pcr_testsuite pcr_testsuite;
 
 extern pcr_testcase *pcr_testcase_new(pcr_unittest *test, const char *desc,
                                             pcr_exception ex);
+extern pcr_testcase *pcr_testcase_copy(const pcr_testcase *ctx,
+                                            pcr_exception ex);
 extern bool pcr_testcase_run(pcr_testcase *ctx, pcr_exception ex);
 
 extern pcr_testsuite *pcr_testsuite_new(const char *name, pcr_exception ex);

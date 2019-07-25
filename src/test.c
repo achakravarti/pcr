@@ -31,6 +31,20 @@ extern pcr_testcase *pcr_testcase_new(pcr_unittest *test, const char *desc,
 }
 
 
+extern pcr_testcase *pcr_testcase_copy(const pcr_testcase *ctx,
+                                            pcr_exception ex)
+{
+    pcr_assert_handle(ctx, ex);
+
+    pcr_exception x;
+    pcr_exception_try (x) {
+        return pcr_testcase_new(ctx->test, ctx->desc, x);
+    }
+
+    pcr_exception_unwind(ex);
+}
+
+
 extern bool pcr_testcase_run(pcr_testcase *ctx, pcr_exception ex)
 {
     pcr_assert_handle(ctx, ex);
@@ -100,7 +114,7 @@ extern void pcr_testsuite_push(pcr_testsuite *ctx, const pcr_testcase *tc,
         if (pcr_hint_unlikely (ctx->len == ctx->cap))
             vec_resize(ctx, x);
 
-        ctx->tests[ctx->len++] = tc;
+        ctx->tests[ctx->len++] = pcr_testcase_copy(tc, x);
     }
 
     pcr_exception_unwind(ex);
