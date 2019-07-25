@@ -12,8 +12,6 @@ int compare(int *a, int *b, pcr_exception ex)
 
 int do_compare(int *a, int *b, pcr_exception ex)
 {
-    pcr_exception x;
-
     pcr_exception_try (x) {
         return compare(a, b, x);
     }
@@ -24,8 +22,6 @@ int do_compare(int *a, int *b, pcr_exception ex)
 
 int do_do_compare(int *a, int *b, pcr_exception ex)
 {
-    auto pcr_exception x;
-
     pcr_exception_try (x) {
         return do_compare(a, b, x);
     }
@@ -40,8 +36,6 @@ int do_do_compare(int *a, int *b, pcr_exception ex)
 
 char *make_str(const char *str, pcr_exception ex)
 {
-    auto pcr_exception x;
-
     pcr_exception_try (x) {
         register size_t len = strlen(str);
         char *bfr = pcr_mempool_alloc(len + 1, x);
@@ -57,8 +51,6 @@ char *make_str(const char *str, pcr_exception ex)
 
 int main(void)
 {
-    pcr_exception x;
-
     pcr_exception_try (x) {
         char *bfr = make_str("Hello, world! Goodbye, world!", x);
         printf("bfr = %s\n", bfr);

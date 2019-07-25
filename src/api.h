@@ -36,8 +36,9 @@ typedef int PCR_EXCEPTION;
 #define PCR_EXCEPTION_RANGE 0x3
 #define PCR_EXCEPTION_MEMPOOL 0x4
 
-#define pcr_exception_try(x)                          \
-    register PCR_EXCEPTION pcr__exid__ = setjmp((x)); \
+#define pcr_exception_try(x)                        \
+    pcr_exception x;                                \
+    register PCR_EXCEPTION pcr__exid__ = setjmp(x); \
     if (pcr_hint_likely (!pcr__exid__))
 
 #define pcr_exception_catch(x) \
