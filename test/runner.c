@@ -3,9 +3,7 @@
 
 int compare(int *a, int *b, pcr_exception ex)
 {
-    if (!(a && b))
-        pcr_exception_throw(ex, PCR_EXCEPTION_HANDLE);
-
+    pcr_assert_handle(a && b, ex);
     return *a == *b;
 }
 
