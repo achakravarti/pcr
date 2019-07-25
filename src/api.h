@@ -83,6 +83,18 @@ extern void *pcr_mempool_alloc(size_t sz, pcr_exception ex);
 extern void *pcr_mempool_realloc(void *ptr, size_t sz, pcr_exception ex);
 
 
+/* unit testing */
+
+#include <stdbool.h>
+
+typedef bool (pcr_unittest)(void);
+typedef struct pcr_testcase pcr_testcase;
+
+extern pcr_testcase *pcr_testcase_new(pcr_unittest *test, const char *desc,
+                                            pcr_exception ex);
+extern bool pcr_testcase_run(pcr_testcase *ctx, pcr_exception ex);
+
+
 #if defined (__cplusplus)
 }
 #endif
