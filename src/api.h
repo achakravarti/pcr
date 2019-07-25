@@ -28,6 +28,10 @@ typedef int PCR_EXCEPTION;
 #define PCR_EXCEPTION_STATE 0x2
 #define PCR_EXCEPTION_RANGE 0x3
 
+#define pcr_exception_try(x) \
+    register PCR_EXCEPTION pcr__ex__id__ = setjmp((x)); \
+    if (pcr_hint_likely (!pcr__ex__id__))
+
 
 #endif /* !defined PROTO_C_RUNTIME */
 
