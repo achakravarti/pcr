@@ -38,6 +38,9 @@ typedef int PCR_EXCEPTION;
 #define pcr_exception_catchall \
     if (pcr_hint_unlikely (pcr__exid__))
 
+#define pcr_exception_trace() \
+    printf("Exception 0x%x traced in %s()\n", (unsigned) pcr__exid__, __func__)
+
 
 #endif /* !defined PROTO_C_RUNTIME */
 
