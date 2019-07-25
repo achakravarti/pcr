@@ -1,6 +1,7 @@
 #if !defined PROTO_C_RUNTIME
 #define PROTO_C_RUNTIME
 
+
 /* compiler hints */
 
 #if (defined __GNUC__ || defined __clang__)
@@ -17,6 +18,8 @@
 #endif
 
 
+/* exception handling */
+
 #include <setjmp.h>
 #include <stdio.h>
 
@@ -28,7 +31,7 @@ typedef int PCR_EXCEPTION;
 #define PCR_EXCEPTION_STATE 0x2
 #define PCR_EXCEPTION_RANGE 0x3
 
-#define pcr_exception_try(x) \
+#define pcr_exception_try(x)                          \
     register PCR_EXCEPTION pcr__exid__ = setjmp((x)); \
     if (pcr_hint_likely (!pcr__exid__))
 
@@ -43,6 +46,13 @@ typedef int PCR_EXCEPTION;
 
 #define pcr_exception_trace() \
     printf("Exception 0x%x traced in %s()\n", (unsigned) pcr__exid__, __func__)
+
+#define pcr_exception_unwind(x)    \
+    do {                           \
+        if (pcr__exid__)           \
+            pcr_exception_trace(); \
+        longjmp((x), pcr__exid__); \
+    } while (0)
 
 
 #endif /* !defined PROTO_C_RUNTIME */
