@@ -1,6 +1,10 @@
 #if !defined PROTO_C_RUNTIME
 #define PROTO_C_RUNTIME
 
+#if defined (__cplusplus)
+extern "C" {
+#endif
+
 
 /* compiler hints */
 
@@ -54,6 +58,10 @@ typedef int PCR_EXCEPTION;
         longjmp((x), pcr__exid__); \
     } while (0)
 
+
+#if defined (__cplusplus)
+}
+#endif
 
 #endif /* !defined PROTO_C_RUNTIME */
 
