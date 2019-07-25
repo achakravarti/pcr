@@ -17,5 +17,17 @@
 #endif
 
 
+#include <setjmp.h>
+#include <stdio.h>
+
+typedef jmp_buf pcr_exception;
+typedef int PCR_EXCEPTION;
+
+#define PCR_EXCEPTION_NONE 0x0
+#define PCR_EXCEPTION_HANDLE 0x1
+#define PCR_EXCEPTION_STATE 0x2
+#define PCR_EXCEPTION_RANGE 0x3
+
+
 #endif /* !defined PROTO_C_RUNTIME */
 
