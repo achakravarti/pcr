@@ -1,6 +1,6 @@
 all:
 	mkdir -p bld
-	gcc -g -O2 test/runner.c -o bld/pcr-test-runner
+	gcc -g -O2 src/mempool.c test/runner.c -lgc -o bld/pcr-test-runner
 	./bld/pcr-test-runner
 
 clean:
