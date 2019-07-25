@@ -34,6 +34,7 @@ typedef int PCR_EXCEPTION;
 #define PCR_EXCEPTION_HANDLE 0x1
 #define PCR_EXCEPTION_STATE 0x2
 #define PCR_EXCEPTION_RANGE 0x3
+#define PCR_EXCEPTION_MEMPOOL 0x4
 
 #define pcr_exception_try(x)                          \
     register PCR_EXCEPTION pcr__exid__ = setjmp((x)); \
@@ -74,6 +75,12 @@ typedef int PCR_EXCEPTION;
 
 #define pcr_assert_range(p, x) \
     pcr_assert_generic((p), (x), PCR_EXCEPTION_RANGE)
+
+
+/* memory arena */
+
+extern void *pcr_mempool_alloc(size_t sz, pcr_exception ex);
+extern void *pcr_mempool_realloc(void *ptr, size_t sz, pcr_exception ex);
 
 
 #if defined (__cplusplus)
