@@ -232,7 +232,7 @@ extern void pcr_testharness_init(const char *log, pcr_exception ex)
         pcr_testlog_open(log);
 
         thvec_hnd = pcr_mempool_alloc(sizeof *thvec_hnd, x);
-        thvec_hnd->len = 0;
+        thvec_hnd->len = thvec_hnd->pass = thvec_hnd->total = 0;
         thvec_hnd->cap = 4;
         thvec_hnd->tests = pcr_mempool_alloc(
                                 sizeof *thvec_hnd->tests * thvec_hnd->cap, x);
@@ -244,6 +244,11 @@ extern void pcr_testharness_init(const char *log, pcr_exception ex)
 
 extern void pcr_testharness_exit(void)
 {
+    pcr_testlog_close();
+
+    log_tee("\ncompleted running %lu test suites...\n", thvec_hnd->total);
+    log_tee("%lu passed, %lu failed, %lu total", thvec_hnd->pass,
+                    thvec_hnd->total - thvec_hnd->pass, thvec_hnd->len);
 }
 
 
@@ -263,9 +268,6 @@ extern void pcr_testharnees_run(pcr_exception ex)
             thvec_hnd->total++;
         }
 
-        log_tee("\ncompleted running all tests...\n");
-        log_tee("%lu passed, %lu failed, %lu total", thvec_hnd->pass,
-                        thvec_hnd->total - thvec_hnd->pass, thvec_hnd->len);
     }
 
     pcr_exception_unwind(ex);
