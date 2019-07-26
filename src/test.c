@@ -209,3 +209,41 @@ extern uint64_t pcr_testsuite_run(pcr_testsuite *ctx, pcr_exception ex)
     return 0;
 }
 
+
+struct {
+    pcr_testsuite **tests;
+    size_t cap;
+    size_t len;
+} *thvec_hnd;
+
+
+extern void pcr_testharness_init(const char *log, pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        pcr_testlog_open(log);
+
+        thvec_hnd = pcr_mempool_alloc(sizeof *thvec_hnd, x);
+        thvec_hnd->len = 0;
+        thvec_hnd->cap = 4;
+        thvec_hnd->tests = pcr_mempool_alloc(
+                                sizeof *thvec_hnd->tests * thvec_hnd->cap, x);
+    }
+
+    pcr_exception_unwind(ex);
+}
+
+
+extern void pcr_testharness_exit(void)
+{
+}
+
+
+extern void pcr_testharness_push(const pcr_testsuite *ts, pcr_exception ex)
+{
+}
+
+
+extern void pcr_testharnees_run(pcr_exception ex)
+{
+}
+
