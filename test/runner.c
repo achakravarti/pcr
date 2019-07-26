@@ -53,7 +53,7 @@ static bool test_dummy(void)
 {
     pcr_exception_try (x) {
         int a = 5, b = 6;
-        compare(0, &b, x);
+        compare(&a, &b, x);
 
         return false;
     }
@@ -72,6 +72,8 @@ int main(void)
 
         pcr_testsuite *ts = pcr_testsuite_new("Rough Tests", x);
         pcr_testcase *tc = pcr_testcase_new(&test_dummy, "Dummy Test", x);
+        pcr_testsuite_push(ts, tc, x);
+        pcr_testsuite_push(ts, tc, x);
         pcr_testsuite_push(ts, tc, x);
         pcr_testsuite_run(ts, x);
 
