@@ -54,13 +54,13 @@ static bool test_dummy(void)
     pcr_exception_try (x) {
         int a = 5, b = 6;
         compare(&a, &b, x);
-
-        return false;
     }
 
     pcr_exception_catch (PCR_EXCEPTION_STATE) {
         return true;
     }
+
+    return false;
 }
 
 
