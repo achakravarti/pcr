@@ -15,6 +15,10 @@ extern void pcr_log_open(const char *path, bool flush)
 
 extern void pcr_log_close(void)
 {
+    if (pcr_hint_likely (log_file)) {
+        (void) fclose(log_file);
+        log_file = NULL;
+    }
 }
 
 
