@@ -30,17 +30,17 @@ extern "C" {
 
 extern void pcr_log_open(const char *path, bool flush);
 extern void pcr_log_close(void);
-#define pcr_log_trace(m) \
-    pcr_log_write__('T', __func__, __FILE__, __LINE__, (m))
+extern void pcr_log_write__(const char, const char *, ...);
 
-#define pcr_log_warning(m) \
-    pcr_log_write__('W', __func__, __FILE__, __LINE__, (m))
+#define pcr_log_trace(m, ...) \
+    pcr_log_write__('T', (m), ##__VA_ARGS__)
 
-#define pcr_log_error(m) \
-    pcr_log_write__('E', __func__, __FILE__, __LINE__, (m))
+#define pcr_log_warning(m, ...) \
+    pcr_log_write__('W', (m), ##__VA_ARGS__)
 
-extern void pcr_log_write__(const char type, const char *func, const char *file,
-                                    uint64_t line, const char *msg);
+#define pcr_log_error(m, ...) \
+    pcr_log_write__('E', (m), ##__VA_ARGS__)
+
 
 
 /* exception handling */
@@ -68,13 +68,15 @@ typedef int PCR_EXCEPTION;
     if (pcr_hint_unlikely (pcr__exid__))
 
 #define pcr_exception_throw(x, id) \
-    do { \
-        printf("Exception 0x%x thrown in %s()\n", (unsigned) (id), __func__); \
-        longjmp((x), (id)); \
+    do {                                                         \
+        pcr_log_error("exception 0x%x thrown in %s() [%s:%d]",   \
+                            (id), __func__, __FILE__, __LINE__); \
+        longjmp((x), (id));                                      \
     } while (0)
 
-#define pcr_exception_trace() \
-    printf("Exception 0x%x traced in %s()\n", (unsigned) pcr__exid__, __func__)
+#define pcr_exception_trace()            \
+    pcr_log_error("exception 0x%x detected in %s() [%s:%d]", \
+                        pcr__exid__, __func__, __FILE__, __LINE__);
 
 #define pcr_exception_unwind(x)        \
     do {                               \
