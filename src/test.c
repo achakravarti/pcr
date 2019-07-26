@@ -141,12 +141,23 @@ extern void pcr_testsuite_push(pcr_testsuite *ctx, const pcr_testcase *tc,
 }
 
 
+static inline void print_border(void)
+{
+    printf("\n");
+
+    for (register size_t i = 0; i < 80; i++)
+        printf("=");
+
+    printf("\n");
+}
+
+
 extern uint64_t pcr_testsuite_run(pcr_testsuite *ctx, pcr_exception ex)
 {
     pcr_assert_handle(ctx, ex);
 
     pcr_exception_try (x) {
-        printf("\n============================================\n");
+        print_border();
         printf("Initialising test suite \'%s\'...\n\n", ctx->name);
 
         register uint64_t pass = 0, len = ctx->len;
@@ -156,8 +167,8 @@ extern uint64_t pcr_testsuite_run(pcr_testsuite *ctx, pcr_exception ex)
         }
 
         printf("\nCompleted running test suite \'%s\'...\n", ctx->name);
-        printf("%lu passed, %lu failed, %lu total\n", pass, len - pass, len);
-        printf("============================================\n");
+        printf("%lu passed, %lu failed, %lu total", pass, len - pass, len);
+        print_border();
 
         return pass;
     }
