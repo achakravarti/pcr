@@ -156,9 +156,13 @@ extern pcr_testsuite *pcr_testsuite_copy(const pcr_testsuite *ctx,
         cpy->len = ctx->len;
         cpy->cap = ctx->cap;
 
-        const size_t sz = sizeof *cpy->tests * cpy->cap;
+        size_t sz = sizeof *cpy->tests * cpy->cap;
         cpy->tests = pcr_mempool_alloc(sz, x);
         memcpy(cpy->tests, ctx->tests, sz);
+
+        sz = strlen(ctx->name) + 1;
+        cpy->name = pcr_mempool_alloc(sz, x);
+        strncpy(cpy->name, ctx->name, sz);
 
         return cpy;
     }
