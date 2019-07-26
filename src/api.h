@@ -30,9 +30,6 @@ extern "C" {
 
 extern void pcr_log_open(const char *path, bool flush);
 extern void pcr_log_close(void);
-extern void pcr_log_write__(const char type, const char *func, const char *file,
-                                    uint64_t line, const char *msg);
-
 #define pcr_log_trace(m) \
     pcr_log_write__('T', __func__, __FILE__, __LINE__, (m))
 
@@ -41,6 +38,9 @@ extern void pcr_log_write__(const char type, const char *func, const char *file,
 
 #define pcr_log_error(m) \
     pcr_log_write__('E', __func__, __FILE__, __LINE__, (m))
+
+extern void pcr_log_write__(const char type, const char *func, const char *file,
+                                    uint64_t line, const char *msg);
 
 
 /* exception handling */
