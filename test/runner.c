@@ -55,7 +55,7 @@ static bool test_dummy(void)
 {
     pcr_exception_try (x) {
         int a = 5, b = 6;
-        compare(&a, &b, x);
+        compare(0, &b, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_STATE) {
@@ -75,14 +75,19 @@ int main(void)
         char *bfr = make_str("Hello, world! Goodbye, world!", x);
         printf("bfr = %s\n", bfr);
 
-        pcr_testlog_open("test2.log");
-        pcr_testsuite *ts = pcr_testsuite_new("Rough Tests", x);
         pcr_testcase *tc = pcr_testcase_new(&test_dummy, "Dummy Test", x);
+
+        pcr_testsuite *ts = pcr_testsuite_new("Rough Tests", x);
         pcr_testsuite_push(ts, tc, x);
         pcr_testsuite_push(ts, tc, x);
         pcr_testsuite_push(ts, tc, x);
-        pcr_testsuite_run(ts, x);
-        pcr_testlog_close();
+
+        pcr_testharness_init("test3.log", x);
+        pcr_testharness_push(ts, x);
+        pcr_testharness_push(ts, x);
+        pcr_testharness_run(x);
+        pcr_testharness_exit();
+
 
         int a = 5;
         int b = 6;
@@ -91,7 +96,8 @@ int main(void)
     }
 
     pcr_exception_catchall {
-        pcr_exception_trace();
+        pcr_exception_log();
+        pcr_exception_print();
     }
 
     pcr_log_close();
