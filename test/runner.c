@@ -75,12 +75,14 @@ int main(void)
         char *bfr = make_str("Hello, world! Goodbye, world!", x);
         printf("bfr = %s\n", bfr);
 
+        pcr_testlog_open("test2.log");
         pcr_testsuite *ts = pcr_testsuite_new("Rough Tests", x);
         pcr_testcase *tc = pcr_testcase_new(&test_dummy, "Dummy Test", x);
         pcr_testsuite_push(ts, tc, x);
         pcr_testsuite_push(ts, tc, x);
         pcr_testsuite_push(ts, tc, x);
         pcr_testsuite_run(ts, x);
+        pcr_testlog_close();
 
         int a = 5;
         int b = 6;
