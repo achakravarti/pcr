@@ -254,6 +254,20 @@ extern void pcr_testharness_exit(void)
 
 extern void pcr_testharness_push(const pcr_testsuite *ts, pcr_exception ex)
 {
+    pcr_assert_state(thvec_hnd, ex);
+    pcr_assert_handle(ts, ex);
+
+    pcr_exception_try (x) {
+        if (pcr_hint_unlikely (thvec_hnd->len == thvec_hnd->cap)) {
+            thvec_hnd->cap *= 2;
+            const size_t newsz = sizeof *thvec_hnd->tests * thvec_hnd->cap;
+            thvec_hnd->tests = pcr_mempool_realloc(thvec_hnd->tests, newsz, x);
+        }
+
+        thvec_hnd->tests[thvec_hnd->len++] = pcr_testsuite_copy(ts, x);
+    }
+
+    pcr_exception_unwind(ex);
 }
 
 
