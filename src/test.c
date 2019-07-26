@@ -9,31 +9,31 @@ struct pcr_testcase {
 };
 
 
-static thread_local FILE *log_file = NULL;
+static thread_local FILE *log_hnd = NULL;
 
 
 static inline void log_open(const char *path)
 {
-    if (pcr_hint_unlikely (log_file))
-        (void) fclose(log_file);
+    if (pcr_hint_unlikely (log_hnd))
+        (void) fclose(log_hnd);
 
-    if (pcr_hint_unlikely (!(path && *path && (log_file = fopen(path, "w")))))
+    if (pcr_hint_unlikely (!(path && *path && (log_hnd = fopen(path, "w")))))
         printf("[warning] pcr_testlog_open(): cannot open test log %s\n", path);
 }
 
 
 static inline void log_close(void)
 {
-    if (pcr_hint_likely (log_file)) {
-        (void) fclose(log_file);
-        log_file = NULL;
+    if (pcr_hint_likely (log_hnd)) {
+        (void) fclose(log_hnd);
+        log_hnd = NULL;
     }
 }
 
 
 #define log_write(m, ...)                      \
-    if (pcr_hint_likely (log_file)) {          \
-        fprintf(log_file, (m), ##__VA_ARGS__); \
+    if (pcr_hint_likely (log_hnd)) {          \
+        fprintf(log_hnd, (m), ##__VA_ARGS__); \
     }
 
 
@@ -46,13 +46,13 @@ static inline void log_close(void)
 
 static void log_border(void)
 {
-    if (pcr_hint_likely (log_file)) {
-        fputs("\n", log_file);
+    if (pcr_hint_likely (log_hnd)) {
+        fputs("\n", log_hnd);
 
         for (register size_t i = 0; i < 80; i++)
-            fputs("=", log_file);
+            fputs("=", log_hnd);
 
-        fputs("\n", log_file);
+        fputs("\n", log_hnd);
     }
 }
 
