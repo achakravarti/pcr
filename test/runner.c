@@ -54,15 +54,12 @@ static bool test_dummy(void)
     pcr_exception_try (x) {
         int a = 5, b = 6;
         compare(&a, &b, x);
+
         return true;
     }
 
-    pcr_exception_catchall {
-        return false;
-    }
+    return false;
 }
-
-
 
 
 int main(void)
@@ -70,7 +67,9 @@ int main(void)
     pcr_exception_try (x) {
         char *bfr = make_str("Hello, world! Goodbye, world!", x);
         printf("bfr = %s\n", bfr);
-        printf("test result = %d\n", test_dummy());
+
+        pcr_testcase *tc = pcr_testcase_new(&test_dummy, "Dummy Test", x);
+        printf("test = %d\n", pcr_testcase_run(tc, x));
 
         int a = 5;
         int b = 6;
