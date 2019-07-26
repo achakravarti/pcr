@@ -32,11 +32,6 @@ extern void pcr_log_write__(const char type, const char *msg, ...)
     time_t tm = time(NULL);
     char *ctm = ctime(&tm);
 
-    /*const char *fmt = "[%c] [%.24s] [%s():%s:%d] %s\n";
-    if (pcr_hint_likely (log_file && msg && *msg)) {
-        (void) fprintf(log_file, fmt, type, ctm, func, file, line, msg);
-    }*/
-
     (void) fprintf(log_file, "[%c] [%.24s]: ", type, ctm);
 
     auto va_list va;
