@@ -251,9 +251,9 @@ extern void pcr_testharness_exit(void)
 {
     pcr_testlog_close();
 
-    log_tee("\ncompleted running %lu test suites...\n", thvec_hnd->total);
-    log_tee("%lu passed, %lu failed, %lu total", thvec_hnd->pass,
-                    thvec_hnd->total - thvec_hnd->pass, thvec_hnd->len);
+    log_tee("\ncompleted running %lu test suites...\n", thvec_hnd->len);
+    log_tee("%lu passed, %lu failed, %lu total\n", thvec_hnd->pass,
+                    thvec_hnd->total - thvec_hnd->pass, thvec_hnd->total);
 }
 
 
@@ -284,7 +284,7 @@ extern void pcr_testharness_run(pcr_exception ex)
         register uint64_t len = thvec_hnd->len;
         for (register uint64_t i = 0; i < len; i++) {
             thvec_hnd->pass += pcr_testsuite_run(thvec_hnd->tests[i], x);
-            thvec_hnd->total++;
+            thvec_hnd->total += pcr_testsuite_len(thvec_hnd->tests[i], x);
         }
 
     }
