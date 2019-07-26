@@ -68,7 +68,10 @@ static bool test_dummy(void)
 
 int main(void)
 {
+    pcr_log_open("test.log", true);
+
     pcr_exception_try (x) {
+
         char *bfr = make_str("Hello, world! Goodbye, world!", x);
         printf("bfr = %s\n", bfr);
 
@@ -89,6 +92,7 @@ int main(void)
         pcr_exception_trace();
     }
 
+    pcr_log_close();
     return 0;
 }
 
