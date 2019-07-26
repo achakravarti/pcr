@@ -74,17 +74,19 @@ typedef int PCR_EXCEPTION;
         longjmp((x), (id));                                      \
     } while (0)
 
-#define pcr_exception_trace()            \
+#define pcr_exception_log()                                  \
     pcr_log_error("exception 0x%x detected in %s() [%s:%d]", \
                         pcr__exid__, __func__, __FILE__, __LINE__);
 
-#define pcr_exception_unwind(x)        \
-    do {                               \
-        if (pcr__exid__) {             \
-            pcr_exception_trace();     \
-            longjmp((x), pcr__exid__); \
-        }                              \
-    } while (0)
+#define pcr_exception_print()                         \
+    printf("exception 0x%x detected in %s() [%s:%d]", \
+                pcr__exid__, __func__, __FILE__, __LINE__);
+
+#define pcr_exception_unwind(x)    \
+    if (pcr__exid__) {             \
+        pcr_exception_log();       \
+        longjmp((x), pcr__exid__); \
+    }                              \
 
 
 /* assertion macros */
