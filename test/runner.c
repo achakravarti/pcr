@@ -4,7 +4,7 @@
 
 int compare(int *a, int *b, pcr_exception ex)
 {
-    pcr_assert_handle(a && b, ex);
+    pcr_assert_state(a && b, ex);
     return *a == *b;
 }
 
@@ -53,12 +53,14 @@ static bool test_dummy(void)
 {
     pcr_exception_try (x) {
         int a = 5, b = 6;
-        compare(&a, &b, x);
+        compare(0, &b, x);
 
-        return true;
+        return false;
     }
 
-    return false;
+    pcr_exception_catch (PCR_EXCEPTION_STATE) {
+        return true;
+    }
 }
 
 
@@ -68,8 +70,10 @@ int main(void)
         char *bfr = make_str("Hello, world! Goodbye, world!", x);
         printf("bfr = %s\n", bfr);
 
+        pcr_testsuite *ts = pcr_testsuite_new("Rough Tests", x);
         pcr_testcase *tc = pcr_testcase_new(&test_dummy, "Dummy Test", x);
-        printf("test = %d\n", pcr_testcase_run(tc, x));
+        pcr_testsuite_push(ts, tc, x);
+        pcr_testsuite_run(ts, x);
 
         int a = 5;
         int b = 6;
