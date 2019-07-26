@@ -49,11 +49,28 @@ char *make_str(const char *str, pcr_exception ex)
 }
 
 
+static bool test_dummy(void)
+{
+    pcr_exception_try (x) {
+        int a = 5, b = 6;
+        compare(&a, &b, x);
+        return true;
+    }
+
+    pcr_exception_catchall {
+        return false;
+    }
+}
+
+
+
+
 int main(void)
 {
     pcr_exception_try (x) {
         char *bfr = make_str("Hello, world! Goodbye, world!", x);
         printf("bfr = %s\n", bfr);
+        printf("test result = %d\n", test_dummy());
 
         int a = 5;
         int b = 6;
