@@ -22,10 +22,30 @@ extern "C" {
 #endif
 
 
+/* logging */
+
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdint.h>
+
+extern void pcr_log_open(const char *path, bool flush);
+extern void pcr_log_close(void);
+extern void pcr_log_write__(const char type, const char *func, const char *file,
+                                    uint64_t line, const char *msg);
+
+#define pcr_log_trace(m) \
+    pcr_log_write__('T', __func__, __FILE__, __LINE__, (m))
+
+#define pcr_log_warning(m) \
+    pcr_log_write__('W', __func__, __FILE__, __LINE__, (m))
+
+#define pcr_log_error(m) \
+    pcr_log_write__('E', __func__, __FILE__, __LINE__, (m))
+
+
 /* exception handling */
 
 #include <setjmp.h>
-#include <stdio.h>
 
 typedef jmp_buf pcr_exception;
 typedef int PCR_EXCEPTION;
@@ -89,9 +109,6 @@ extern void *pcr_mempool_realloc(void *ptr, size_t sz, pcr_exception ex);
 
 
 /* unit testing */
-
-#include <stdbool.h>
-#include <stdint.h>
 
 typedef bool (pcr_unittest)(void);
 typedef struct pcr_testcase pcr_testcase;
