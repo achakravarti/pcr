@@ -54,3 +54,6 @@ dkms.conf
 # PCR build directory
 bld/
 
+# Log files
+*.log
+
