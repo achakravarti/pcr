@@ -133,6 +133,12 @@ extern uint64_t pcr_testsuite_run(pcr_testsuite *ctx, pcr_exception ex);
 extern void pcr_testlog_open(const char *path);
 extern void pcr_testlog_close(void);
 
+extern void pcr_testharness_init(const char *log, pcr_exception ex);
+extern void pcr_testharness_exit(void);
+extern void pcr_testharness_push(const pcr_testsuite *ts, pcr_exception ex);
+extern void pcr_testharnees_run(pcr_exception ex);
+
+
 #if defined (__cplusplus)
 }
 #endif
