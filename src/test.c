@@ -89,6 +89,8 @@ extern pcr_testsuite *pcr_testsuite_new(const char *name, pcr_exception ex)
         ts->name = pcr_mempool_alloc(slen + 1, x);
         strncpy(ts->name, name, slen);
         ts->name[slen] = '\0';
+
+        return ts;
     }
 
     pcr_exception_unwind(ex);
@@ -147,8 +149,10 @@ extern uint64_t pcr_testsuite_run(pcr_testsuite *ctx, pcr_exception ex)
         printf("Initialising test suite \'%s\'...\n\n", ctx->name);
 
         register uint64_t pass = 0, len = ctx->len;
-        for (register uint64_t i = 0; i < len; i++)
+        for (register uint64_t i = 0; i < len; i++) {
+            printf("%lu. ", i);
             pass += (uint64_t) pcr_testcase_run(ctx->tests[i], x);
+        }
 
         printf("Completed running test suite \'%s\'...\n", ctx->name);
         printf("%lu passed, %lu failed, %lu total\n", pass, len - pass, len);
