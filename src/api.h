@@ -78,8 +78,8 @@ typedef int PCR_EXCEPTION;
     pcr_log_error("exception 0x%x detected in %s() [%s:%d]", \
                         pcr__exid__, __func__, __FILE__, __LINE__);
 
-#define pcr_exception_print()                         \
-    printf("exception 0x%x detected in %s() [%s:%d]", \
+#define pcr_exception_print()                               \
+    printf("[!] exception 0x%x detected in %s() [%s:%d]\n", \
                 pcr__exid__, __func__, __FILE__, __LINE__);
 
 #define pcr_exception_unwind(x)    \
