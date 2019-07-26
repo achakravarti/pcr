@@ -146,17 +146,18 @@ extern uint64_t pcr_testsuite_run(pcr_testsuite *ctx, pcr_exception ex)
     pcr_assert_handle(ctx, ex);
 
     pcr_exception_try (x) {
+        printf("\n============================================\n");
         printf("Initialising test suite \'%s\'...\n\n", ctx->name);
 
         register uint64_t pass = 0, len = ctx->len;
         for (register uint64_t i = 0; i < len; i++) {
-            printf("%lu. ", i);
+            printf("%lu. ", i + 1);
             pass += (uint64_t) pcr_testcase_run(ctx->tests[i], x);
         }
 
-        printf("Completed running test suite \'%s\'...\n", ctx->name);
+        printf("\nCompleted running test suite \'%s\'...\n", ctx->name);
         printf("%lu passed, %lu failed, %lu total\n", pass, len - pass, len);
-        printf("============================================\n\n");
+        printf("============================================\n");
 
         return pass;
     }
