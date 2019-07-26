@@ -27,6 +27,7 @@ extern pcr_testcase *pcr_testcase_new(pcr_unittest *test, const char *desc,
     }
 
     pcr_exception_unwind(ex);
+    return NULL;
 }
 
 
@@ -40,6 +41,7 @@ extern pcr_testcase *pcr_testcase_copy(const pcr_testcase *ctx,
     }
 
     pcr_exception_unwind(ex);
+    return NULL;
 }
 
 
@@ -94,6 +96,7 @@ extern pcr_testsuite *pcr_testsuite_new(const char *name, pcr_exception ex)
     }
 
     pcr_exception_unwind(ex);
+    return NULL;
 }
 
 
@@ -114,6 +117,7 @@ extern pcr_testsuite *pcr_testsuite_copy(const pcr_testsuite *ctx,
     }
 
     pcr_exception_unwind(ex);
+    return NULL;
 }
 
 
@@ -174,5 +178,6 @@ extern uint64_t pcr_testsuite_run(pcr_testsuite *ctx, pcr_exception ex)
     }
 
     pcr_exception_unwind(ex);
+    return 0;
 }
 
