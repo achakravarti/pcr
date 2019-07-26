@@ -48,7 +48,10 @@ typedef int PCR_EXCEPTION;
     if (pcr_hint_unlikely (pcr__exid__))
 
 #define pcr_exception_throw(x, id) \
-    longjmp((x), (id))
+    do { \
+        printf("Exception 0x%x thrown in %s()\n", (unsigned) (id), __func__); \
+        longjmp((x), (id)); \
+    } while (0)
 
 #define pcr_exception_trace() \
     printf("Exception 0x%x traced in %s()\n", (unsigned) pcr__exid__, __func__)
