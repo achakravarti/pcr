@@ -56,11 +56,12 @@ typedef int PCR_EXCEPTION;
 #define pcr_exception_trace() \
     printf("Exception 0x%x traced in %s()\n", (unsigned) pcr__exid__, __func__)
 
-#define pcr_exception_unwind(x)    \
-    do {                           \
-        if (pcr__exid__)           \
-            pcr_exception_trace(); \
-        longjmp((x), pcr__exid__); \
+#define pcr_exception_unwind(x)        \
+    do {                               \
+        if (pcr__exid__) {             \
+            pcr_exception_trace();     \
+            longjmp((x), pcr__exid__); \
+        }                              \
     } while (0)
 
 
