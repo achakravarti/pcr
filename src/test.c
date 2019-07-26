@@ -37,6 +37,13 @@ extern void pcr_testlog_close(void)
     }
 
 
+#define log_tee(m, ...)                \
+    do {                               \
+        log_write((m), ##__VA_ARGS__); \
+        printf(m, ##__VA_ARGS__);      \
+    } while (0)
+
+
 static inline void log_border(void)
 {
     if (pcr_hint_likely (log_file)) {
@@ -214,6 +221,8 @@ struct {
     pcr_testsuite **tests;
     size_t cap;
     size_t len;
+    uint64_t pass;
+    uint64_t total;
 } *thvec_hnd;
 
 
@@ -245,5 +254,20 @@ extern void pcr_testharness_push(const pcr_testsuite *ts, pcr_exception ex)
 
 extern void pcr_testharnees_run(pcr_exception ex)
 {
+    pcr_assert_state(thvec_hnd, ex);
+
+    pcr_exception_try (x) {
+        register uint64_t len = thvec_hnd->len;
+        for (register uint64_t i = 0; i < len; i++) {
+            thvec_hnd->pass += pcr_testsuite_run(thvec_hnd->tests[i], x);
+            thvec_hnd->total++;
+        }
+
+        log_tee("\ncompleted running all tests...\n");
+        log_tee("%lu passed, %lu failed, %lu total", thvec_hnd->pass,
+                        thvec_hnd->total - thvec_hnd->pass, thvec_hnd->len);
+    }
+
+    pcr_exception_unwind(ex);
 }
 
