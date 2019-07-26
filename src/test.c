@@ -1,3 +1,4 @@
+#include <threads.h>
 #include <string.h>
 #include "./api.h"
 
@@ -6,6 +7,47 @@ struct pcr_testcase {
     pcr_unittest *test;
     char *desc;
 };
+
+
+static thread_local FILE *log_file = NULL;
+
+
+extern void pcr_testlog_open(const char *path)
+{
+    if (pcr_hint_unlikely (log_file))
+        (void) fclose(log_file);
+
+    if (pcr_hint_unlikely (!(path && *path && (log_file = fopen(path, "w")))))
+        printf("[warning] pcr_testlog_open(): cannot open test log %s\n", path);
+}
+
+
+extern void pcr_testlog_close(void)
+{
+    if (pcr_hint_likely (log_file)) {
+        (void) fclose(log_file);
+        log_file = NULL;
+    }
+}
+
+
+#define log_write(m, ...)                      \
+    if (pcr_hint_likely (log_file)) {          \
+        fprintf(log_file, (m), ##__VA_ARGS__); \
+    }
+
+
+static inline void log_border(void)
+{
+    if (pcr_hint_likely (log_file)) {
+        fputs("\n", log_file);
+
+        for (register size_t i = 0; i < 80; i++)
+            fputs("=", log_file);
+
+        fputs("\n", log_file);
+    }
+}
 
 
 extern pcr_testcase *pcr_testcase_new(pcr_unittest *test, const char *desc,
@@ -48,7 +90,7 @@ extern bool pcr_testcase_run(pcr_testcase *ctx, pcr_exception ex)
     pcr_assert_handle(ctx, ex);
 
     bool res = ctx->test();
-    printf("[%s]: %s\n", res ? "OK" : "**FAIL**", ctx->desc);
+    log_write("[%s]: %s\n", res ? "OK" : "**FAIL**", ctx->desc);
 
     return res;
 }
@@ -142,34 +184,23 @@ extern void pcr_testsuite_push(pcr_testsuite *ctx, const pcr_testcase *tc,
 }
 
 
-static inline void print_border(void)
-{
-    printf("\n");
-
-    for (register size_t i = 0; i < 80; i++)
-        printf("=");
-
-    printf("\n");
-}
-
-
 extern uint64_t pcr_testsuite_run(pcr_testsuite *ctx, pcr_exception ex)
 {
     pcr_assert_handle(ctx, ex);
 
     pcr_exception_try (x) {
-        print_border();
-        printf("Initialising test suite \'%s\'...\n\n", ctx->name);
+        log_border();
+        log_write("initialising test suite \'%s\'...\n\n", ctx->name);
 
         register uint64_t pass = 0, len = ctx->len;
         for (register uint64_t i = 0; i < len; i++) {
-            printf("%lu. ", i + 1);
+            log_write("%lu. ", i + 1);
             pass += (uint64_t) pcr_testcase_run(ctx->tests[i], x);
         }
 
-        printf("\nCompleted running test suite \'%s\'...\n", ctx->name);
-        printf("%lu passed, %lu failed, %lu total", pass, len - pass, len);
-        print_border();
+        log_write("\ncompleted running test suite \'%s\'...\n", ctx->name);
+        log_write("%lu passed, %lu failed, %lu total", pass, len - pass, len);
+        log_border();
 
         return pass;
     }
