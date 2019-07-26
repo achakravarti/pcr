@@ -249,11 +249,11 @@ extern void pcr_testharness_init(const char *log, pcr_exception ex)
 
 extern void pcr_testharness_exit(void)
 {
-    pcr_testlog_close();
-
-    log_tee("\ncompleted running %lu test suites...\n", thvec_hnd->len);
+    log_tee("\ncompleted running %lu test suite(s)...\n", thvec_hnd->len);
     log_tee("%lu passed, %lu failed, %lu total\n", thvec_hnd->pass,
                     thvec_hnd->total - thvec_hnd->pass, thvec_hnd->total);
+
+    pcr_testlog_close();
 }
 
 
