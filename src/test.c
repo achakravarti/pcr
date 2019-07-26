@@ -116,7 +116,7 @@ static void vec_resize(pcr_testsuite *ctx, pcr_exception ex)
     pcr_exception_try (x) {
         ctx->cap *= 2;
         ctx->tests = pcr_mempool_realloc(
-                            ctx->tests, sizeof *ctx->tests * ctx->cap, ex);
+                            ctx->tests, sizeof *ctx->tests * ctx->cap, x);
     }
 
     pcr_exception_unwind(ex);
@@ -153,11 +153,12 @@ extern pcr_testsuite *pcr_testsuite_copy(const pcr_testsuite *ctx,
 
     pcr_exception_try (x) {
         pcr_testsuite *cpy = pcr_mempool_alloc(sizeof *cpy, x);
-
         cpy->len = ctx->len;
         cpy->cap = ctx->cap;
-        cpy->tests = pcr_mempool_alloc(sizeof *cpy->tests * cpy->cap, x);
-        memcpy(cpy->tests, ctx->tests, sizeof *cpy->tests);
+
+        const size_t sz = sizeof *cpy->tests * cpy->cap;
+        cpy->tests = pcr_mempool_alloc(sz, x);
+        memcpy(cpy->tests, ctx->tests, sz);
 
         return cpy;
     }
@@ -271,7 +272,7 @@ extern void pcr_testharness_push(const pcr_testsuite *ts, pcr_exception ex)
 }
 
 
-extern void pcr_testharnees_run(pcr_exception ex)
+extern void pcr_testharness_run(pcr_exception ex)
 {
     pcr_assert_state(thvec_hnd, ex);
 
