@@ -17,6 +17,7 @@ int do_compare(int *a, int *b, pcr_exception ex)
     }
 
     pcr_exception_unwind(ex);
+    return 0;
 }
 
 
@@ -31,21 +32,22 @@ int do_do_compare(int *a, int *b, pcr_exception ex)
     }
 
     pcr_exception_unwind(ex);
+    return 0;
 }
 
 
 char *make_str(const char *str, pcr_exception ex)
 {
     pcr_exception_try (x) {
-        register size_t len = strlen(str);
-        char *bfr = pcr_mempool_alloc(len + 1, x);
+        register size_t len = strlen(str) + 1;
+        char *bfr = pcr_mempool_alloc(len, x);
         strncpy(bfr, str, len);
-        bfr[len] = '\0';
 
         return bfr;
     }
 
     pcr_exception_unwind(ex);
+    return NULL;
 }
 
 

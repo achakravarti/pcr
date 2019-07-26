@@ -15,13 +15,11 @@ extern pcr_testcase *pcr_testcase_new(pcr_unittest *test, const char *desc,
 
     pcr_exception_try (x) {
         pcr_testcase *tc = pcr_mempool_alloc(sizeof *tc, x);
-
-        const size_t len = strlen(desc);
         tc->test = test;
-        tc->desc = pcr_mempool_alloc(len + 1, x);
 
-        strncpy(tc->desc, desc, len);
-        tc->desc[len] = '\0';
+        const size_t len = strlen(desc) + 1;
+        tc->desc = pcr_mempool_alloc(len, x);
+        (void) strncpy(tc->desc, desc, len);
 
         return tc;
     }
@@ -87,10 +85,9 @@ extern pcr_testsuite *pcr_testsuite_new(const char *name, pcr_exception ex)
         ts->cap = 4;
         ts->tests = pcr_mempool_alloc(sizeof *ts->tests * ts->cap, x);
 
-        const size_t slen = strlen(name);
-        ts->name = pcr_mempool_alloc(slen + 1, x);
-        strncpy(ts->name, name, slen);
-        ts->name[slen] = '\0';
+        const size_t slen = strlen(name) + 1;
+        ts->name = pcr_mempool_alloc(slen, x);
+        (void) strncpy(ts->name, name, slen);
 
         return ts;
     }
