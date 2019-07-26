@@ -7,8 +7,11 @@ static thread_local FILE *log_file = NULL;
 
 extern void pcr_log_open(const char *path, bool flush)
 {
+    if (pcr_hint_unlikely (log_file))
+        (void) fclose(log_file);
+
     const char *mode = flush ? "w" : "a+";
-    if (pcr_hint_unlikely (!(path && (log_file = fopen(path, mode)))))
+    if (pcr_hint_unlikely (!(path && *path && (log_file = fopen(path, mode)))))
         printf("[warning] pcr_log_open(): cannot open log file %s\n", path);
 }
 
