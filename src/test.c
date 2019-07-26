@@ -47,7 +47,10 @@ extern bool pcr_testcase_run(pcr_testcase *ctx, pcr_exception ex)
 {
     pcr_assert_handle(ctx, ex);
 
-    return ctx->test();
+    bool res = ctx->test();
+    printf("[%s]: %s\n", res ? "OK" : "**FAIL**", ctx->desc);
+
+    return res;
 }
 
 
