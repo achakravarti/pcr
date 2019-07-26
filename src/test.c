@@ -12,7 +12,7 @@ struct pcr_testcase {
 static thread_local FILE *log_file = NULL;
 
 
-extern void pcr_testlog_open(const char *path)
+static inline void log_open(const char *path)
 {
     if (pcr_hint_unlikely (log_file))
         (void) fclose(log_file);
@@ -22,7 +22,7 @@ extern void pcr_testlog_open(const char *path)
 }
 
 
-extern void pcr_testlog_close(void)
+static inline void log_close(void)
 {
     if (pcr_hint_likely (log_file)) {
         (void) fclose(log_file);
@@ -44,7 +44,7 @@ extern void pcr_testlog_close(void)
     } while (0)
 
 
-static inline void log_border(void)
+static void log_border(void)
 {
     if (pcr_hint_likely (log_file)) {
         fputs("\n", log_file);
@@ -234,7 +234,7 @@ struct {
 extern void pcr_testharness_init(const char *log, pcr_exception ex)
 {
     pcr_exception_try (x) {
-        pcr_testlog_open(log);
+        log_open(log);
 
         thvec_hnd = pcr_mempool_alloc(sizeof *thvec_hnd, x);
         thvec_hnd->len = thvec_hnd->pass = thvec_hnd->total = 0;
@@ -253,7 +253,7 @@ extern void pcr_testharness_exit(void)
     log_tee("%lu passed, %lu failed, %lu total\n", thvec_hnd->pass,
                     thvec_hnd->total - thvec_hnd->pass, thvec_hnd->total);
 
-    pcr_testlog_close();
+    log_close();
 }
 
 
