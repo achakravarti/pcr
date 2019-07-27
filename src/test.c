@@ -281,13 +281,10 @@ extern void pcr_testharness_run(pcr_exception ex)
     pcr_exception_try (x) {
         pcr_vector_muterate(&th_hnd->tsvec, &ts_run, NULL, x);
 
-        uint64_t total = th_hnd->total;
-        uint64_t pass = th_hnd->pass;
-        uint64_t fail = total - pass;
-        uint64_t suites = pcr_vector_len(th_hnd->tsvec, x);
-
-        log_tee("\ncompleted running %lu test suite(s)...\n", suites);
-        log_tee("%lu passed, %lu failed, %lu total\n", pass, fail, total);
+        log_tee("\ncompleted running %lu test suite(s)...\n",
+                        pcr_vector_len(th_hnd->tsvec, x));
+        log_tee("%lu passed, %lu failed, %lu total\n", th_hnd->pass,
+                        th_hnd->total - th_hnd->pass, th_hnd->total);
     }
 
     pcr_exception_unwind(ex);
