@@ -31,7 +31,7 @@ static inline void log_close(void)
 }
 
 
-#define log_write(m, ...)                      \
+#define log_write(m, ...)                     \
     if (pcr_hint_likely (log_hnd)) {          \
         fprintf(log_hnd, (m), ##__VA_ARGS__); \
     }
