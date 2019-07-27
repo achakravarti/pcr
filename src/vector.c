@@ -99,6 +99,17 @@ static pcr_vector *vec_fork(pcr_vector *ctx, pcr_exception ex)
 }
 
 
+static void vec_resize(pcr_vector *ctx, pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        ctx->cap *= 2;
+        ctx->payload = pcr_mempool_realloc(ctx->payload, ctx->sz * ctx->cap, x);
+    }
+
+    pcr_exception_unwind(ex);
+}
+
+
 extern void pcr_vector_setelem(pcr_vector **ctx, const void *elem, size_t idx,
                                     pcr_exception ex)
 {
@@ -110,6 +121,25 @@ extern void pcr_vector_setelem(pcr_vector **ctx, const void *elem, size_t idx,
             *ctx = vec_fork(*ctx, x);
 
         memcpy((*ctx)->payload[idx - 1], elem, (*ctx)->sz);
+    }
+
+    pcr_exception_unwind(ex);
+}
+
+
+extern void pcr_vector_push(pcr_vector **ctx, const void *elem,
+                                    pcr_exception ex)
+{
+    pcr_assert_handle(ctx && *ctx && elem, ex);
+
+    pcr_exception_try (x) {
+        if ((*ctx)->ref > 1)
+            *ctx = vec_fork(*ctx, x);
+
+        if (pcr_hint_unlikely ((*ctx)->len == (*ctx)->cap))
+            vec_resize(*ctx, x);
+
+        memcpy((*ctx)->payload[(*ctx)->len++], elem, (*ctx)->sz);
     }
 
     pcr_exception_unwind(ex);
