@@ -148,6 +148,7 @@ typedef int (pcr_comparator)(void *ctx, void *cmp, pcr_exception ex);
 extern pcr_vector *pcr_vector_new(const size_t elemsz, pcr_exception ex);
 extern pcr_vector *pcr_vector_copy(const pcr_vector *ctx, pcr_exception ex);
 extern size_t pcr_vector_len(const pcr_vector *ctx, pcr_exception ex);
+extern size_t pcr_vector_refcount(const pcr_vector *ctx, pcr_exception ex);
 extern void *pcr_vector_elem(const pcr_vector *ctx, const size_t idx);
 extern void pcr_vector_setelem(pcr_vector *ctx, void *elem, const size_t idx);
 extern void pcr_vector_sort(pcr_vector *ctx, pcr_comparator *cmp,

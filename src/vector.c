@@ -48,3 +48,12 @@ extern size_t pcr_vector_len(const pcr_vector *ctx, pcr_exception ex)
     return ctx->len;
 }
 
+
+extern size_t pcr_vector_refcount(const pcr_vector *ctx, pcr_exception ex)
+{
+    pcr_assert_handle(ctx, ex);
+
+    return ctx->ref;
+}
+
+
