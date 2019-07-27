@@ -141,7 +141,9 @@ extern void pcr_testharness_run(pcr_exception ex);
 /* vector */
 
 typedef struct pcr_vector pcr_vector;
-typedef void (pcr_iterator)(const void *elem, size_t idx, void *xtra,
+typedef void (pcr_iterator)(const void *elem, size_t idx, void *opt,
+                                pcr_exception ex);
+typedef void (pcr_muterator)(void *elem, size_t idx, void *opt,
                                 pcr_exception ex);
 typedef int (pcr_comparator)(void *ctx, void *cmp, pcr_exception ex);
 
@@ -155,8 +157,10 @@ extern void pcr_vector_setelem(pcr_vector **ctx, const void *elem, size_t idx,
                                     pcr_exception ex);
 extern void pcr_vector_sort(pcr_vector *ctx, pcr_comparator *cmp,
                                 pcr_exception ex);
-extern void pcr_vector_each(pcr_vector **ctx, pcr_iterator *itr, void *opt,
+extern void pcr_vector_each(const pcr_vector *ctx, pcr_iterator *itr, void *opt,
                                 pcr_exception ex);
+extern void pcr_vector_muterate(pcr_vector **ctx, pcr_muterator *mtr, void *opt,
+                                        pcr_exception ex);
 
 
 #if defined (__cplusplus)

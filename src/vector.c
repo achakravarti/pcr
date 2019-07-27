@@ -115,15 +115,33 @@ extern void pcr_vector_setelem(pcr_vector **ctx, const void *elem, size_t idx,
 }
 
 
-extern void pcr_vector_each(pcr_vector **ctx, pcr_iterator *itr, void *opt,
+extern void pcr_vector_each(const pcr_vector *ctx, pcr_iterator *itr, void *opt,
                                 pcr_exception ex)
 {
-    pcr_assert_handle(ctx && *ctx && itr, ex);
+    pcr_assert_handle(ctx && itr, ex);
 
     pcr_exception_try (x) {
+        register size_t len = ctx->len;
+        for (register size_t i = 0; i < len; i++)
+            itr(ctx->payload[i], i, opt, x);
+    }
+
+    pcr_exception_unwind(ex);
+}
+
+
+extern void pcr_vector_muterate(pcr_vector **ctx, pcr_muterator *mtr, void *opt,
+                                        pcr_exception ex)
+{
+    pcr_assert_handle(ctx && *ctx && mtr, ex);
+
+    pcr_exception_try (x) {
+        if ((*ctx)->ref > 1)
+            *ctx = vec_fork(*ctx, x);
+
         register size_t len = (*ctx)->len;
         for (register size_t i = 0; i < len; i++)
-            itr((*ctx)->payload[i], i, opt, x);
+            mtr((*ctx)->payload[i], i, opt, x);
     }
 
     pcr_exception_unwind(ex);
