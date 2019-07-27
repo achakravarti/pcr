@@ -1,3 +1,4 @@
+#include <string.h>
 #include "./api.h"
 
 
@@ -56,4 +57,21 @@ extern size_t pcr_vector_refcount(const pcr_vector *ctx, pcr_exception ex)
     return ctx->ref;
 }
 
+
+extern void *pcr_vector_elem(const pcr_vector *ctx, const size_t idx,
+                                    pcr_exception ex)
+{
+    pcr_assert_handle(ctx, ex);
+    pcr_assert_range(idx && idx <= ctx->len, ex);
+
+    pcr_exception_try (x) {
+        void *elem = pcr_mempool_alloc(ctx->sz, x);
+        memcpy(elem, ctx->payload[idx - 1], ctx->sz);
+
+        return elem;
+    }
+
+    pcr_exception_unwind(ex);
+    return NULL;
+}
 
