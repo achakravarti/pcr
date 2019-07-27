@@ -223,12 +223,10 @@ extern uint64_t pcr_testsuite_run(pcr_testsuite *ctx, pcr_exception ex)
 
 
 struct {
-    pcr_testsuite **tests;
-    size_t cap;
-    size_t len;
+    pcr_vector *tsvec;
     uint64_t pass;
     uint64_t total;
-} *thvec_hnd;
+} *th_hnd;
 
 
 extern void pcr_testharness_init(const char *log, pcr_exception ex)
@@ -236,11 +234,9 @@ extern void pcr_testharness_init(const char *log, pcr_exception ex)
     pcr_exception_try (x) {
         log_open(log);
 
-        thvec_hnd = pcr_mempool_alloc(sizeof *thvec_hnd, x);
-        thvec_hnd->len = thvec_hnd->pass = thvec_hnd->total = 0;
-        thvec_hnd->cap = 4;
-        thvec_hnd->tests = pcr_mempool_alloc(
-                                sizeof *thvec_hnd->tests * thvec_hnd->cap, x);
+        th_hnd = pcr_mempool_alloc(sizeof *th_hnd, x);
+        th_hnd->tsvec = pcr_vector_new(sizeof (pcr_testsuite), x);
+        th_hnd->pass = th_hnd->total = 0;
     }
 
     pcr_exception_unwind(ex);
@@ -249,27 +245,29 @@ extern void pcr_testharness_init(const char *log, pcr_exception ex)
 
 extern void pcr_testharness_exit(void)
 {
-    log_tee("\ncompleted running %lu test suite(s)...\n", thvec_hnd->len);
-    log_tee("%lu passed, %lu failed, %lu total\n", thvec_hnd->pass,
-                    thvec_hnd->total - thvec_hnd->pass, thvec_hnd->total);
-
     log_close();
 }
 
 
 extern void pcr_testharness_push(const pcr_testsuite *ts, pcr_exception ex)
 {
-    pcr_assert_state(thvec_hnd, ex);
+    pcr_assert_state(th_hnd, ex);
     pcr_assert_handle(ts, ex);
 
     pcr_exception_try (x) {
-        if (pcr_hint_unlikely (thvec_hnd->len == thvec_hnd->cap)) {
-            thvec_hnd->cap *= 2;
-            const size_t newsz = sizeof *thvec_hnd->tests * thvec_hnd->cap;
-            thvec_hnd->tests = pcr_mempool_realloc(thvec_hnd->tests, newsz, x);
-        }
+        pcr_vector_push(&th_hnd->tsvec, (void *) ts, x);
+    }
 
-        thvec_hnd->tests[thvec_hnd->len++] = pcr_testsuite_copy(ts, x);
+    pcr_exception_unwind(ex);
+}
+
+
+static void ts_run(void *elem, size_t idx, void *opt, pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        pcr_testsuite *ts = (pcr_testsuite *) elem;
+        th_hnd->pass += pcr_testsuite_run(ts, x);
+        th_hnd->total += pcr_testsuite_len(ts, x);
     }
 
     pcr_exception_unwind(ex);
@@ -278,15 +276,18 @@ extern void pcr_testharness_push(const pcr_testsuite *ts, pcr_exception ex)
 
 extern void pcr_testharness_run(pcr_exception ex)
 {
-    pcr_assert_state(thvec_hnd, ex);
+    pcr_assert_state(th_hnd, ex);
 
     pcr_exception_try (x) {
-        register uint64_t len = thvec_hnd->len;
-        for (register uint64_t i = 0; i < len; i++) {
-            thvec_hnd->pass += pcr_testsuite_run(thvec_hnd->tests[i], x);
-            thvec_hnd->total += pcr_testsuite_len(thvec_hnd->tests[i], x);
-        }
+        pcr_vector_muterate(&th_hnd->tsvec, &ts_run, NULL, x);
 
+        uint64_t total = th_hnd->total;
+        uint64_t pass = th_hnd->pass;
+        uint64_t fail = total - pass;
+        uint64_t suites = pcr_vector_len(th_hnd->tsvec, x);
+
+        log_tee("\ncompleted running %lu test suite(s)...\n", suites);
+        log_tee("%lu passed, %lu failed, %lu total\n", pass, fail, total);
     }
 
     pcr_exception_unwind(ex);
