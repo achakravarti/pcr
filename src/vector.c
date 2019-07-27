@@ -77,36 +77,30 @@ extern void *pcr_vector_elem(const pcr_vector *ctx, size_t idx,
 }
 
 
-static pcr_vector *vec_fork(pcr_vector *ctx, pcr_exception ex)
+static pcr_vector *vec_fork(pcr_vector **ctx, pcr_exception ex)
 {
     pcr_exception_try (x) {
-        pcr_vector *frk = pcr_vector_new(ctx->sz, x);
+        pcr_vector *hnd = *ctx;
+        if (hnd->ref > 1) {
+            pcr_vector *frk = pcr_vector_new(hnd->sz, x);
 
-        frk->sz = ctx->sz;
-        frk->len = ctx->len;
-        frk->cap = ctx->cap;
-        frk->ref = --ctx->ref;
+            frk->sz = hnd->sz;
+            frk->len = hnd->len;
+            frk->cap = hnd->cap;
+            frk->ref = --hnd->ref;
 
-        const size_t newsz = frk->sz * frk->cap;
-        frk->payload = pcr_mempool_alloc(newsz, x);
-        memcpy(frk->payload, ctx->payload, newsz);
+            const size_t newsz = frk->sz * frk->cap;
+            frk->payload = pcr_mempool_alloc(newsz, x);
+            memcpy(frk->payload, hnd->payload, newsz);
 
-        return frk;
+            *ctx = frk;
+        }
+
+        return *ctx;
     }
 
     pcr_exception_unwind(ex);
     return NULL;
-}
-
-
-static void vec_resize(pcr_vector *ctx, pcr_exception ex)
-{
-    pcr_exception_try (x) {
-        ctx->cap *= 2;
-        ctx->payload = pcr_mempool_realloc(ctx->payload, ctx->sz * ctx->cap, x);
-    }
-
-    pcr_exception_unwind(ex);
 }
 
 
@@ -117,10 +111,8 @@ extern void pcr_vector_setelem(pcr_vector **ctx, const void *elem, size_t idx,
     pcr_assert_range(idx && idx <= (*ctx)->len, ex);
 
     pcr_exception_try (x) {
-        if ((*ctx)->ref > 1)
-            *ctx = vec_fork(*ctx, x);
-
-        memcpy((*ctx)->payload[idx - 1], elem, (*ctx)->sz);
+        pcr_vector *hnd = vec_fork(ctx, x);
+        memcpy(hnd->payload[idx - 1], elem, hnd->sz);
     }
 
     pcr_exception_unwind(ex);
@@ -133,16 +125,16 @@ extern void pcr_vector_push(pcr_vector **ctx, const void *elem,
     pcr_assert_handle(ctx && *ctx && elem, ex);
 
     pcr_exception_try (x) {
-        if ((*ctx)->ref > 1)
-            *ctx = vec_fork(*ctx, x);
+        pcr_vector *hnd = vec_fork(ctx, x);
+        if (pcr_hint_unlikely (hnd->len == hnd->cap)) {
+            hnd->cap *= 2;
+            hnd->payload = pcr_mempool_realloc(hnd->payload, hnd->sz * hnd->cap,
+                                                    x);
+        }
 
-        if (pcr_hint_unlikely ((*ctx)->len == (*ctx)->cap))
-            vec_resize(*ctx, x);
-
-        (*ctx)->payload[(*ctx)->len] = pcr_mempool_realloc(
-                                            (*ctx)->payload[(*ctx)->len],
-                                            (*ctx)->sz, x);
-        memcpy((*ctx)->payload[(*ctx)->len++], elem, (*ctx)->sz);
+        hnd->payload[hnd->len] = pcr_mempool_realloc(hnd->payload[hnd->len],
+                                                            hnd->sz, x);
+        memcpy(hnd->payload[hnd->len++], elem, hnd->sz);
     }
 
     pcr_exception_unwind(ex);
@@ -154,11 +146,9 @@ extern void pcr_vector_pop(pcr_vector **ctx, pcr_exception ex)
     pcr_assert_handle(ctx && *ctx, ex);
 
     pcr_exception_try (x) {
-        if ((*ctx)->ref > 1)
-            *ctx = vec_fork(*ctx, x);
-
-        if (pcr_hint_likely ((*ctx)->len))
-            (*ctx)->payload[(*ctx)->len--] = NULL;
+        pcr_vector *hnd = vec_fork(ctx, x);
+        if (pcr_hint_likely (hnd->len))
+            hnd->payload[hnd->len--] = NULL;
     }
 
     pcr_exception_unwind(ex);
@@ -171,10 +161,8 @@ extern void pcr_vector_sort(pcr_vector **ctx, pcr_comparator *cmp,
     pcr_assert_handle(ctx && *ctx && cmp, ex);
 
     pcr_exception_try (x) {
-        if ((*ctx)->ref > 1)
-            *ctx = vec_fork(*ctx, x);
-
-        qsort((*ctx)->payload, (*ctx)->len, (*ctx)->sz, cmp);
+        pcr_vector *hnd = vec_fork(ctx, x);
+        qsort(hnd->payload, hnd->len, hnd->sz, cmp);
     }
 
     pcr_exception_unwind(ex);
@@ -187,8 +175,7 @@ extern void pcr_vector_iterate(const pcr_vector *ctx, pcr_iterator *itr,
     pcr_assert_handle(ctx && itr, ex);
 
     pcr_exception_try (x) {
-        register size_t len = ctx->len;
-        for (register size_t i = 0; i < len; i++)
+        for (register size_t i = 0, len = ctx->len; i < len; i++)
             itr(ctx->payload[i], i + 1, opt, x);
     }
 
@@ -202,12 +189,9 @@ extern void pcr_vector_muterate(pcr_vector **ctx, pcr_muterator *mtr, void *opt,
     pcr_assert_handle(ctx && *ctx && mtr, ex);
 
     pcr_exception_try (x) {
-        if ((*ctx)->ref > 1)
-            *ctx = vec_fork(*ctx, x);
-
-        register size_t len = (*ctx)->len;
-        for (register size_t i = 0; i < len; i++)
-            mtr((*ctx)->payload[i], i + 1, opt, x);
+        pcr_vector *hnd = vec_fork(ctx, x);
+        for (register size_t i = 0, len = hnd->len; i < len; i++)
+            mtr(hnd->payload[i], i + 1, opt, x);
     }
 
     pcr_exception_unwind(ex);
