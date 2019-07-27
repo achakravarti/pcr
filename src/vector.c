@@ -146,6 +146,22 @@ extern void pcr_vector_push(pcr_vector **ctx, const void *elem,
 }
 
 
+extern void pcr_vector_pop(pcr_vector **ctx, pcr_exception ex)
+{
+    pcr_assert_handle(ctx && *ctx, ex);
+
+    pcr_exception_try (x) {
+        if ((*ctx)->ref > 1)
+            *ctx = vec_fork(*ctx, x);
+
+        if (pcr_hint_likely ((*ctx)->len))
+            (*ctx)->payload[(*ctx)->len--] = NULL;
+    }
+
+    pcr_exception_unwind(ex);
+}
+
+
 extern void pcr_vector_sort(pcr_vector **ctx, pcr_comparator *cmp,
                                     pcr_exception ex)
 {
