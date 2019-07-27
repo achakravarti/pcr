@@ -22,10 +22,30 @@ extern "C" {
 #endif
 
 
+/* logging */
+
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdint.h>
+
+extern void pcr_log_open(const char *path, bool flush);
+extern void pcr_log_close(void);
+extern void pcr_log_write__(const char, const char *, ...);
+
+#define pcr_log_trace(m, ...) \
+    pcr_log_write__('T', (m), ##__VA_ARGS__)
+
+#define pcr_log_warning(m, ...) \
+    pcr_log_write__('W', (m), ##__VA_ARGS__)
+
+#define pcr_log_error(m, ...) \
+    pcr_log_write__('E', (m), ##__VA_ARGS__)
+
+
+
 /* exception handling */
 
 #include <setjmp.h>
-#include <stdio.h>
 
 typedef jmp_buf pcr_exception;
 typedef int PCR_EXCEPTION;
@@ -48,21 +68,25 @@ typedef int PCR_EXCEPTION;
     if (pcr_hint_unlikely (pcr__exid__))
 
 #define pcr_exception_throw(x, id) \
-    do { \
-        printf("Exception 0x%x thrown in %s()\n", (unsigned) (id), __func__); \
-        longjmp((x), (id)); \
+    do {                                                         \
+        pcr_log_error("exception 0x%x thrown in %s() [%s:%d]",   \
+                            (id), __func__, __FILE__, __LINE__); \
+        longjmp((x), (id));                                      \
     } while (0)
 
-#define pcr_exception_trace() \
-    printf("Exception 0x%x traced in %s()\n", (unsigned) pcr__exid__, __func__)
+#define pcr_exception_log()                                  \
+    pcr_log_error("exception 0x%x detected in %s() [%s:%d]", \
+                        pcr__exid__, __func__, __FILE__, __LINE__);
 
-#define pcr_exception_unwind(x)        \
-    do {                               \
-        if (pcr__exid__) {             \
-            pcr_exception_trace();     \
-            longjmp((x), pcr__exid__); \
-        }                              \
-    } while (0)
+#define pcr_exception_print()                               \
+    printf("[!] exception 0x%x detected in %s() [%s:%d]\n", \
+                pcr__exid__, __func__, __FILE__, __LINE__);
+
+#define pcr_exception_unwind(x)    \
+    if (pcr__exid__) {             \
+        pcr_exception_log();       \
+        longjmp((x), pcr__exid__); \
+    }                              \
 
 
 /* assertion macros */
@@ -90,9 +114,6 @@ extern void *pcr_mempool_realloc(void *ptr, size_t sz, pcr_exception ex);
 
 /* unit testing */
 
-#include <stdbool.h>
-#include <stdint.h>
-
 typedef bool (pcr_unittest)(void);
 typedef struct pcr_testcase pcr_testcase;
 typedef struct pcr_testsuite pcr_testsuite;
@@ -110,6 +131,11 @@ extern size_t pcr_testsuite_len(const pcr_testsuite *ctx, pcr_exception ex);
 extern void pcr_testsuite_push(pcr_testsuite *ctx, const pcr_testcase *tc,
                                     pcr_exception ex);
 extern uint64_t pcr_testsuite_run(pcr_testsuite *ctx, pcr_exception ex);
+
+extern void pcr_testharness_init(const char *log, pcr_exception ex);
+extern void pcr_testharness_exit(void);
+extern void pcr_testharness_push(const pcr_testsuite *ts, pcr_exception ex);
+extern void pcr_testharness_run(pcr_exception ex);
 
 
 #if defined (__cplusplus)

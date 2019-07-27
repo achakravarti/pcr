@@ -1,3 +1,4 @@
+#include <threads.h>
 #include <string.h>
 #include "./api.h"
 
@@ -6,6 +7,54 @@ struct pcr_testcase {
     pcr_unittest *test;
     char *desc;
 };
+
+
+static thread_local FILE *log_hnd = NULL;
+
+
+static inline void log_open(const char *path)
+{
+    if (pcr_hint_unlikely (log_hnd))
+        (void) fclose(log_hnd);
+
+    if (pcr_hint_unlikely (!(path && *path && (log_hnd = fopen(path, "w")))))
+        printf("[warning] pcr_testlog_open(): cannot open test log %s\n", path);
+}
+
+
+static inline void log_close(void)
+{
+    if (pcr_hint_likely (log_hnd)) {
+        (void) fclose(log_hnd);
+        log_hnd = NULL;
+    }
+}
+
+
+#define log_write(m, ...)                      \
+    if (pcr_hint_likely (log_hnd)) {          \
+        fprintf(log_hnd, (m), ##__VA_ARGS__); \
+    }
+
+
+#define log_tee(m, ...)                \
+    do {                               \
+        log_write((m), ##__VA_ARGS__); \
+        printf(m, ##__VA_ARGS__);      \
+    } while (0)
+
+
+static void log_border(void)
+{
+    if (pcr_hint_likely (log_hnd)) {
+        fputs("\n", log_hnd);
+
+        for (register size_t i = 0; i < 80; i++)
+            fputs("=", log_hnd);
+
+        fputs("\n", log_hnd);
+    }
+}
 
 
 extern pcr_testcase *pcr_testcase_new(pcr_unittest *test, const char *desc,
@@ -48,7 +97,7 @@ extern bool pcr_testcase_run(pcr_testcase *ctx, pcr_exception ex)
     pcr_assert_handle(ctx, ex);
 
     bool res = ctx->test();
-    printf("[%s]: %s\n", res ? "OK" : "**FAIL**", ctx->desc);
+    log_write("[%s]: %s\n", res ? "OK" : "**FAIL**", ctx->desc);
 
     return res;
 }
@@ -67,7 +116,7 @@ static void vec_resize(pcr_testsuite *ctx, pcr_exception ex)
     pcr_exception_try (x) {
         ctx->cap *= 2;
         ctx->tests = pcr_mempool_realloc(
-                            ctx->tests, sizeof *ctx->tests * ctx->cap, ex);
+                            ctx->tests, sizeof *ctx->tests * ctx->cap, x);
     }
 
     pcr_exception_unwind(ex);
@@ -104,11 +153,16 @@ extern pcr_testsuite *pcr_testsuite_copy(const pcr_testsuite *ctx,
 
     pcr_exception_try (x) {
         pcr_testsuite *cpy = pcr_mempool_alloc(sizeof *cpy, x);
-
         cpy->len = ctx->len;
         cpy->cap = ctx->cap;
-        cpy->tests = pcr_mempool_alloc(sizeof *cpy->tests * cpy->cap, x);
-        memcpy(cpy->tests, ctx->tests, sizeof *cpy->tests);
+
+        size_t sz = sizeof *cpy->tests * cpy->cap;
+        cpy->tests = pcr_mempool_alloc(sz, x);
+        memcpy(cpy->tests, ctx->tests, sz);
+
+        sz = strlen(ctx->name) + 1;
+        cpy->name = pcr_mempool_alloc(sz, x);
+        strncpy(cpy->name, ctx->name, sz);
 
         return cpy;
     }
@@ -142,39 +196,99 @@ extern void pcr_testsuite_push(pcr_testsuite *ctx, const pcr_testcase *tc,
 }
 
 
-static inline void print_border(void)
-{
-    printf("\n");
-
-    for (register size_t i = 0; i < 80; i++)
-        printf("=");
-
-    printf("\n");
-}
-
-
 extern uint64_t pcr_testsuite_run(pcr_testsuite *ctx, pcr_exception ex)
 {
     pcr_assert_handle(ctx, ex);
 
     pcr_exception_try (x) {
-        print_border();
-        printf("Initialising test suite \'%s\'...\n\n", ctx->name);
+        log_border();
+        log_write("initialising test suite \'%s\'...\n\n", ctx->name);
 
         register uint64_t pass = 0, len = ctx->len;
         for (register uint64_t i = 0; i < len; i++) {
-            printf("%lu. ", i + 1);
+            log_write("%lu. ", i + 1);
             pass += (uint64_t) pcr_testcase_run(ctx->tests[i], x);
         }
 
-        printf("\nCompleted running test suite \'%s\'...\n", ctx->name);
-        printf("%lu passed, %lu failed, %lu total", pass, len - pass, len);
-        print_border();
+        log_write("\ncompleted running test suite \'%s\'...\n", ctx->name);
+        log_write("%lu passed, %lu failed, %lu total", pass, len - pass, len);
+        log_border();
 
         return pass;
     }
 
     pcr_exception_unwind(ex);
     return 0;
+}
+
+
+struct {
+    pcr_testsuite **tests;
+    size_t cap;
+    size_t len;
+    uint64_t pass;
+    uint64_t total;
+} *thvec_hnd;
+
+
+extern void pcr_testharness_init(const char *log, pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        log_open(log);
+
+        thvec_hnd = pcr_mempool_alloc(sizeof *thvec_hnd, x);
+        thvec_hnd->len = thvec_hnd->pass = thvec_hnd->total = 0;
+        thvec_hnd->cap = 4;
+        thvec_hnd->tests = pcr_mempool_alloc(
+                                sizeof *thvec_hnd->tests * thvec_hnd->cap, x);
+    }
+
+    pcr_exception_unwind(ex);
+}
+
+
+extern void pcr_testharness_exit(void)
+{
+    log_tee("\ncompleted running %lu test suite(s)...\n", thvec_hnd->len);
+    log_tee("%lu passed, %lu failed, %lu total\n", thvec_hnd->pass,
+                    thvec_hnd->total - thvec_hnd->pass, thvec_hnd->total);
+
+    log_close();
+}
+
+
+extern void pcr_testharness_push(const pcr_testsuite *ts, pcr_exception ex)
+{
+    pcr_assert_state(thvec_hnd, ex);
+    pcr_assert_handle(ts, ex);
+
+    pcr_exception_try (x) {
+        if (pcr_hint_unlikely (thvec_hnd->len == thvec_hnd->cap)) {
+            thvec_hnd->cap *= 2;
+            const size_t newsz = sizeof *thvec_hnd->tests * thvec_hnd->cap;
+            thvec_hnd->tests = pcr_mempool_realloc(thvec_hnd->tests, newsz, x);
+        }
+
+        thvec_hnd->tests[thvec_hnd->len++] = pcr_testsuite_copy(ts, x);
+    }
+
+    pcr_exception_unwind(ex);
+}
+
+
+extern void pcr_testharness_run(pcr_exception ex)
+{
+    pcr_assert_state(thvec_hnd, ex);
+
+    pcr_exception_try (x) {
+        register uint64_t len = thvec_hnd->len;
+        for (register uint64_t i = 0; i < len; i++) {
+            thvec_hnd->pass += pcr_testsuite_run(thvec_hnd->tests[i], x);
+            thvec_hnd->total += pcr_testsuite_len(thvec_hnd->tests[i], x);
+        }
+
+    }
+
+    pcr_exception_unwind(ex);
 }
 
