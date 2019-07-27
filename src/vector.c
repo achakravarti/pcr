@@ -40,3 +40,11 @@ extern pcr_vector *pcr_vector_copy(const pcr_vector *ctx, pcr_exception ex)
     return hnd;
 }
 
+
+extern size_t pcr_vector_len(const pcr_vector *ctx, pcr_exception ex)
+{
+    pcr_assert_handle(ctx, ex);
+
+    return ctx->len;
+}
+
