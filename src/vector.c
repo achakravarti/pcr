@@ -189,7 +189,7 @@ extern void pcr_vector_iterate(const pcr_vector *ctx, pcr_iterator *itr,
     pcr_exception_try (x) {
         register size_t len = ctx->len;
         for (register size_t i = 0; i < len; i++)
-            itr(ctx->payload[i], i, opt, x);
+            itr(ctx->payload[i], i + 1, opt, x);
     }
 
     pcr_exception_unwind(ex);
@@ -207,7 +207,7 @@ extern void pcr_vector_muterate(pcr_vector **ctx, pcr_muterator *mtr, void *opt,
 
         register size_t len = (*ctx)->len;
         for (register size_t i = 0; i < len; i++)
-            mtr((*ctx)->payload[i], i, opt, x);
+            mtr((*ctx)->payload[i], i + 1, opt, x);
     }
 
     pcr_exception_unwind(ex);
