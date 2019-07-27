@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <string.h>
 #include "./api.h"
 
@@ -109,6 +110,22 @@ extern void pcr_vector_setelem(pcr_vector **ctx, const void *elem, size_t idx,
             *ctx = vec_fork(*ctx, x);
 
         memcpy((*ctx)->payload[idx - 1], elem, (*ctx)->sz);
+    }
+
+    pcr_exception_unwind(ex);
+}
+
+
+extern void pcr_vector_sort(pcr_vector **ctx, pcr_comparator *cmp,
+                                    pcr_exception ex)
+{
+    pcr_assert_handle(ctx && *ctx && cmp, ex);
+
+    pcr_exception_try (x) {
+        if ((*ctx)->ref > 1)
+            *ctx = vec_fork(*ctx, x);
+
+        qsort((*ctx)->payload, (*ctx)->len, (*ctx)->sz, cmp);
     }
 
     pcr_exception_unwind(ex);
