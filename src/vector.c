@@ -11,7 +11,7 @@ struct pcr_vector {
 };
 
 
-extern pcr_vector *pcr_vector_new(const size_t elemsz, pcr_exception ex)
+extern pcr_vector *pcr_vector_new(size_t elemsz, pcr_exception ex)
 {
     pcr_assert_range(elemsz, ex);
 
@@ -58,7 +58,7 @@ extern size_t pcr_vector_refcount(const pcr_vector *ctx, pcr_exception ex)
 }
 
 
-extern void *pcr_vector_elem(const pcr_vector *ctx, const size_t idx,
+extern void *pcr_vector_elem(const pcr_vector *ctx, size_t idx,
                                     pcr_exception ex)
 {
     pcr_assert_handle(ctx, ex);
@@ -73,5 +73,59 @@ extern void *pcr_vector_elem(const pcr_vector *ctx, const size_t idx,
 
     pcr_exception_unwind(ex);
     return NULL;
+}
+
+
+static pcr_vector *vec_fork(pcr_vector *ctx, pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        pcr_vector *frk = pcr_vector_new(ctx->sz, x);
+
+        frk->sz = ctx->sz;
+        frk->len = ctx->len;
+        frk->cap = ctx->cap;
+        frk->ref = --ctx->ref;
+
+        const size_t newsz = frk->sz * frk->cap;
+        frk->payload = pcr_mempool_alloc(newsz, x);
+        memcpy(frk->payload, ctx->payload, newsz);
+
+        return frk;
+    }
+
+    pcr_exception_unwind(ex);
+    return NULL;
+}
+
+
+extern void pcr_vector_setelem(pcr_vector **ctx, const void *elem, size_t idx,
+                                    pcr_exception ex)
+{
+    pcr_assert_handle(ctx && *ctx && elem, ex);
+    pcr_assert_range(idx && idx <= (*ctx)->len, ex);
+
+    pcr_exception_try (x) {
+        if ((*ctx)->ref > 1)
+            *ctx = vec_fork(*ctx, x);
+
+        memcpy((*ctx)->payload[idx - 1], elem, (*ctx)->sz);
+    }
+
+    pcr_exception_unwind(ex);
+}
+
+
+extern void pcr_vector_each(pcr_vector **ctx, pcr_iterator *itr, void *opt,
+                                pcr_exception ex)
+{
+    pcr_assert_handle(ctx && *ctx && itr, ex);
+
+    pcr_exception_try (x) {
+        register size_t len = (*ctx)->len;
+        for (register size_t i = 0; i < len; i++)
+            itr((*ctx)->payload[i], i, opt, x);
+    }
+
+    pcr_exception_unwind(ex);
 }
 
