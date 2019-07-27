@@ -104,23 +104,9 @@ extern bool pcr_testcase_run(pcr_testcase *ctx, pcr_exception ex)
 
 
 struct pcr_testsuite {
-    pcr_testcase **tests;
+    pcr_vector *tcvec;
     char *name;
-    size_t cap;
-    size_t len;
 };
-
-
-static void vec_resize(pcr_testsuite *ctx, pcr_exception ex)
-{
-    pcr_exception_try (x) {
-        ctx->cap *= 2;
-        ctx->tests = pcr_mempool_realloc(
-                            ctx->tests, sizeof *ctx->tests * ctx->cap, x);
-    }
-
-    pcr_exception_unwind(ex);
-}
 
 
 extern pcr_testsuite *pcr_testsuite_new(const char *name, pcr_exception ex)
@@ -129,14 +115,11 @@ extern pcr_testsuite *pcr_testsuite_new(const char *name, pcr_exception ex)
 
     pcr_exception_try (x) {
         pcr_testsuite *ts = pcr_mempool_alloc(sizeof *ts, x);
+        ts->tcvec = pcr_vector_new(sizeof (pcr_testcase), x);
 
-        ts->len = 0;
-        ts->cap = 4;
-        ts->tests = pcr_mempool_alloc(sizeof *ts->tests * ts->cap, x);
-
-        const size_t slen = strlen(name) + 1;
-        ts->name = pcr_mempool_alloc(slen, x);
-        (void) strncpy(ts->name, name, slen);
+        const size_t len = strlen(name) + 1;
+        ts->name = pcr_mempool_alloc(len, x);
+        (void) strncpy(ts->name, name, len);
 
         return ts;
     }
@@ -153,16 +136,11 @@ extern pcr_testsuite *pcr_testsuite_copy(const pcr_testsuite *ctx,
 
     pcr_exception_try (x) {
         pcr_testsuite *cpy = pcr_mempool_alloc(sizeof *cpy, x);
-        cpy->len = ctx->len;
-        cpy->cap = ctx->cap;
+        cpy->tcvec = pcr_vector_copy(ctx->tcvec, x);
 
-        size_t sz = sizeof *cpy->tests * cpy->cap;
-        cpy->tests = pcr_mempool_alloc(sz, x);
-        memcpy(cpy->tests, ctx->tests, sz);
-
-        sz = strlen(ctx->name) + 1;
-        cpy->name = pcr_mempool_alloc(sz, x);
-        strncpy(cpy->name, ctx->name, sz);
+        size_t len = strlen(ctx->name) + 1;
+        cpy->name = pcr_mempool_alloc(len, x);
+        strncpy(cpy->name, ctx->name, len);
 
         return cpy;
     }
@@ -176,7 +154,12 @@ extern size_t pcr_testsuite_len(const pcr_testsuite *ctx, pcr_exception ex)
 {
     pcr_assert_handle(ctx, ex);
 
-    return ctx->len;
+    pcr_exception_try (x) {
+        return pcr_vector_len(ctx->tcvec, x);
+    }
+
+    pcr_exception_unwind(ex);
+    return 0;
 }
 
 
@@ -186,10 +169,21 @@ extern void pcr_testsuite_push(pcr_testsuite *ctx, const pcr_testcase *tc,
     pcr_assert_handle(ctx && tc, ex);
 
     pcr_exception_try (x) {
-        if (pcr_hint_unlikely (ctx->len == ctx->cap))
-            vec_resize(ctx, x);
+        pcr_vector_push(&ctx->tcvec, tc, x);
+    }
 
-        ctx->tests[ctx->len++] = pcr_testcase_copy(tc, x);
+    pcr_exception_unwind(ex);
+}
+
+
+static void tc_run(void *elem, size_t idx, void *opt, pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        pcr_testcase *tc = (pcr_testcase *) elem;
+        uint64_t *pass = (uint64_t *) opt;
+
+        log_write("%lu. ", idx);
+        *pass += (uint64_t) pcr_testcase_run(tc, x);
     }
 
     pcr_exception_unwind(ex);
@@ -204,12 +198,10 @@ extern uint64_t pcr_testsuite_run(pcr_testsuite *ctx, pcr_exception ex)
         log_border();
         log_write("initialising test suite \'%s\'...\n\n", ctx->name);
 
-        register uint64_t pass = 0, len = ctx->len;
-        for (register uint64_t i = 0; i < len; i++) {
-            log_write("%lu. ", i + 1);
-            pass += (uint64_t) pcr_testcase_run(ctx->tests[i], x);
-        }
+        uint64_t pass = 0;
+        pcr_vector_muterate(&ctx->tcvec, &tc_run, &pass, x);
 
+        size_t len = pcr_vector_len(ctx->tcvec, x);
         log_write("\ncompleted running test suite \'%s\'...\n", ctx->name);
         log_write("%lu passed, %lu failed, %lu total", pass, len - pass, len);
         log_border();
