@@ -157,8 +157,8 @@ extern void pcr_vector_setelem(pcr_vector **ctx, const void *elem, size_t idx,
                                     pcr_exception ex);
 extern void pcr_vector_sort(pcr_vector *ctx, pcr_comparator *cmp,
                                 pcr_exception ex);
-extern void pcr_vector_each(const pcr_vector *ctx, pcr_iterator *itr, void *opt,
-                                pcr_exception ex);
+extern void pcr_vector_iterate(const pcr_vector *ctx, pcr_iterator *itr,
+                                    void *opt, pcr_exception ex);
 extern void pcr_vector_muterate(pcr_vector **ctx, pcr_muterator *mtr, void *opt,
                                         pcr_exception ex);
 

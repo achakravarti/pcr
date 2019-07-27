@@ -115,8 +115,8 @@ extern void pcr_vector_setelem(pcr_vector **ctx, const void *elem, size_t idx,
 }
 
 
-extern void pcr_vector_each(const pcr_vector *ctx, pcr_iterator *itr, void *opt,
-                                pcr_exception ex)
+extern void pcr_vector_iterate(const pcr_vector *ctx, pcr_iterator *itr,
+                                    void *opt, pcr_exception ex)
 {
     pcr_assert_handle(ctx && itr, ex);
 
