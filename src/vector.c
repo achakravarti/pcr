@@ -139,6 +139,9 @@ extern void pcr_vector_push(pcr_vector **ctx, const void *elem,
         if (pcr_hint_unlikely ((*ctx)->len == (*ctx)->cap))
             vec_resize(*ctx, x);
 
+        (*ctx)->payload[(*ctx)->len] = pcr_mempool_realloc(
+                                            (*ctx)->payload[(*ctx)->len],
+                                            (*ctx)->sz, x);
         memcpy((*ctx)->payload[(*ctx)->len++], elem, (*ctx)->sz);
     }
 
