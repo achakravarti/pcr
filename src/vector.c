@@ -48,7 +48,6 @@ extern pcr_vector *pcr_vector_copy(const pcr_vector *ctx, pcr_exception ex)
 extern size_t pcr_vector_len(const pcr_vector *ctx, pcr_exception ex)
 {
     pcr_assert_handle(ctx, ex);
-
     return ctx->len;
 }
 
@@ -56,8 +55,14 @@ extern size_t pcr_vector_len(const pcr_vector *ctx, pcr_exception ex)
 extern size_t pcr_vector_refcount(const pcr_vector *ctx, pcr_exception ex)
 {
     pcr_assert_handle(ctx, ex);
-
     return ctx->ref;
+}
+
+
+extern bool pcr_vector_sorted(const pcr_vector *ctx, pcr_exception ex)
+{
+    pcr_assert_handle(ctx, ex);
+    return ctx->sorted;
 }
 
 

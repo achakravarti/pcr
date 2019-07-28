@@ -151,6 +151,7 @@ extern pcr_vector *pcr_vector_new(size_t elemsz, pcr_exception ex);
 extern pcr_vector *pcr_vector_copy(const pcr_vector *ctx, pcr_exception ex);
 extern size_t pcr_vector_len(const pcr_vector *ctx, pcr_exception ex);
 extern size_t pcr_vector_refcount(const pcr_vector *ctx, pcr_exception ex);
+extern bool pcr_vector_sorted(const pcr_vector *ctx, pcr_exception ex);
 extern void *pcr_vector_elem(const pcr_vector *ctx, size_t idx,
                                     pcr_exception ex);
 extern void pcr_vector_setelem(pcr_vector **ctx, const void *elem, size_t idx,
