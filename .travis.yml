@@ -3,11 +3,12 @@ dist: cuttlefish
 language: c
 
 compiler:
-        - gcc
+        - musl-gcc
 
 before_install:
         - sudo apt-get update
         - sudo apt-get install libgc-dev
+        - sudo apt-get install musl-dev
 
 script:
         - make
