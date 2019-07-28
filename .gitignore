@@ -57,3 +57,7 @@ bld/
 # Log files
 *.log
 
+# Coverage files
+*.gcda
+*.gcno
+
