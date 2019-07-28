@@ -4,18 +4,9 @@ language: c
 compiler:
         - gcc
 
-#       Update GCC and GCov to version 8; this is needed for gcov to work
-#       properly; refer to the following site:
-#       https://gist.github.com/application2000/73fd6f4bf1be6600a2cf9f56315a2d91
 before_install:
         - sudo apt-get update
-        - sudo apt-get install build-essential software-properties-common -y
-        - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-        - sudo apt-get update
-        - sudo apt-get install gcc-snapshot -y
-        - sudo apt-get update
-        - sudo apt-get install gcc-8 -y
-        - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 60 --slave /usr/bin/gcov gcov /usr/bin/gcov-8
+        - sudo apt-get libgc-dev
 
 script:
         - make
