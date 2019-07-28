@@ -1,8 +1,11 @@
+FLAGS = -g -Wall -Wextra -O2 -coverage -o bld/pcr-test-runner -lgc
+
 all:
 	mkdir -p bld
-	gcc -g -O2 -Wall src/log.c src/mempool.c src/vector.c src/test.c test/runner.c -lgc -o bld/pcr-test-runner
+	gcc $(FLAGS) src/log.c src/mempool.c src/vector.c src/test.c test/runner.c
 	./bld/pcr-test-runner
 
 clean:
 	rm -rfv bld
+	rm -f *.gcda *.gcno
 
