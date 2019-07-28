@@ -1,4 +1,4 @@
-dist: cuttlefish
+dist: xenial
 
 language: c
 
@@ -9,6 +9,7 @@ before_install:
         - sudo apt-get update
         - sudo apt-get install libgc-dev
         - sudo apt-get install musl-dev
+        - sudo apt-get install musl-tools
 
 script:
         - make
