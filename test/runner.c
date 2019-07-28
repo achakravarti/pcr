@@ -85,6 +85,10 @@ int main(void)
         pcr_testharness_init("test3.log", x);
         pcr_testharness_push(ts, x);
         pcr_testharness_push(ts, x);
+        pcr_testharness_push(ts, x);
+        pcr_testharness_push(ts, x);
+        pcr_testharness_push(ts, x);
+        pcr_testharness_push(ts, x);
         pcr_testharness_run(x);
         pcr_testharness_exit();
 

@@ -138,6 +138,37 @@ extern void pcr_testharness_push(const pcr_testsuite *ts, pcr_exception ex);
 extern void pcr_testharness_run(pcr_exception ex);
 
 
+/* vector */
+
+typedef struct pcr_vector pcr_vector;
+typedef void (pcr_iterator)(const void *elem, size_t idx, void *opt,
+                                pcr_exception ex);
+typedef void (pcr_muterator)(void *elem, size_t idx, void *opt,
+                                pcr_exception ex);
+typedef int (pcr_comparator)(const void *ctx, const void *cmp);
+
+extern pcr_vector *pcr_vector_new(size_t elemsz, pcr_exception ex);
+extern pcr_vector *pcr_vector_copy(const pcr_vector *ctx, pcr_exception ex);
+extern size_t pcr_vector_len(const pcr_vector *ctx, pcr_exception ex);
+extern size_t pcr_vector_refcount(const pcr_vector *ctx, pcr_exception ex);
+extern bool pcr_vector_sorted(const pcr_vector *ctx, pcr_exception ex);
+extern void *pcr_vector_elem(const pcr_vector *ctx, size_t idx,
+                                    pcr_exception ex);
+extern void pcr_vector_setelem(pcr_vector **ctx, const void *elem, size_t idx,
+                                    pcr_exception ex);
+extern void pcr_vector_push(pcr_vector **ctx, const void *elem,
+                                    pcr_exception ex);
+extern void pcr_vector_pop(pcr_vector **ctx, pcr_exception ex);
+extern void pcr_vector_sort(pcr_vector **ctx, pcr_comparator *cmp,
+                                    pcr_exception ex);
+extern size_t pcr_vector_search(pcr_vector **ctx, const void *key,
+                                        pcr_comparator *cmp, pcr_exception ex);
+extern void pcr_vector_iterate(const pcr_vector *ctx, pcr_iterator *itr,
+                                    void *opt, pcr_exception ex);
+extern void pcr_vector_muterate(pcr_vector **ctx, pcr_muterator *mtr, void *opt,
+                                        pcr_exception ex);
+
+
 #if defined (__cplusplus)
 }
 #endif
