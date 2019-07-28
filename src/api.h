@@ -160,6 +160,8 @@ extern void pcr_vector_push(pcr_vector **ctx, const void *elem,
 extern void pcr_vector_pop(pcr_vector **ctx, pcr_exception ex);
 extern void pcr_vector_sort(pcr_vector **ctx, pcr_comparator *cmp,
                                     pcr_exception ex);
+extern size_t pcr_vector_search(pcr_vector **ctx, const void *key,
+                                        pcr_comparator *cmp, pcr_exception ex);
 extern void pcr_vector_iterate(const pcr_vector *ctx, pcr_iterator *itr,
                                     void *opt, pcr_exception ex);
 extern void pcr_vector_muterate(pcr_vector **ctx, pcr_muterator *mtr, void *opt,

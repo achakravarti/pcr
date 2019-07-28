@@ -9,6 +9,7 @@ struct pcr_vector {
     size_t len;
     size_t cap;
     size_t ref;
+    bool sorted;
 };
 
 
@@ -22,6 +23,7 @@ extern pcr_vector *pcr_vector_new(size_t elemsz, pcr_exception ex)
         ctx->sz = elemsz;
         ctx->len = ctx->ref = 0;
         ctx->cap = 4;
+        ctx->sorted = false;
         ctx->payload = pcr_mempool_alloc(elemsz * ctx->cap, x);
 
         return ctx;
@@ -88,6 +90,7 @@ static pcr_vector *vec_fork(pcr_vector **ctx, pcr_exception ex)
             frk->len = hnd->len;
             frk->cap = hnd->cap;
             frk->ref = --hnd->ref;
+            frk->sorted = hnd->sorted;
 
             const size_t newsz = frk->sz * frk->cap;
             frk->payload = pcr_mempool_alloc(newsz, x);
@@ -135,6 +138,7 @@ extern void pcr_vector_push(pcr_vector **ctx, const void *elem,
         hnd->payload[hnd->len] = pcr_mempool_realloc(hnd->payload[hnd->len],
                                                             hnd->sz, x);
         memcpy(hnd->payload[hnd->len++], elem, hnd->sz);
+        hnd->sorted = false;
     }
 
     pcr_exception_unwind(ex);
@@ -147,8 +151,10 @@ extern void pcr_vector_pop(pcr_vector **ctx, pcr_exception ex)
 
     pcr_exception_try (x) {
         pcr_vector *hnd = vec_fork(ctx, x);
-        if (pcr_hint_likely (hnd->len))
+        if (pcr_hint_likely (hnd->len)) {
             hnd->payload[hnd->len--] = NULL;
+            hnd->sorted = false;
+        }
     }
 
     pcr_exception_unwind(ex);
@@ -162,10 +168,31 @@ extern void pcr_vector_sort(pcr_vector **ctx, pcr_comparator *cmp,
 
     pcr_exception_try (x) {
         pcr_vector *hnd = vec_fork(ctx, x);
-        qsort(hnd->payload, hnd->len, hnd->sz, cmp);
+        if (!hnd->sorted) {
+            qsort(hnd->payload, hnd->len, hnd->sz, cmp);
+            hnd->sorted = true;
+        }
     }
 
     pcr_exception_unwind(ex);
+}
+
+
+extern size_t pcr_vector_search(pcr_vector **ctx, const void *key,
+                                        pcr_comparator *cmp, pcr_exception ex)
+{
+    pcr_assert_handle(ctx && *ctx && key && cmp, ex);
+
+    pcr_exception_try (x) {
+        pcr_vector_sort(ctx, cmp, x);
+
+        pcr_vector *hnd = *ctx;
+        void *where = bsearch(key, hnd->payload, hnd->len, hnd->sz, cmp);
+        return where ? ((void **) where - hnd->payload) / hnd->sz : 0;
+    }
+
+    pcr_exception_unwind(ex);
+    return 0;
 }
 
 
