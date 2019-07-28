@@ -1,4 +1,4 @@
-FLAGS = -g -std=c11 -Wall -Wextra -O2 -coverage -o bld/pcr-test-runner -lgc
+FLAGS = -g -std=c11 -Wall -Wextra -O2 -coverage -o bld/pcr-test-runner -I /usr/include -lgc
 
 all:
 	mkdir -p bld
