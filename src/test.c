@@ -257,6 +257,9 @@ extern void pcr_testharness_push(const pcr_testsuite *ts, pcr_exception ex)
 static void ts_run(void *elem, size_t idx, void *opt, pcr_exception ex)
 {
     pcr_exception_try (x) {
+        (void) idx;
+        (void) opt;
+
         pcr_testsuite *ts = (pcr_testsuite *) elem;
         th_hnd->pass += pcr_testsuite_run(ts, x);
         th_hnd->total += pcr_testsuite_len(ts, x);
