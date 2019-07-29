@@ -2,7 +2,7 @@
 #include "./api.h"
 
 
-extern pcr_string *pcr_string_new(const char *cstr, pcr_exception ex)
+extern pcr_string *pcr_string_new(const unsigned char *cstr, pcr_exception ex)
 {
     pcr_assert_handle(cstr, ex);
 
@@ -23,6 +23,12 @@ extern pcr_string *pcr_string_new(const char *cstr, pcr_exception ex)
 
 extern pcr_string *pcr_string_copy(const pcr_string *ctx, pcr_exception ex)
 {
+    pcr_exception_try (x) {
+        return pcr_string_new(ctx, x);
+    }
+
+    pcr_exception_unwind(ex);
+    return NULL;
 }
 
 
