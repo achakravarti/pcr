@@ -112,19 +112,32 @@ extern void *pcr_mempool_alloc(size_t sz, pcr_exception ex);
 extern void *pcr_mempool_realloc(void *ptr, size_t sz, pcr_exception ex);
 
 
+/* utf-8 strings */
+
+typedef char pcr_string;
+
+extern pcr_string *pcr_string_new(const char *cstr, pcr_exception ex);
+extern pcr_string *pcr_string_copy(const pcr_string *ctx, pcr_exception ex);
+extern size_t pcr_string_len(const pcr_string *ctx, pcr_exception ex);
+extern pcr_string *pcr_string_add(const pcr_string *ctx, const pcr_string *add,
+                                        pcr_exception ex);
+
+
 /* unit testing */
 
 typedef bool (pcr_unittest)(void);
 typedef struct pcr_testcase pcr_testcase;
 typedef struct pcr_testsuite pcr_testsuite;
 
-extern pcr_testcase *pcr_testcase_new(pcr_unittest *test, const char *desc,
+extern pcr_testcase *pcr_testcase_new(pcr_unittest *test,
+                                            const pcr_string *desc,
                                             pcr_exception ex);
 extern pcr_testcase *pcr_testcase_copy(const pcr_testcase *ctx,
                                             pcr_exception ex);
 extern bool pcr_testcase_run(pcr_testcase *ctx, pcr_exception ex);
 
-extern pcr_testsuite *pcr_testsuite_new(const char *name, pcr_exception ex);
+extern pcr_testsuite *pcr_testsuite_new(const pcr_string *name,
+                                            pcr_exception ex);
 extern pcr_testsuite *pcr_testsuite_copy(const pcr_testsuite *ctx,
                                                 pcr_exception ex);
 extern size_t pcr_testsuite_len(const pcr_testsuite *ctx, pcr_exception ex);
@@ -132,7 +145,7 @@ extern void pcr_testsuite_push(pcr_testsuite *ctx, const pcr_testcase *tc,
                                     pcr_exception ex);
 extern uint64_t pcr_testsuite_run(pcr_testsuite *ctx, pcr_exception ex);
 
-extern void pcr_testharness_init(const char *log, pcr_exception ex);
+extern void pcr_testharness_init(const pcr_string *log, pcr_exception ex);
 extern void pcr_testharness_exit(void);
 extern void pcr_testharness_push(const pcr_testsuite *ts, pcr_exception ex);
 extern void pcr_testharness_run(pcr_exception ex);
@@ -169,15 +182,6 @@ extern void pcr_vector_muterate(pcr_vector **ctx, pcr_muterator *mtr, void *opt,
                                         pcr_exception ex);
 
 
-/* utf-8 strings */
-
-typedef unsigned char pcr_string;
-
-extern pcr_string *pcr_string_new(const unsigned char *cstr, pcr_exception ex);
-extern pcr_string *pcr_string_copy(const pcr_string *ctx, pcr_exception ex);
-extern size_t pcr_string_len(const pcr_string *ctx, pcr_exception ex);
-extern pcr_string *pcr_string_add(const pcr_string *ctx, const pcr_string *add,
-                                        pcr_exception ex);
 
 
 #if defined (__cplusplus)

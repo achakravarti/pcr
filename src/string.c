@@ -2,7 +2,7 @@
 #include "./api.h"
 
 
-extern pcr_string *pcr_string_new(const unsigned char *cstr, pcr_exception ex)
+extern pcr_string *pcr_string_new(const char *cstr, pcr_exception ex)
 {
     pcr_assert_handle(cstr, ex);
 
