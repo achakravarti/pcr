@@ -169,6 +169,23 @@ extern void pcr_vector_muterate(pcr_vector **ctx, pcr_muterator *mtr, void *opt,
                                         pcr_exception ex);
 
 
+/* utf-8 strings */
+
+typedef unsigned char pcr_string;
+
+extern pcr_string *pcr_string_new(const char *cstr, pcr_exception ex);
+extern pcr_string *pcr_string_copy(const pcr_string *ctx, pcr_exception ex);
+extern size_t pcr_string_len(const pcr_string *ctx, pcr_exception ex);
+extern pcr_string *pcr_string_add(const pcr_string *ctx, const pcr_string *add,
+                                        pcr_exception ex);
+extern size_t pcr_string_search(const pcr_string *ctx, const pcr_string *sub,
+                                        pcr_exception ex);
+extern pcr_string *pcr_string_substr(const pcr_string *ctx, size_t start,
+                                        size_t end, pcr_exception ex);
+extern pcr_string *pcr_string_split(const pcr_string *ctx, size_t where,
+                                        pcr_exception ex);
+
+
 #if defined (__cplusplus)
 }
 #endif
