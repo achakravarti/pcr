@@ -34,6 +34,8 @@ extern pcr_string *pcr_string_copy(const pcr_string *ctx, pcr_exception ex)
 
 extern size_t pcr_string_len(const pcr_string *ctx, pcr_exception ex)
 {
+    pcr_assert_handle(ctx, ex);
+    return utf8len(ctx);
 }
 
 
