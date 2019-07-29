@@ -1,18 +1,17 @@
 #include <threads.h>
-#include <string.h>
 #include "./api.h"
 
 
 struct pcr_testcase {
     pcr_unittest *test;
-    char *desc;
+    pcr_string *desc;
 };
 
 
 static thread_local FILE *log_hnd = NULL;
 
 
-static inline void log_open(const char *path)
+static inline void log_open(const pcr_string *path)
 {
     if (pcr_hint_unlikely (log_hnd))
         (void) fclose(log_hnd);
@@ -57,7 +56,8 @@ static void log_border(void)
 }
 
 
-extern pcr_testcase *pcr_testcase_new(pcr_unittest *test, const char *desc,
+extern pcr_testcase *pcr_testcase_new(pcr_unittest *test,
+                                            const pcr_string *desc,
                                             pcr_exception ex)
 {
     pcr_assert_handle(test && desc, ex);
@@ -65,10 +65,7 @@ extern pcr_testcase *pcr_testcase_new(pcr_unittest *test, const char *desc,
     pcr_exception_try (x) {
         pcr_testcase *tc = pcr_mempool_alloc(sizeof *tc, x);
         tc->test = test;
-
-        const size_t len = strlen(desc) + 1;
-        tc->desc = pcr_mempool_alloc(len, x);
-        (void) strncpy(tc->desc, desc, len);
+        tc->desc = pcr_string_copy(desc, x);
 
         return tc;
     }
@@ -105,21 +102,18 @@ extern bool pcr_testcase_run(pcr_testcase *ctx, pcr_exception ex)
 
 struct pcr_testsuite {
     pcr_vector *tcvec;
-    char *name;
+    pcr_string *name;
 };
 
 
-extern pcr_testsuite *pcr_testsuite_new(const char *name, pcr_exception ex)
+extern pcr_testsuite *pcr_testsuite_new(const pcr_string *name, pcr_exception ex)
 {
     pcr_assert_handle(name, ex);
 
     pcr_exception_try (x) {
         pcr_testsuite *ts = pcr_mempool_alloc(sizeof *ts, x);
         ts->tcvec = pcr_vector_new(sizeof (pcr_testcase), x);
-
-        const size_t len = strlen(name) + 1;
-        ts->name = pcr_mempool_alloc(len, x);
-        (void) strncpy(ts->name, name, len);
+        ts->name = pcr_string_copy(name, x);
 
         return ts;
     }
@@ -137,10 +131,7 @@ extern pcr_testsuite *pcr_testsuite_copy(const pcr_testsuite *ctx,
     pcr_exception_try (x) {
         pcr_testsuite *cpy = pcr_mempool_alloc(sizeof *cpy, x);
         cpy->tcvec = pcr_vector_copy(ctx->tcvec, x);
-
-        size_t len = strlen(ctx->name) + 1;
-        cpy->name = pcr_mempool_alloc(len, x);
-        strncpy(cpy->name, ctx->name, len);
+        cpy->name = pcr_string_copy(ctx->name, x);
 
         return cpy;
     }
@@ -221,7 +212,7 @@ struct {
 } *th_hnd;
 
 
-extern void pcr_testharness_init(const char *log, pcr_exception ex)
+extern void pcr_testharness_init(const pcr_string *log, pcr_exception ex)
 {
     pcr_exception_try (x) {
         log_open(log);
