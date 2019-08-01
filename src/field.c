@@ -56,6 +56,8 @@ extern PCR_FIELD pcr_field_type(const pcr_field *ctx, pcr_exception ex)
 
 extern pcr_string *pcr_field_key(const pcr_field *ctx, pcr_exception ex)
 {
+    pcr_assert_handle(ctx, ex);
+    return pcr_string_copy(ctx->key, ex);
 }
 
 
