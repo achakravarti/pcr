@@ -70,6 +70,17 @@ extern size_t pcr_field_refcount(const pcr_field *ctx, pcr_exception ex)
 
 extern void *pcr_field_value(const pcr_field *ctx, pcr_exception ex)
 {
+    pcr_assert_handle(ctx, ex);
+
+    pcr_exception_try (x) {
+        void *value = pcr_mempool_alloc(ctx->sz, x);
+        memcpy(value, ctx->value, ctx->sz);
+
+        return value;
+    }
+
+    pcr_exception_unwind(ex);
+    return NULL;
 }
 
 
