@@ -38,6 +38,12 @@ extern pcr_field *pcr_field_new(PCR_FIELD type, size_t elemsz,
 
 extern pcr_field *pcr_field_copy(const pcr_field *ctx, pcr_exception ex)
 {
+    pcr_assert_handle(ctx, ex);
+
+    pcr_field *hnd = (pcr_field *) ctx;
+    hnd->ref++;
+
+    return hnd;
 }
 
 
