@@ -49,6 +49,8 @@ extern pcr_field *pcr_field_copy(const pcr_field *ctx, pcr_exception ex)
 
 extern PCR_FIELD pcr_field_type(const pcr_field *ctx, pcr_exception ex)
 {
+    pcr_assert_handle(ctx, ex);
+    return ctx->type;
 }
 
 
