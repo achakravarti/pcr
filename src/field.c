@@ -1,16 +1,38 @@
+#include <string.h>
 #include "./api.h"
 
 
 struct pcr_field {
-    PCR_FIELD type;
-    pcr_string *key;
     void *value;
+    pcr_string *key;
+    PCR_FIELD type;
+    size_t sz;
+    size_t ref;
 };
 
 
-extern pcr_field *pcr_field_new(PCR_FIELD type, const pcr_string *key,
+extern pcr_field *pcr_field_new(PCR_FIELD type, size_t elemsz,
+                                        const pcr_string *key,
                                         const void *value, pcr_exception ex)
 {
+    pcr_assert_range(elemsz, ex);
+
+    pcr_exception_try (x) {
+        pcr_field *ctx = pcr_mempool_alloc(sizeof *ctx, x);
+
+        ctx->sz = elemsz;
+        ctx->ref = 1;
+        ctx->type = type;
+        ctx->key = pcr_string_copy(key, x);
+
+        ctx->value = pcr_mempool_alloc(ctx->sz, x);
+        memcpy(ctx->value, value, ctx->sz);
+
+        return ctx;
+    }
+
+    pcr_exception_unwind(ex);
+    return NULL;
 }
 
 
