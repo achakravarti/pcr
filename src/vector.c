@@ -90,12 +90,13 @@ static pcr_vector *vec_fork(pcr_vector **ctx, pcr_exception ex)
     pcr_exception_try (x) {
         pcr_vector *hnd = *ctx;
         if (hnd->ref > 1) {
+            hnd->ref--;
             pcr_vector *frk = pcr_vector_new(hnd->sz, x);
 
             frk->sz = hnd->sz;
             frk->len = hnd->len;
             frk->cap = hnd->cap;
-            frk->ref = --hnd->ref;
+            frk->ref = 1;
             frk->sorted = hnd->sorted;
 
             const size_t newsz = frk->sz * frk->cap;
