@@ -182,6 +182,26 @@ extern void pcr_vector_muterate(pcr_vector **ctx, pcr_muterator *mtr, void *opt,
                                         pcr_exception ex);
 
 
+/* record */
+
+typedef struct pcr_field pcr_field;
+
+typedef enum PCR_FIELD {
+    PCR_FIELD_INT,
+    PCR_FIELD_UINT,
+    PCR_FIELD_REAL,
+    PCR_FIELD_TEXT
+} PCR_FIELD;
+
+extern pcr_field *pcr_field_new(PCR_FIELD type, const pcr_string *key,
+                                        const void *value, pcr_exception ex);
+extern pcr_field *pcr_field_copy(const pcr_field *ctx, pcr_exception ex);
+extern PCR_FIELD pcr_field_type(const pcr_field *ctx, pcr_exception ex);
+extern pcr_string *pcr_field_key(const pcr_field *ctx, pcr_exception ex);
+extern size_t pcr_field_refcount(const pcr_field *ctx, pcr_exception ex);
+extern void *pcr_field_value(const pcr_field *ctx, pcr_exception ex);
+extern void pcr_field_setvalue(pcr_field **ctx, const void *value,
+                                    pcr_exception *ex);
 
 
 #if defined (__cplusplus)
