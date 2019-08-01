@@ -84,8 +84,33 @@ extern void *pcr_field_value(const pcr_field *ctx, pcr_exception ex)
 }
 
 
-extern void pcr_field_setvalue(pcr_field **ctx, const void *value,
-                                    pcr_exception *ex)
+static pcr_field *field_fork(pcr_field **ctx, pcr_exception ex)
 {
+    pcr_exception_try (x) {
+        pcr_field *hnd = *ctx;
+        if (hnd->ref > 1) {
+            hnd->ref--;
+            *ctx = pcr_field_new(hnd->type, hnd->sz, hnd->key, hnd->value, x);
+        }
+
+        return *ctx;
+    }
+
+    pcr_exception_unwind(ex);
+    return NULL;
+}
+
+
+extern void pcr_field_setvalue(pcr_field **ctx, const void *value,
+                                    pcr_exception ex)
+{
+    pcr_assert_handle(ctx && *ctx && value, ex);
+
+    pcr_exception_try (x) {
+        pcr_field *hnd = field_fork(ctx, x);
+        memcpy(hnd->value, value, hnd->sz);
+    }
+
+    pcr_exception_unwind(ex);
 }
 
