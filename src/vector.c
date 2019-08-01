@@ -21,7 +21,8 @@ extern pcr_vector *pcr_vector_new(size_t elemsz, pcr_exception ex)
         pcr_vector *ctx = pcr_mempool_alloc(sizeof *ctx, x);
 
         ctx->sz = elemsz;
-        ctx->len = ctx->ref = 0;
+        ctx->len = 0;
+        ctx->ref = 1;
         ctx->cap = 4;
         ctx->sorted = false;
         ctx->payload = pcr_mempool_alloc(elemsz * ctx->cap, x);
