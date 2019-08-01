@@ -63,6 +63,8 @@ extern pcr_string *pcr_field_key(const pcr_field *ctx, pcr_exception ex)
 
 extern size_t pcr_field_refcount(const pcr_field *ctx, pcr_exception ex)
 {
+    pcr_assert_handle(ctx, ex);
+    return ctx->ref;
 }
 
 
