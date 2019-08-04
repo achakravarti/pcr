@@ -17,7 +17,10 @@ pcr_record_new(const pcr_field_vector *fields, pcr_exception ex)
 
 
 extern pcr_record *
-pcr_record_copy(const pcr_record *ctx, pcr_exception ex);
+pcr_record_copy(const pcr_record *ctx, pcr_exception ex)
+{
+    return pcr_vector_copy(ctx, ex);
+}
 
 
 extern size_t
