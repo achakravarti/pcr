@@ -105,4 +105,8 @@ pcr_record_field(const pcr_record *ctx, size_t idx, pcr_exception ex)
 
 extern void
 pcr_record_setfield(pcr_record **ctx, const pcr_field *field, size_t idx,
-                            pcr_exception ex);
+                            pcr_exception ex)
+{
+    pcr_vector_setelem(ctx, field, idx, ex);
+}
+
