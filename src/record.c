@@ -37,11 +37,11 @@ pcr_record_refcount(const pcr_record *ctx, pcr_exception ex)
 }
 
 
-static void keys_push(const void *elem, size_t idx, void *opt, pcr_exception ex)
+static void
+keys_push(const void *elem, size_t idx, void *opt, pcr_exception ex)
 {
-    pcr_string_vector *keys = (pcr_string_vector *) opt;
-
     pcr_exception_try (x) {
+        pcr_string_vector *keys = (pcr_string_vector *) opt;
         pcr_vector_push(&keys, pcr_field_key((pcr_field *) elem, x), x);
     }
 
@@ -57,6 +57,8 @@ pcr_record_keys(const pcr_record *ctx, pcr_exception ex)
     pcr_exception_try (x) {
         pcr_string_vector *keys = pcr_vector_new(sizeof (pcr_string), x);
         pcr_vector_iterate(ctx, &keys_push, &keys, x);
+
+        return keys;
     }
 
     pcr_exception_unwind(ex);
@@ -64,8 +66,34 @@ pcr_record_keys(const pcr_record *ctx, pcr_exception ex)
 }
 
 
+static void
+types_push(const void *elem, size_t idx, void *opt, pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        PCR_FIELD_VECTOR *types = (PCR_FIELD_VECTOR *) opt;
+        PCR_FIELD type = pcr_field_type((pcr_field *) elem, x);
+        pcr_vector_push(&types, &type, x);
+    }
+
+    pcr_exception_unwind(ex);
+}
+
+
 extern PCR_FIELD_VECTOR *
-pcr_record_types(const pcr_record *ctx, pcr_exception ex);
+pcr_record_types(const pcr_record *ctx, pcr_exception ex)
+{
+    pcr_assert_handle(ctx, ex);
+
+    pcr_exception_try (x) {
+        PCR_FIELD_VECTOR *types = pcr_vector_new(sizeof (PCR_FIELD), x);
+        pcr_vector_iterate(ctx, &types_push, &types, x);
+
+        return types;
+    }
+
+    pcr_exception_unwind(ex);
+    return NULL;
+}
 
 
 extern pcr_vector *
