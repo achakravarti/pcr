@@ -31,7 +31,10 @@ pcr_record_len(const pcr_record *ctx, pcr_exception ex)
 
 
 extern size_t
-pcr_record_refcount(const pcr_record *ctx, pcr_exception ex);
+pcr_record_refcount(const pcr_record *ctx, pcr_exception ex)
+{
+    return pcr_vector_refcount(ctx, ex);
+}
 
 
 extern pcr_string_vector *
