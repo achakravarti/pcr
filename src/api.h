@@ -228,10 +228,7 @@ pcr_record_keys(const pcr_record *ctx, pcr_exception ex);
 extern PCR_FIELD_VECTOR *
 pcr_record_types(const pcr_record *ctx, pcr_exception ex);
 
-extern pcr_vector *
-pcr_record_fields(const pcr_record *ctx, pcr_exception ex);
-
-extern pcr_field_vector *
+extern pcr_field *
 pcr_record_field(const pcr_record *ctx, size_t idx, pcr_exception ex);
 
 extern void
