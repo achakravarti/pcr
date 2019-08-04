@@ -205,6 +205,40 @@ extern void pcr_field_setvalue(pcr_field **ctx, const void *value,
                                     pcr_exception ex);
 
 
+typedef pcr_vector pcr_string_vector;
+typedef pcr_vector PCR_FIELD_VECTOR;
+typedef pcr_vector pcr_field_vector;
+typedef pcr_field_vector pcr_record;
+
+extern pcr_record *
+pcr_record_new(const pcr_field_vector *fields, pcr_exception ex);
+
+extern pcr_record *
+pcr_record_copy(const pcr_record *ctx, pcr_exception ex);
+
+extern size_t
+pcr_record_len(const pcr_record *ctx, pcr_exception ex);
+
+extern size_t
+pcr_record_refcount(const pcr_record *ctx, pcr_exception ex);
+
+extern pcr_string_vector *
+pcr_record_keys(const pcr_record *ctx, pcr_exception ex);
+
+extern PCR_FIELD_VECTOR *
+pcr_record_types(const pcr_record *ctx, pcr_exception ex);
+
+extern pcr_vector *
+pcr_record_fields(const pcr_record *ctx, pcr_exception ex);
+
+extern pcr_field_vector *
+pcr_record_field(const pcr_record *ctx, size_t idx, pcr_exception ex);
+
+extern void
+pcr_record_setfield(pcr_record **ctx, const pcr_field *field, size_t idx,
+                            pcr_exception ex);
+
+
 #if defined (__cplusplus)
 }
 #endif
