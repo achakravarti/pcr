@@ -24,7 +24,10 @@ pcr_record_copy(const pcr_record *ctx, pcr_exception ex)
 
 
 extern size_t
-pcr_record_len(const pcr_record *ctx, pcr_exception ex);
+pcr_record_len(const pcr_record *ctx, pcr_exception ex)
+{
+    return pcr_vector_len(ctx, ex);
+}
 
 
 extern size_t
