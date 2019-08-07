@@ -11,9 +11,9 @@ struct pcr_field {
 };
 
 
-extern pcr_field *pcr_field_new(PCR_FIELD type, size_t elemsz,
-                                        const pcr_string *key,
-                                        const void *value, pcr_exception ex)
+extern pcr_field *
+pcr_field_new(PCR_FIELD type, size_t elemsz, const pcr_string *key,
+                    const void *value, pcr_exception ex)
 {
     pcr_assert_range(elemsz, ex);
     pcr_assert_string(key, ex);
@@ -37,7 +37,8 @@ extern pcr_field *pcr_field_new(PCR_FIELD type, size_t elemsz,
 }
 
 
-extern pcr_field *pcr_field_copy(const pcr_field *ctx, pcr_exception ex)
+extern pcr_field *
+pcr_field_copy(const pcr_field *ctx, pcr_exception ex)
 {
     pcr_assert_handle(ctx, ex);
 
@@ -48,28 +49,32 @@ extern pcr_field *pcr_field_copy(const pcr_field *ctx, pcr_exception ex)
 }
 
 
-extern PCR_FIELD pcr_field_type(const pcr_field *ctx, pcr_exception ex)
+extern PCR_FIELD
+pcr_field_type(const pcr_field *ctx, pcr_exception ex)
 {
     pcr_assert_handle(ctx, ex);
     return ctx->type;
 }
 
 
-extern pcr_string *pcr_field_key(const pcr_field *ctx, pcr_exception ex)
+extern pcr_string *
+pcr_field_key(const pcr_field *ctx, pcr_exception ex)
 {
     pcr_assert_handle(ctx, ex);
     return pcr_string_copy(ctx->key, ex);
 }
 
 
-extern size_t pcr_field_refcount(const pcr_field *ctx, pcr_exception ex)
+extern size_t
+pcr_field_refcount(const pcr_field *ctx, pcr_exception ex)
 {
     pcr_assert_handle(ctx, ex);
     return ctx->ref;
 }
 
 
-extern void *pcr_field_value(const pcr_field *ctx, pcr_exception ex)
+extern void *
+pcr_field_value(const pcr_field *ctx, pcr_exception ex)
 {
     pcr_assert_handle(ctx, ex);
 
@@ -85,7 +90,8 @@ extern void *pcr_field_value(const pcr_field *ctx, pcr_exception ex)
 }
 
 
-static pcr_field *field_fork(pcr_field **ctx, pcr_exception ex)
+static pcr_field *
+field_fork(pcr_field **ctx, pcr_exception ex)
 {
     pcr_exception_try (x) {
         pcr_field *hnd = *ctx;
@@ -102,8 +108,8 @@ static pcr_field *field_fork(pcr_field **ctx, pcr_exception ex)
 }
 
 
-extern void pcr_field_setvalue(pcr_field **ctx, const void *value,
-                                    pcr_exception ex)
+extern void
+pcr_field_setvalue(pcr_field **ctx, const void *value, pcr_exception ex)
 {
     pcr_assert_handle(ctx && *ctx && value, ex);
 
@@ -138,7 +144,7 @@ pcr_field_string(const pcr_field *ctx, pcr_exception ex)
                 break;
 
             default:
-                return pcr_string_new("null", x);
+                return pcr_string_new("NULL", x);
                 break;
         }
     }
