@@ -16,6 +16,7 @@ extern pcr_field *pcr_field_new(PCR_FIELD type, size_t elemsz,
                                         const void *value, pcr_exception ex)
 {
     pcr_assert_range(elemsz, ex);
+    pcr_assert_string(key, ex);
 
     pcr_exception_try (x) {
         pcr_field *ctx = pcr_mempool_alloc(sizeof *ctx, x);
