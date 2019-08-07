@@ -55,6 +55,7 @@ typedef int PCR_EXCEPTION;
 #define PCR_EXCEPTION_STATE 0x2
 #define PCR_EXCEPTION_RANGE 0x3
 #define PCR_EXCEPTION_MEMPOOL 0x4
+#define PCR_EXCEPTION_STRING 0x5
 
 #define pcr_exception_try(x)                        \
     pcr_exception x;                                \
@@ -98,6 +99,9 @@ typedef int PCR_EXCEPTION;
 
 #define pcr_assert_handle(p, x) \
     pcr_assert_generic((p), (x), PCR_EXCEPTION_HANDLE)
+
+#define pcr_assert_string(s, x) \
+    pcr_assert_generic((s) && *(s), (x), PCR_EXCEPTION_STRING)
 
 #define pcr_assert_state(p, x) \
     pcr_assert_generic((p), (x), PCR_EXCEPTION_STATE)
