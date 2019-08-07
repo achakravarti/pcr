@@ -1,5 +1,4 @@
 #include <string.h>
-#include <inttypes.h>
 #include "./api.h"
 
 
@@ -135,6 +134,26 @@ pcr_field_string(const pcr_field *ctx, pcr_exception ex)
                 return pcr_string_copy((pcr_string *) ctx->value, x);
                 break;
         }
+    }
+
+    pcr_exception_unwind(ex);
+    return NULL;
+}
+
+
+extern pcr_string *
+pcr_field_json(const pcr_field *ctx, pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        pcr_string *value = pcr_field_string(ctx, x);
+
+        pcr_string *json = pcr_string_new("\"", x);
+        json = pcr_string_add(json, ctx->key, x);
+        json = pcr_string_add(json, "\":\"", x);
+        json = pcr_string_add(json, value, x);
+        json = pcr_string_add(json, "\"", x);
+
+        return json;
     }
 
     pcr_exception_unwind(ex);

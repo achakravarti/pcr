@@ -207,6 +207,8 @@ extern size_t pcr_field_refcount(const pcr_field *ctx, pcr_exception ex);
 extern void *pcr_field_value(const pcr_field *ctx, pcr_exception ex);
 extern void pcr_field_setvalue(pcr_field **ctx, const void *value,
                                     pcr_exception ex);
+extern pcr_string *
+pcr_field_json(const pcr_field *ctx, pcr_exception ex);
 
 
 typedef pcr_vector pcr_string_vector;
