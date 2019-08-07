@@ -1,4 +1,5 @@
 #include <string.h>
+#include <inttypes.h>
 #include "./api.h"
 
 
@@ -112,5 +113,31 @@ extern void pcr_field_setvalue(pcr_field **ctx, const void *value,
     }
 
     pcr_exception_unwind(ex);
+}
+
+
+extern pcr_string *
+pcr_field_string(const pcr_field *ctx, pcr_exception ex)
+{
+    pcr_assert_handle(ctx && ctx->value, ex);
+
+    pcr_exception_try (x) {
+        switch (ctx->type) {
+            case PCR_FIELD_INT:
+                return pcr_string_parseint(*((int64_t *) ctx->value), x);
+                break;
+
+            case PCR_FIELD_FLOAT:
+                return pcr_string_parsefloat(*((double *) ctx->value), x);
+                break;
+
+            default:
+                return pcr_string_copy((pcr_string *) ctx->value, x);
+                break;
+        }
+    }
+
+    pcr_exception_unwind(ex);
+    return NULL;
 }
 

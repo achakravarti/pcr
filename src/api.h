@@ -121,6 +121,11 @@ extern pcr_string *pcr_string_copy(const pcr_string *ctx, pcr_exception ex);
 extern size_t pcr_string_len(const pcr_string *ctx, pcr_exception ex);
 extern pcr_string *pcr_string_add(const pcr_string *ctx, const pcr_string *add,
                                         pcr_exception ex);
+extern pcr_string *
+pcr_string_parseint(int64_t value, pcr_exception ex);
+
+extern pcr_string *
+pcr_string_parsefloat(double value, pcr_exception ex);
 
 
 /* unit testing */
@@ -188,8 +193,7 @@ typedef struct pcr_field pcr_field;
 
 typedef enum PCR_FIELD {
     PCR_FIELD_INT,
-    PCR_FIELD_UINT,
-    PCR_FIELD_REAL,
+    PCR_FIELD_FLOAT,
     PCR_FIELD_TEXT
 } PCR_FIELD;
 
