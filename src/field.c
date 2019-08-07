@@ -118,20 +118,26 @@ extern void pcr_field_setvalue(pcr_field **ctx, const void *value,
 extern pcr_string *
 pcr_field_string(const pcr_field *ctx, pcr_exception ex)
 {
-    pcr_assert_handle(ctx && ctx->value, ex);
+    pcr_assert_handle(ctx, ex);
 
     pcr_exception_try (x) {
         switch (ctx->type) {
             case PCR_FIELD_INT:
+                pcr_assert_handle(ctx->value, x);
                 return pcr_string_parseint(*((int64_t *) ctx->value), x);
                 break;
 
             case PCR_FIELD_FLOAT:
+                pcr_assert_handle(ctx->value, x);
                 return pcr_string_parsefloat(*((double *) ctx->value), x);
                 break;
 
-            default:
+            case PCR_FIELD_TEXT:
                 return pcr_string_copy((pcr_string *) ctx->value, x);
+                break;
+
+            default:
+                return pcr_string_new("null", x);
                 break;
         }
     }

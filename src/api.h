@@ -192,6 +192,7 @@ extern void pcr_vector_muterate(pcr_vector **ctx, pcr_muterator *mtr, void *opt,
 typedef struct pcr_field pcr_field;
 
 typedef enum PCR_FIELD {
+    PCR_FIELD_NULL,
     PCR_FIELD_INT,
     PCR_FIELD_FLOAT,
     PCR_FIELD_TEXT
