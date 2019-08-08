@@ -6,7 +6,9 @@ extern "C" {
 #endif
 
 
-/* compiler hints */
+/******************************************************************************
+ * INTERFACE: pcr_hint
+ */
 
 #if (defined __GNUC__ || defined __clang__)
 #   define pcr_hint_hot __attribute__((hot))
@@ -22,7 +24,9 @@ extern "C" {
 #endif
 
 
-/* logging */
+/******************************************************************************
+ * INTERFACE: pcr_log
+ */
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -42,8 +46,9 @@ extern void pcr_log_write__(const char, const char *, ...);
     pcr_log_write__('E', (m), ##__VA_ARGS__)
 
 
-
-/* exception handling */
+/******************************************************************************
+ * INTERFACE: pcr_exception
+ */
 
 #include <setjmp.h>
 
@@ -90,7 +95,9 @@ typedef int PCR_EXCEPTION;
     }                              \
 
 
-/* assertion macros */
+/******************************************************************************
+ * INTERFACE: pcr_assert
+ */
 
 #define pcr_assert_generic(p, x, id)    \
     if (pcr_hint_unlikely (!(p))) {     \
@@ -110,57 +117,17 @@ typedef int PCR_EXCEPTION;
     pcr_assert_generic((p), (x), PCR_EXCEPTION_RANGE)
 
 
-/* memory arena */
+/******************************************************************************
+ * INTERFACE: pcr_mempool
+ */
 
 extern void *pcr_mempool_alloc(size_t sz, pcr_exception ex);
 extern void *pcr_mempool_realloc(void *ptr, size_t sz, pcr_exception ex);
 
 
-/* utf-8 strings */
-
-typedef char pcr_string;
-
-extern pcr_string *pcr_string_new(const char *cstr, pcr_exception ex);
-extern pcr_string *pcr_string_copy(const pcr_string *ctx, pcr_exception ex);
-extern size_t pcr_string_len(const pcr_string *ctx, pcr_exception ex);
-extern pcr_string *pcr_string_add(const pcr_string *ctx, const pcr_string *add,
-                                        pcr_exception ex);
-extern pcr_string *
-pcr_string_parseint(int64_t value, pcr_exception ex);
-
-extern pcr_string *
-pcr_string_parsefloat(double value, pcr_exception ex);
-
-
-/* unit testing */
-
-typedef bool (pcr_unittest)(void);
-typedef struct pcr_testcase pcr_testcase;
-typedef struct pcr_testsuite pcr_testsuite;
-
-extern pcr_testcase *pcr_testcase_new(pcr_unittest *test,
-                                            const pcr_string *desc,
-                                            pcr_exception ex);
-extern pcr_testcase *pcr_testcase_copy(const pcr_testcase *ctx,
-                                            pcr_exception ex);
-extern bool pcr_testcase_run(pcr_testcase *ctx, pcr_exception ex);
-
-extern pcr_testsuite *pcr_testsuite_new(const pcr_string *name,
-                                            pcr_exception ex);
-extern pcr_testsuite *pcr_testsuite_copy(const pcr_testsuite *ctx,
-                                                pcr_exception ex);
-extern size_t pcr_testsuite_len(const pcr_testsuite *ctx, pcr_exception ex);
-extern void pcr_testsuite_push(pcr_testsuite *ctx, const pcr_testcase *tc,
-                                    pcr_exception ex);
-extern uint64_t pcr_testsuite_run(pcr_testsuite *ctx, pcr_exception ex);
-
-extern void pcr_testharness_init(const pcr_string *log, pcr_exception ex);
-extern void pcr_testharness_exit(void);
-extern void pcr_testharness_push(const pcr_testsuite *ts, pcr_exception ex);
-extern void pcr_testharness_run(pcr_exception ex);
-
-
-/* vector */
+/******************************************************************************
+ * INTERFACE: pcr_vector
+ */
 
 typedef struct pcr_vector pcr_vector;
 typedef void (pcr_iterator)(const void *elem, size_t idx, void *opt,
@@ -191,7 +158,58 @@ extern void pcr_vector_muterate(pcr_vector **ctx, pcr_muterator *mtr, void *opt,
                                         pcr_exception ex);
 
 
-/* record */
+/******************************************************************************
+ * INTERFACE: pcr_string
+ */
+
+typedef char pcr_string;
+typedef pcr_vector pcr_string_vector;
+
+extern pcr_string *pcr_string_new(const char *cstr, pcr_exception ex);
+extern pcr_string *pcr_string_copy(const pcr_string *ctx, pcr_exception ex);
+extern size_t pcr_string_len(const pcr_string *ctx, pcr_exception ex);
+extern pcr_string *pcr_string_add(const pcr_string *ctx, const pcr_string *add,
+                                        pcr_exception ex);
+extern pcr_string *
+pcr_string_parseint(int64_t value, pcr_exception ex);
+
+extern pcr_string *
+pcr_string_parsefloat(double value, pcr_exception ex);
+
+
+/******************************************************************************
+ * INTERFACE: unit testing
+ */
+
+typedef bool (pcr_unittest)(void);
+typedef struct pcr_testcase pcr_testcase;
+typedef struct pcr_testsuite pcr_testsuite;
+
+extern pcr_testcase *pcr_testcase_new(pcr_unittest *test,
+                                            const pcr_string *desc,
+                                            pcr_exception ex);
+extern pcr_testcase *pcr_testcase_copy(const pcr_testcase *ctx,
+                                            pcr_exception ex);
+extern bool pcr_testcase_run(pcr_testcase *ctx, pcr_exception ex);
+
+extern pcr_testsuite *pcr_testsuite_new(const pcr_string *name,
+                                            pcr_exception ex);
+extern pcr_testsuite *pcr_testsuite_copy(const pcr_testsuite *ctx,
+                                                pcr_exception ex);
+extern size_t pcr_testsuite_len(const pcr_testsuite *ctx, pcr_exception ex);
+extern void pcr_testsuite_push(pcr_testsuite *ctx, const pcr_testcase *tc,
+                                    pcr_exception ex);
+extern uint64_t pcr_testsuite_run(pcr_testsuite *ctx, pcr_exception ex);
+
+extern void pcr_testharness_init(const pcr_string *log, pcr_exception ex);
+extern void pcr_testharness_exit(void);
+extern void pcr_testharness_push(const pcr_testsuite *ts, pcr_exception ex);
+extern void pcr_testharness_run(pcr_exception ex);
+
+
+/******************************************************************************
+ * INTERFACE: pcr_field
+ */
 
 typedef struct pcr_field pcr_field;
 
@@ -201,6 +219,9 @@ typedef enum PCR_FIELD {
     PCR_FIELD_FLOAT,
     PCR_FIELD_TEXT
 } PCR_FIELD;
+
+typedef pcr_vector PCR_FIELD_VECTOR;
+typedef pcr_vector pcr_field_vector;
 
 extern pcr_field *pcr_field_new(PCR_FIELD type, size_t elemsz,
                                         const pcr_string *key,
@@ -216,9 +237,11 @@ extern pcr_string *
 pcr_field_json(const pcr_field *ctx, pcr_exception ex);
 
 
-typedef pcr_vector pcr_string_vector;
-typedef pcr_vector PCR_FIELD_VECTOR;
-typedef pcr_vector pcr_field_vector;
+/******************************************************************************
+ * INTERFACE: pcr_record
+ */
+
+
 typedef pcr_field_vector pcr_record;
 
 extern pcr_record *
