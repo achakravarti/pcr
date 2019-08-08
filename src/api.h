@@ -246,6 +246,9 @@ extern void
 pcr_record_setfield(pcr_record **ctx, const pcr_field *field, size_t idx,
                             pcr_exception ex);
 
+extern pcr_string *
+pcr_record_json(const pcr_record *ctx, pcr_exception ex);
+
 
 #if defined (__cplusplus)
 }

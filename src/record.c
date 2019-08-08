@@ -110,3 +110,32 @@ pcr_record_setfield(pcr_record **ctx, const pcr_field *field, size_t idx,
     pcr_vector_setelem(ctx, field, idx, ex);
 }
 
+
+extern pcr_string *
+pcr_record_json(const pcr_record *ctx, pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        register size_t len = pcr_vector_len(ctx, x);
+
+        if (pcr_hint_unlikely (!len))
+            return pcr_string_new("{}", x);
+
+        register pcr_string *json = pcr_string_new("{", x);
+        register pcr_field *field;
+
+        for (register size_t i = 1; i < len; len++) {
+            field = pcr_vector_elem(ctx, i, x);
+            json = pcr_string_add(json, pcr_field_json(field, x), x);
+            json = pcr_string_add(json, ",", x);
+        }
+
+        field = pcr_vector_elem(ctx, len, x);
+        json = pcr_string_add(json, pcr_field_json(field, x), x);
+
+        return pcr_string_add(json, "}", x);
+    }
+
+    pcr_exception_unwind(ex);
+    return NULL;
+}
+
