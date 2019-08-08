@@ -32,9 +32,14 @@ extern "C" {
 #include <stdbool.h>
 #include <stdint.h>
 
-extern void pcr_log_open(const char *path, bool flush);
-extern void pcr_log_close(void);
-extern void pcr_log_write__(const char, const char *, ...);
+extern void
+pcr_log_open(const char *path, bool flush);
+
+extern void
+pcr_log_close(void);
+
+extern void
+pcr_log_write__(const char, const char *, ...);
 
 #define pcr_log_trace(m, ...) \
     pcr_log_write__('T', (m), ##__VA_ARGS__)
@@ -121,8 +126,11 @@ typedef int PCR_EXCEPTION;
  * INTERFACE: pcr_mempool
  */
 
-extern void *pcr_mempool_alloc(size_t sz, pcr_exception ex);
-extern void *pcr_mempool_realloc(void *ptr, size_t sz, pcr_exception ex);
+extern void *
+pcr_mempool_alloc(size_t sz, pcr_exception ex);
+
+extern void *
+pcr_mempool_realloc(void *ptr, size_t sz, pcr_exception ex);
 
 
 /******************************************************************************
@@ -130,32 +138,58 @@ extern void *pcr_mempool_realloc(void *ptr, size_t sz, pcr_exception ex);
  */
 
 typedef struct pcr_vector pcr_vector;
-typedef void (pcr_iterator)(const void *elem, size_t idx, void *opt,
-                                pcr_exception ex);
-typedef void (pcr_muterator)(void *elem, size_t idx, void *opt,
-                                pcr_exception ex);
-typedef int (pcr_comparator)(const void *ctx, const void *cmp);
 
-extern pcr_vector *pcr_vector_new(size_t elemsz, pcr_exception ex);
-extern pcr_vector *pcr_vector_copy(const pcr_vector *ctx, pcr_exception ex);
-extern size_t pcr_vector_len(const pcr_vector *ctx, pcr_exception ex);
-extern size_t pcr_vector_refcount(const pcr_vector *ctx, pcr_exception ex);
-extern bool pcr_vector_sorted(const pcr_vector *ctx, pcr_exception ex);
-extern void *pcr_vector_elem(const pcr_vector *ctx, size_t idx,
-                                    pcr_exception ex);
-extern void pcr_vector_setelem(pcr_vector **ctx, const void *elem, size_t idx,
-                                    pcr_exception ex);
-extern void pcr_vector_push(pcr_vector **ctx, const void *elem,
-                                    pcr_exception ex);
-extern void pcr_vector_pop(pcr_vector **ctx, pcr_exception ex);
-extern void pcr_vector_sort(pcr_vector **ctx, pcr_comparator *cmp,
-                                    pcr_exception ex);
-extern size_t pcr_vector_search(pcr_vector **ctx, const void *key,
-                                        pcr_comparator *cmp, pcr_exception ex);
-extern void pcr_vector_iterate(const pcr_vector *ctx, pcr_iterator *itr,
-                                    void *opt, pcr_exception ex);
-extern void pcr_vector_muterate(pcr_vector **ctx, pcr_muterator *mtr, void *opt,
-                                        pcr_exception ex);
+typedef void
+(pcr_iterator)(const void *elem, size_t idx, void *opt, pcr_exception ex);
+
+typedef void
+(pcr_muterator)(void *elem, size_t idx, void *opt, pcr_exception ex);
+
+typedef int
+(pcr_comparator)(const void *ctx, const void *cmp);
+
+extern pcr_vector *
+pcr_vector_new(size_t elemsz, pcr_exception ex);
+
+extern pcr_vector *
+pcr_vector_copy(const pcr_vector *ctx, pcr_exception ex);
+
+extern size_t
+pcr_vector_len(const pcr_vector *ctx, pcr_exception ex);
+
+extern size_t
+pcr_vector_refcount(const pcr_vector *ctx, pcr_exception ex);
+
+extern bool
+pcr_vector_sorted(const pcr_vector *ctx, pcr_exception ex);
+
+extern void *
+pcr_vector_elem(const pcr_vector *ctx, size_t idx, pcr_exception ex);
+
+extern void
+pcr_vector_setelem(pcr_vector **ctx, const void *elem, size_t idx,
+                        pcr_exception ex);
+
+extern void
+pcr_vector_push(pcr_vector **ctx, const void *elem, pcr_exception ex);
+
+extern void
+pcr_vector_pop(pcr_vector **ctx, pcr_exception ex);
+
+extern void
+pcr_vector_sort(pcr_vector **ctx, pcr_comparator *cmp, pcr_exception ex);
+
+extern size_t
+pcr_vector_search(pcr_vector **ctx, const void *key, pcr_comparator *cmp,
+                        pcr_exception ex);
+
+extern void
+pcr_vector_iterate(const pcr_vector *ctx, pcr_iterator *itr, void *opt,
+                        pcr_exception ex);
+
+extern void
+pcr_vector_muterate(pcr_vector **ctx, pcr_muterator *mtr, void *opt,
+                        pcr_exception ex);
 
 
 /******************************************************************************
@@ -165,11 +199,18 @@ extern void pcr_vector_muterate(pcr_vector **ctx, pcr_muterator *mtr, void *opt,
 typedef char pcr_string;
 typedef pcr_vector pcr_string_vector;
 
-extern pcr_string *pcr_string_new(const char *cstr, pcr_exception ex);
-extern pcr_string *pcr_string_copy(const pcr_string *ctx, pcr_exception ex);
-extern size_t pcr_string_len(const pcr_string *ctx, pcr_exception ex);
-extern pcr_string *pcr_string_add(const pcr_string *ctx, const pcr_string *add,
-                                        pcr_exception ex);
+extern pcr_string *
+pcr_string_new(const char *cstr, pcr_exception ex);
+
+extern pcr_string *
+pcr_string_copy(const pcr_string *ctx, pcr_exception ex);
+
+extern size_t
+pcr_string_len(const pcr_string *ctx, pcr_exception ex);
+
+extern pcr_string *
+pcr_string_add(const pcr_string *ctx, const pcr_string *add, pcr_exception ex);
+
 extern pcr_string *
 pcr_string_parseint(int64_t value, pcr_exception ex);
 
@@ -178,33 +219,62 @@ pcr_string_parsefloat(double value, pcr_exception ex);
 
 
 /******************************************************************************
- * INTERFACE: unit testing
+ * INTERFACE: pcr_testcase
  */
 
-typedef bool (pcr_unittest)(void);
+typedef bool
+(pcr_unittest)(void);
+
 typedef struct pcr_testcase pcr_testcase;
+
+extern pcr_testcase *
+pcr_testcase_new(pcr_unittest *test, const pcr_string *desc, pcr_exception ex);
+
+extern pcr_testcase *
+pcr_testcase_copy(const pcr_testcase *ctx, pcr_exception ex);
+
+extern bool
+pcr_testcase_run(pcr_testcase *ctx, pcr_exception ex);
+
+
+/******************************************************************************
+ * INTERFACE: pcr_testsuite
+ */
+
 typedef struct pcr_testsuite pcr_testsuite;
 
-extern pcr_testcase *pcr_testcase_new(pcr_unittest *test,
-                                            const pcr_string *desc,
-                                            pcr_exception ex);
-extern pcr_testcase *pcr_testcase_copy(const pcr_testcase *ctx,
-                                            pcr_exception ex);
-extern bool pcr_testcase_run(pcr_testcase *ctx, pcr_exception ex);
+extern pcr_testsuite *
+pcr_testsuite_new(const pcr_string *name, pcr_exception ex);
 
-extern pcr_testsuite *pcr_testsuite_new(const pcr_string *name,
-                                            pcr_exception ex);
-extern pcr_testsuite *pcr_testsuite_copy(const pcr_testsuite *ctx,
-                                                pcr_exception ex);
-extern size_t pcr_testsuite_len(const pcr_testsuite *ctx, pcr_exception ex);
-extern void pcr_testsuite_push(pcr_testsuite *ctx, const pcr_testcase *tc,
-                                    pcr_exception ex);
-extern uint64_t pcr_testsuite_run(pcr_testsuite *ctx, pcr_exception ex);
+extern pcr_testsuite *
+pcr_testsuite_copy(const pcr_testsuite *ctx, pcr_exception ex);
 
-extern void pcr_testharness_init(const pcr_string *log, pcr_exception ex);
-extern void pcr_testharness_exit(void);
-extern void pcr_testharness_push(const pcr_testsuite *ts, pcr_exception ex);
-extern void pcr_testharness_run(pcr_exception ex);
+extern size_t
+pcr_testsuite_len(const pcr_testsuite *ctx, pcr_exception ex);
+
+extern void
+pcr_testsuite_push(pcr_testsuite *ctx, const pcr_testcase *tc,
+                        pcr_exception ex);
+
+extern uint64_t
+pcr_testsuite_run(pcr_testsuite *ctx, pcr_exception ex);
+
+
+/******************************************************************************
+ * INTERFACE: pcr_testharness
+ */
+
+extern void
+pcr_testharness_init(const pcr_string *log, pcr_exception ex);
+
+extern void
+pcr_testharness_exit(void);
+
+extern void
+pcr_testharness_push(const pcr_testsuite *ts, pcr_exception ex);
+
+extern void
+pcr_testharness_run(pcr_exception ex);
 
 
 /******************************************************************************
@@ -223,16 +293,28 @@ typedef enum PCR_FIELD {
 typedef pcr_vector PCR_FIELD_VECTOR;
 typedef pcr_vector pcr_field_vector;
 
-extern pcr_field *pcr_field_new(PCR_FIELD type, size_t elemsz,
-                                        const pcr_string *key,
-                                        const void *value, pcr_exception ex);
-extern pcr_field *pcr_field_copy(const pcr_field *ctx, pcr_exception ex);
-extern PCR_FIELD pcr_field_type(const pcr_field *ctx, pcr_exception ex);
-extern pcr_string *pcr_field_key(const pcr_field *ctx, pcr_exception ex);
-extern size_t pcr_field_refcount(const pcr_field *ctx, pcr_exception ex);
-extern void *pcr_field_value(const pcr_field *ctx, pcr_exception ex);
-extern void pcr_field_setvalue(pcr_field **ctx, const void *value,
-                                    pcr_exception ex);
+extern pcr_field *
+pcr_field_new(PCR_FIELD type, size_t elemsz, const pcr_string *key,
+                    const void *value, pcr_exception ex);
+
+extern pcr_field *
+pcr_field_copy(const pcr_field *ctx, pcr_exception ex);
+
+extern PCR_FIELD
+pcr_field_type(const pcr_field *ctx, pcr_exception ex);
+
+extern pcr_string *
+pcr_field_key(const pcr_field *ctx, pcr_exception ex);
+
+extern size_t
+pcr_field_refcount(const pcr_field *ctx, pcr_exception ex);
+
+extern void *
+pcr_field_value(const pcr_field *ctx, pcr_exception ex);
+
+extern void
+pcr_field_setvalue(pcr_field **ctx, const void *value, pcr_exception ex);
+
 extern pcr_string *
 pcr_field_json(const pcr_field *ctx, pcr_exception ex);
 
