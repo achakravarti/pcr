@@ -389,7 +389,7 @@ extern pcr_string *
 pcr_sql_bound(const pcr_sql *ctx, pcr_exception ex);
 
 extern void
-pcr_sql_bind(pcr_sql *ctx, const pcr_field *field, pcr_exception ex);
+pcr_sql_bind(pcr_sql **ctx, const pcr_field *field, pcr_exception ex);
 
 
 #if defined (__cplusplus)
