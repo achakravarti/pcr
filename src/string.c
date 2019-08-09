@@ -84,6 +84,7 @@ pcr_string_find(const pcr_string *haystack, const pcr_string *needle,
 }
 
 
+// https://gist.github.com/stanislaw/f62c36823242c4ffea1b
 extern pcr_string *
 pcr_string_replace(const pcr_string *haystack, const pcr_string *needle,
                         const pcr_string *replace, pcr_exception ex)
@@ -108,6 +109,25 @@ pcr_string_replace(const pcr_string *haystack, const pcr_string *needle,
 
         str[len + diff] = '\0';
         return str;
+    }
+
+    pcr_exception_unwind(ex);
+    return NULL;
+}
+
+
+// https://gist.github.com/stanislaw/f62c36823242c4ffea1b
+extern pcr_string *
+pcr_string_replaceall(const pcr_string *haystack, const pcr_string *needle,
+                            const pcr_string *replace, pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        pcr_string *repl = pcr_string_replace(haystack, needle, replace, x);
+
+        while (strstr(repl, needle))
+            repl = pcr_string_replace(repl, needle, replace, x);
+
+        return repl;
     }
 
     pcr_exception_unwind(ex);

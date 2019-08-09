@@ -220,6 +220,10 @@ pcr_string_replace(const pcr_string *haystack, const pcr_string *needle,
                         const pcr_string *replace, pcr_exception ex);
 
 extern pcr_string *
+pcr_string_replaceall(const pcr_string *haystack, const pcr_string *needle,
+                            const pcr_string *replace, pcr_exception ex);
+
+extern pcr_string *
 pcr_string_parseint(int64_t value, pcr_exception ex);
 
 extern pcr_string *
