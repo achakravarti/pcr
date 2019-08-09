@@ -367,6 +367,28 @@ extern pcr_string *
 pcr_record_json(const pcr_record *ctx, pcr_exception ex);
 
 
+/******************************************************************************
+ * INTERFACE: pcr_record
+ */
+
+typedef struct pcr_sql pcr_sql;
+
+extern pcr_sql *
+pcr_sql_new(const pcr_string *raw, pcr_exception ex);
+
+extern pcr_sql *
+pcr_sql_copy(const pcr_sql *ctx, pcr_exception ex);
+
+extern pcr_string *
+pcr_sql_unbound(const pcr_sql *ctx, pcr_exception ex);
+
+extern pcr_string *
+pcr_sql_bound(const pcr_sql *ctx, pcr_exception ex);
+
+extern void
+pcr_sql_bind(pcr_sql *ctx, const pcr_field *field, pcr_exception ex);
+
+
 #if defined (__cplusplus)
 }
 #endif
