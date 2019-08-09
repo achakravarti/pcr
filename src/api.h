@@ -211,6 +211,10 @@ pcr_string_len(const pcr_string *ctx, pcr_exception ex);
 extern pcr_string *
 pcr_string_add(const pcr_string *ctx, const pcr_string *add, pcr_exception ex);
 
+extern size_t
+pcr_string_find(const pcr_string *haystack, const pcr_string *needle,
+                    pcr_exception ex);
+
 extern pcr_string *
 pcr_string_parseint(int64_t value, pcr_exception ex);
 
