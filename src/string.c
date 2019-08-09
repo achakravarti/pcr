@@ -85,6 +85,37 @@ pcr_string_find(const pcr_string *haystack, const pcr_string *needle,
 
 
 extern pcr_string *
+pcr_string_replace(const pcr_string *haystack, const pcr_string *needle,
+                        const pcr_string *replace, pcr_exception ex)
+{
+    pcr_assert_handle(haystack && needle && replace, ex);
+
+    pcr_exception_try (x) {
+        char *pos = strstr(haystack, needle);
+        if (!pos)
+            return pcr_string_copy(haystack, x);
+
+        const size_t len = strlen(haystack);
+        const size_t replen = strlen(replace);
+        const size_t needlen = strlen(needle);
+        const size_t diff = replen - needlen;
+        pcr_string *str = pcr_mempool_alloc(sizeof *str * (len + diff + 1), x);
+
+        size_t shifts = pos - haystack;
+        memcpy(str, haystack, shifts);
+        memcpy(str + shifts, replace, replen);
+        memcpy(str + shifts + replen, pos + needlen, len - shifts - needlen);
+
+        str[len + diff] = '\0';
+        return str;
+    }
+
+    pcr_exception_unwind(ex);
+    return NULL;
+}
+
+
+extern pcr_string *
 pcr_string_parseint(int64_t value, pcr_exception ex)
 {
     pcr_exception_try (x) {
