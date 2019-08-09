@@ -328,6 +328,9 @@ extern void
 pcr_field_setvalue(pcr_field **ctx, const void *value, pcr_exception ex);
 
 extern pcr_string *
+pcr_field_string(const pcr_field *ctx, pcr_exception ex);
+
+extern pcr_string *
 pcr_field_json(const pcr_field *ctx, pcr_exception ex);
 
 
@@ -368,13 +371,13 @@ pcr_record_json(const pcr_record *ctx, pcr_exception ex);
 
 
 /******************************************************************************
- * INTERFACE: pcr_record
+ * INTERFACE: pcr_sql
  */
 
 typedef struct pcr_sql pcr_sql;
 
 extern pcr_sql *
-pcr_sql_new(const pcr_string *raw, pcr_exception ex);
+pcr_sql_new(const pcr_string *unbound, pcr_exception ex);
 
 extern pcr_sql *
 pcr_sql_copy(const pcr_sql *ctx, pcr_exception ex);
