@@ -200,10 +200,39 @@ pcr_resultset_push(pcr_resultset **ctx, const pcr_attribute *attr,
 extern pcr_string *
 pcr_resultset_json(const pcr_resultset *ctx, pcr_exception ex)
 {
-    pcr_assert_handle(ctx, ex);
     pcr_exception_try (x) {
+        register size_t items = pcr_vector_len(ctx->values, x);
+        register size_t cols = pcr_vector_len(ctx->keys, x);
+        register size_t rows = items / cols;
+
+        pcr_string *json = pcr_string_new("{", x);
+        json = pcr_string_add(json, ctx->name, x);
+        json = pcr_string_add(json, ": [", x);
+
+        if (pcr_hint_unlikely (!rows))
+            return pcr_string_add(json, "]}", x);
+
+        pcr_attribute *attr;
+        for (register size_t r = 1; r <= rows; r++) {
+            register size_t c = 1;
+            json = pcr_string_add(json, "{", x);
+
+            for (; c <= cols; c++) {
+                attr = pcr_resultset_attrib(ctx, r, c, x);
+                json = pcr_string_add(json, pcr_attribute_json(attr, x), x);
+                if (pcr_hint_unlikely(c < cols))
+                    json = pcr_string_add(json, ",", x);
+            }
+
+            json = pcr_string_add(json, "}", x);
+            if (pcr_hint_unlikely ((r * c) < items))
+                json = pcr_string_add(json, ",", x);
+        }
+
+        return pcr_string_add(json, "]}", x);
     }
 
     pcr_exception_unwind(ex);
+    return NULL;
 }
 

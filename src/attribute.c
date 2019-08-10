@@ -33,8 +33,8 @@ static size_t value_size(PCR_ATTRIBUTE type, const void *value,
 
 
 extern pcr_attribute *
-pcr_field_new(PCR_ATTRIBUTE type, const pcr_string *key, const void *value,
-              pcr_exception ex)
+pcr_attribute_new(PCR_ATTRIBUTE type, const pcr_string *key, const void *value,
+                  pcr_exception ex)
 {
     pcr_assert_string(key, ex);
 
