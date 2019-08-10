@@ -341,6 +341,8 @@ pcr_field_json(const pcr_field *ctx, pcr_exception ex);
 
 typedef pcr_field_vector pcr_record;
 
+typedef pcr_vector pcr_record_vector;
+
 extern pcr_record *
 pcr_record_new(const pcr_field_vector *fields, pcr_exception ex);
 
@@ -390,6 +392,38 @@ pcr_sql_bound(const pcr_sql *ctx, pcr_exception ex);
 
 extern void
 pcr_sql_bind(pcr_sql **ctx, const pcr_field *field, pcr_exception ex);
+
+
+/******************************************************************************
+ * INTERFACE: pcr_dbase
+ */
+
+typedef struct pcr_dbase pcr_dbase;
+
+typedef enum PCR_DBASE {
+    PCR_DBASE_SQLITE
+} PCR_DBASE;
+
+extern pcr_dbase *
+pcr_dbase_new(PCR_DBASE adapter, const pcr_string *conn, pcr_exception ex);
+
+extern pcr_dbase *
+pcr_dbase_copy(const pcr_dbase *ctx, pcr_exception ex);
+
+extern pcr_record_vector *
+pcr_dbase_query(const pcr_dbase *ctx, const pcr_sql *sql, pcr_exception ex);
+
+extern void
+pcr_dbase_command(pcr_dbase *ctx, const pcr_sql *sql, pcr_exception ex);
+
+extern void
+pcr_dbase_begin(pcr_dbase *ctx, pcr_exception ex);
+
+extern void
+pcr_dbase_commit(pcr_dbase *ctx, pcr_exception ex);
+
+extern void
+pcr_dbase_rollback(pcr_dbase *ctx, pcr_exception ex);
 
 
 #if defined (__cplusplus)
