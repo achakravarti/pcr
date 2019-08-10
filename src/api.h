@@ -335,44 +335,6 @@ pcr_field_json(const pcr_field *ctx, pcr_exception ex);
 
 
 /******************************************************************************
- * INTERFACE: pcr_record
- */
-
-
-typedef pcr_field_vector pcr_record;
-
-typedef pcr_vector pcr_record_vector;
-
-extern pcr_record *
-pcr_record_new(const pcr_field_vector *fields, pcr_exception ex);
-
-extern pcr_record *
-pcr_record_copy(const pcr_record *ctx, pcr_exception ex);
-
-extern size_t
-pcr_record_len(const pcr_record *ctx, pcr_exception ex);
-
-extern size_t
-pcr_record_refcount(const pcr_record *ctx, pcr_exception ex);
-
-extern pcr_string_vector *
-pcr_record_keys(const pcr_record *ctx, pcr_exception ex);
-
-extern PCR_FIELD_VECTOR *
-pcr_record_types(const pcr_record *ctx, pcr_exception ex);
-
-extern pcr_field *
-pcr_record_field(const pcr_record *ctx, size_t idx, pcr_exception ex);
-
-extern void
-pcr_record_setfield(pcr_record **ctx, const pcr_field *field, size_t idx,
-                            pcr_exception ex);
-
-extern pcr_string *
-pcr_record_json(const pcr_record *ctx, pcr_exception ex);
-
-
-/******************************************************************************
  * INTERFACE: pcr_resultset
  */
 
@@ -418,7 +380,7 @@ pcr_resultset_push(pcr_resultset **ctx, const pcr_field *field,
                    pcr_exception ex);
 
 extern pcr_string *
-pcr_resultset_json(const pcr_record *ctx, pcr_exception ex);
+pcr_resultset_json(const pcr_resultset *ctx, pcr_exception ex);
 
 
 /******************************************************************************
