@@ -44,6 +44,14 @@ pcr_string_len(const pcr_string *ctx, pcr_exception ex)
 }
 
 
+extern int
+pcr_string_cmp(const pcr_string *lhs, const pcr_string *rhs, pcr_exception ex)
+{
+    pcr_assert_handle(lhs && rhs, ex);
+    return utf8cmp(lhs, rhs);
+}
+
+
 extern pcr_string *
 pcr_string_add(const pcr_string *ctx, const pcr_string *add, pcr_exception ex)
 {
@@ -169,3 +177,4 @@ pcr_string_parsefloat(double value, pcr_exception ex)
     pcr_exception_unwind(ex);
     return NULL;
 }
+

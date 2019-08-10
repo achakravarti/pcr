@@ -208,6 +208,9 @@ pcr_string_copy(const pcr_string *ctx, pcr_exception ex);
 extern size_t
 pcr_string_len(const pcr_string *ctx, pcr_exception ex);
 
+extern int
+pcr_string_cmp(const pcr_string *lhs, const pcr_string *rhs, pcr_exception ex);
+
 extern pcr_string *
 pcr_string_add(const pcr_string *ctx, const pcr_string *add, pcr_exception ex);
 
@@ -334,14 +337,6 @@ pcr_attribute_json(const pcr_attribute *ctx, pcr_exception ex);
 /******************************************************************************
  * INTERFACE: pcr_resultset
  */
-
-struct pcr_resultset {
-    pcr_string *name;
-    pcr_string_vector *keys;
-    PCR_ATTRIBUTE_VECTOR *types;
-    pcr_vector *values;
-    size_t ref;
-};
 
 typedef struct pcr_resultset pcr_resultset;
 
