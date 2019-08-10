@@ -100,19 +100,19 @@ sql_fork(pcr_sql **ctx, pcr_exception ex)
 
 
 extern void
-pcr_sql_bind(pcr_sql **ctx, const pcr_field *field, pcr_exception ex)
+pcr_sql_bind(pcr_sql **ctx, const pcr_attribute *attr, pcr_exception ex)
 {
     pcr_sql *hnd;
     pcr_assert_handle(ctx && (hnd = *ctx), ex);
 
     pcr_exception_try (x) {
         pcr_string *param = pcr_string_new("@", x);
-        param = pcr_string_add(param, pcr_field_key(field, x), x);
+        param = pcr_string_add(param, pcr_attribute_key(attr, x), x);
         pcr_assert_state(pcr_string_find(hnd->unbound, param, x), x);
 
-        pcr_string *arg = pcr_field_string(field, x);
+        pcr_string *arg = pcr_attribute_string(attr, x);
 
-        if (pcr_field_type(field, x) == PCR_FIELD_TEXT) {
+        if (pcr_attribute_type(attr, x) == PCR_ATTRIBUTE_TEXT) {
             pcr_string *sane = pcr_string_replaceall(arg, "\'", "\'\'", x);
 
             arg = pcr_string_new("\'", x);

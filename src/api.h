@@ -290,48 +290,45 @@ pcr_testharness_run(pcr_exception ex);
 
 
 /******************************************************************************
- * INTERFACE: pcr_field
+ * INTERFACE: pcr_attrib
  */
 
-typedef struct pcr_field pcr_field;
+typedef struct pcr_attribute pcr_attribute;
 
-typedef enum PCR_FIELD {
-    PCR_FIELD_NULL,
-    PCR_FIELD_INT,
-    PCR_FIELD_FLOAT,
-    PCR_FIELD_TEXT
-} PCR_FIELD;
+typedef enum PCR_ATTRIBUTE {
+    PCR_ATTRIBUTE_NULL,
+    PCR_ATTRIBUTE_INT,
+    PCR_ATTRIBUTE_FLOAT,
+    PCR_ATTRIBUTE_TEXT
+} PCR_ATTRIBUTE;
 
-typedef pcr_vector PCR_FIELD_VECTOR;
-typedef pcr_vector pcr_field_vector;
+typedef pcr_vector PCR_ATTRIBUTE_VECTOR;
+typedef pcr_vector pcr_attribute_vector;
 
-extern pcr_field *
-pcr_field_new(PCR_FIELD type, size_t elemsz, const pcr_string *key,
-                    const void *value, pcr_exception ex);
+extern pcr_attribute *
+pcr_attribute_new(PCR_ATTRIBUTE type, const pcr_string *key, const void *value,
+                  pcr_exception ex);
 
-extern pcr_field *
-pcr_field_copy(const pcr_field *ctx, pcr_exception ex);
+extern pcr_attribute *
+pcr_attribute_copy(const pcr_attribute *ctx, pcr_exception ex);
 
-extern PCR_FIELD
-pcr_field_type(const pcr_field *ctx, pcr_exception ex);
+extern PCR_ATTRIBUTE
+pcr_attribute_type(const pcr_attribute *ctx, pcr_exception ex);
 
 extern pcr_string *
-pcr_field_key(const pcr_field *ctx, pcr_exception ex);
-
-extern size_t
-pcr_field_refcount(const pcr_field *ctx, pcr_exception ex);
+pcr_attribute_key(const pcr_attribute *ctx, pcr_exception ex);
 
 extern void *
-pcr_field_value(const pcr_field *ctx, pcr_exception ex);
+pcr_attribute_value(const pcr_attribute *ctx, pcr_exception ex);
 
-extern void
-pcr_field_setvalue(pcr_field **ctx, const void *value, pcr_exception ex);
-
-extern pcr_string *
-pcr_field_string(const pcr_field *ctx, pcr_exception ex);
+extern size_t
+pcr_attribute_valuesz(const pcr_attribute *ctx, pcr_exception ex);
 
 extern pcr_string *
-pcr_field_json(const pcr_field *ctx, pcr_exception ex);
+pcr_attribute_string(const pcr_attribute *ctx, pcr_exception ex);
+
+extern pcr_string *
+pcr_attribute_json(const pcr_attribute *ctx, pcr_exception ex);
 
 
 /******************************************************************************
@@ -341,7 +338,7 @@ pcr_field_json(const pcr_field *ctx, pcr_exception ex);
 struct pcr_resultset {
     pcr_string *name;
     pcr_string_vector *keys;
-    PCR_FIELD_VECTOR *types;
+    PCR_ATTRIBUTE_VECTOR *types;
     pcr_vector *values;
     size_t ref;
 };
@@ -350,7 +347,7 @@ typedef struct pcr_resultset pcr_resultset;
 
 extern pcr_resultset *
 pcr_resultset_new(const pcr_string *name, const pcr_string_vector *keys,
-                  const PCR_FIELD_VECTOR *types, pcr_exception ex);
+                  const PCR_ATTRIBUTE_VECTOR *types, pcr_exception ex);
 
 extern pcr_resultset *
 pcr_resultset_copy(const pcr_resultset *ctx, pcr_exception ex);
@@ -358,7 +355,7 @@ pcr_resultset_copy(const pcr_resultset *ctx, pcr_exception ex);
 extern pcr_string_vector *
 pcr_resultset_keys(const pcr_resultset *ctx, pcr_exception ex);
 
-extern PCR_FIELD_VECTOR *
+extern PCR_ATTRIBUTE_VECTOR *
 pcr_resultset_types(const pcr_resultset *ctx, pcr_exception ex);
 
 extern size_t
@@ -367,16 +364,16 @@ pcr_resultset_rows(const pcr_resultset *ctx, pcr_exception ex);
 extern size_t
 pcr_resultset_cols(const pcr_resultset *ctx, pcr_exception ex);
 
-extern pcr_field *
-pcr_resultset_field(const pcr_resultset *ctx, size_t row, size_t col,
-                    pcr_exception ex);
+extern pcr_attribute *
+pcr_resultset_attrib(const pcr_resultset *ctx, size_t row, size_t col,
+                     pcr_exception ex);
 
 extern void
-pcr_resultset_setfield(pcr_resultset **ctx, const pcr_field *field, size_t row,
-                       size_t col, pcr_exception ex);
+pcr_resultset_setattrib(pcr_resultset **ctx, const pcr_attribute *attr,
+                        size_t row, size_t col, pcr_exception ex);
 
 extern void
-pcr_resultset_push(pcr_resultset **ctx, const pcr_field *field,
+pcr_resultset_push(pcr_resultset **ctx, const pcr_attribute *attr,
                    pcr_exception ex);
 
 extern pcr_string *
@@ -402,7 +399,7 @@ extern pcr_string *
 pcr_sql_bound(const pcr_sql *ctx, pcr_exception ex);
 
 extern void
-pcr_sql_bind(pcr_sql **ctx, const pcr_field *field, pcr_exception ex);
+pcr_sql_bind(pcr_sql **ctx, const pcr_attribute *attr, pcr_exception ex);
 
 
 /******************************************************************************
@@ -421,7 +418,7 @@ pcr_dbase_new(PCR_DBASE adapter, const pcr_string *conn, pcr_exception ex);
 extern pcr_dbase *
 pcr_dbase_copy(const pcr_dbase *ctx, pcr_exception ex);
 
-extern pcr_record_vector *
+extern pcr_resultset *
 pcr_dbase_query(const pcr_dbase *ctx, const pcr_sql *sql, pcr_exception ex);
 
 extern void
