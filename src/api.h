@@ -373,6 +373,55 @@ pcr_record_json(const pcr_record *ctx, pcr_exception ex);
 
 
 /******************************************************************************
+ * INTERFACE: pcr_resultset
+ */
+
+struct pcr_resultset {
+    pcr_string *name;
+    pcr_string_vector *keys;
+    PCR_FIELD_VECTOR *types;
+    pcr_vector *values;
+    size_t ref;
+};
+
+typedef struct pcr_resultset pcr_resultset;
+
+extern pcr_resultset *
+pcr_resultset_new(const pcr_string *name, const pcr_string_vector *keys,
+                  const PCR_FIELD_VECTOR *types, pcr_exception ex);
+
+extern pcr_resultset *
+pcr_resultset_copy(const pcr_resultset *ctx, pcr_exception ex);
+
+extern pcr_string_vector *
+pcr_resultset_keys(const pcr_resultset *ctx, pcr_exception ex);
+
+extern PCR_FIELD_VECTOR *
+pcr_resultset_types(const pcr_resultset *ctx, pcr_exception ex);
+
+extern size_t
+pcr_resultset_rows(const pcr_resultset *ctx, pcr_exception ex);
+
+extern size_t
+pcr_resultset_cols(const pcr_resultset *ctx, pcr_exception ex);
+
+extern pcr_field *
+pcr_resultset_field(const pcr_resultset *ctx, size_t row, size_t col,
+                    pcr_exception ex);
+
+extern void
+pcr_resultset_setfield(pcr_resultset **ctx, const pcr_field *field, size_t row,
+                       size_t col, pcr_exception ex);
+
+extern void
+pcr_resultset_push(pcr_resultset **ctx, const pcr_field *field,
+                   pcr_exception ex);
+
+extern pcr_string *
+pcr_resultset_json(const pcr_record *ctx, pcr_exception ex);
+
+
+/******************************************************************************
  * INTERFACE: pcr_sql
  */
 
