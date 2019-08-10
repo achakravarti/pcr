@@ -81,7 +81,8 @@ sql_fork(pcr_sql **ctx, pcr_exception ex)
     pcr_exception_try (x) {
         pcr_sql *hnd = *ctx;
 
-        if (hnd->ref-- > 1) {
+        if (hnd->ref > 1) {
+            hnd->ref--;
             pcr_string *unbound = pcr_string_copy(hnd->unbound, x);
             pcr_string *bound = pcr_string_copy(hnd->bound, x);
 
@@ -122,6 +123,20 @@ pcr_sql_bind(pcr_sql **ctx, const pcr_attribute *attr, pcr_exception ex)
 
         hnd = sql_fork(ctx, x);
         hnd->bound = pcr_string_replaceall(hnd->bound, param, arg, x);
+    }
+
+    pcr_exception_unwind(ex);
+}
+
+
+extern void
+pcr_sql_reset(pcr_sql **ctx, pcr_exception ex)
+{
+    pcr_assert_handle(ctx && *ctx, ex);
+
+    pcr_exception_try (x) {
+        pcr_sql *hnd = sql_fork(ctx, x);
+        hnd->bound = pcr_string_copy(hnd->unbound, x);
     }
 
     pcr_exception_unwind(ex);

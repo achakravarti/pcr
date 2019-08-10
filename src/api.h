@@ -396,6 +396,9 @@ pcr_sql_bound(const pcr_sql *ctx, pcr_exception ex);
 extern void
 pcr_sql_bind(pcr_sql **ctx, const pcr_attribute *attr, pcr_exception ex);
 
+extern void
+pcr_sql_reset(pcr_sql **ctx, pcr_exception ex);
+
 
 /******************************************************************************
  * INTERFACE: pcr_dbase
