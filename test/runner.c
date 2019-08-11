@@ -1,5 +1,6 @@
 #include <string.h>
 #include "../src/api.h"
+#include "./suites.h"
 
 
 int compare(int *a, int *b, pcr_exception ex)
@@ -89,6 +90,7 @@ int main(void)
         pcr_testharness_push(ts, x);
         pcr_testharness_push(ts, x);
         pcr_testharness_push(ts, x);
+        pcr_testharness_push(pcr_string_testsuite(x), x);
         pcr_testharness_run(x);
         pcr_testharness_exit();
 
