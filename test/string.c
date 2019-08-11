@@ -42,6 +42,21 @@ static bool test_new_3(void)
 }
 
 
+#define DESC_NEW_4 "pcr_string_new() throws PCR_EXCEPTION_HANDLE if passed a" \
+                   " NULL pointer for @cstr"
+static bool test_new_4(void)
+{
+    pcr_exception_try (x) {
+        (void) pcr_string_new(NULL, x);
+    }
+
+    pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        return true;
+    }
+
+    return false;
+}
+
 
 extern pcr_testsuite *
 pcr_string_testsuite(pcr_exception ex)
@@ -56,6 +71,9 @@ pcr_string_testsuite(pcr_exception ex)
         pcr_testsuite_push(ts, tc, x);
 
         tc = pcr_testcase_new(&test_new_3, DESC_NEW_3, x);
+        pcr_testsuite_push(ts, tc, x);
+
+        tc = pcr_testcase_new(&test_new_4, DESC_NEW_4, x);
         pcr_testsuite_push(ts, tc, x);
 
         return ts;
