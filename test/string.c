@@ -28,6 +28,23 @@ static bool test_new_2(void)
 }
 
 
+#define DESC_NEW_3 "pcr_string_new() can create a Unicode string"
+static bool test_new_3(void)
+{
+    pcr_exception_try (x) {
+        const char *expect = "Привет, мир!";
+        pcr_string *test = pcr_string_new(expect, x);
+
+        pcr_log_trace("expect = %s", expect);
+        pcr_log_trace("test   = %s", test);
+        return test && !strcmp(test, expect);
+    }
+
+    return false;
+}
+
+
+
 extern pcr_testsuite *
 pcr_string_testsuite(pcr_exception ex)
 {
@@ -38,6 +55,9 @@ pcr_string_testsuite(pcr_exception ex)
         pcr_testsuite_push(ts, tc, x);
 
         tc = pcr_testcase_new(&test_new_2, DESC_NEW_2, x);
+        pcr_testsuite_push(ts, tc, x);
+
+        tc = pcr_testcase_new(&test_new_3, DESC_NEW_3, x);
         pcr_testsuite_push(ts, tc, x);
 
         return ts;
