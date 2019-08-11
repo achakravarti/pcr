@@ -232,7 +232,92 @@ static bool test_cmp_3(void)
 }
 
 
+#define DESC_CMP_4 "pcr_string_cmp() detects two unequal ASCII strings"
+static bool test_cmp_4(void)
+{
+    pcr_exception_try (x) {
+        pcr_string *lhs = pcr_string_new("Hello, world!", x);
+        pcr_string *rhs = pcr_string_new("Goodbye, moon?", x);
 
+        return pcr_string_cmp(lhs, rhs, x);
+    }
+
+    return false;
+}
+
+
+#define DESC_CMP_5 "pcr_string_cmp() detects two unequal Unicode strings"
+static bool test_cmp_5(void)
+{
+    pcr_exception_try (x) {
+        pcr_string *lhs = pcr_string_new("Привет, мир!", x);
+        pcr_string *rhs = pcr_string_new("До свидания, луна?", x);
+
+        return pcr_string_cmp(lhs, rhs, x);
+    }
+
+    return false;
+}
+
+
+#define DESC_CMP_6 "pcr_string_cmp() detects a lexicographically smaller" \
+                   " ASCII string"
+static bool test_cmp_6(void)
+{
+    pcr_exception_try (x) {
+        pcr_string *lhs = pcr_string_new("Goodbye, moon?", x);
+        pcr_string *rhs = pcr_string_new("Hello, world!", x);
+
+        return pcr_string_cmp(lhs, rhs, x) < 0;
+    }
+
+    return false;
+}
+
+
+#define DESC_CMP_7 "pcr_string_cmp() detects a lexicographically smaller" \
+                   " Unicode string"
+static bool test_cmp_7(void)
+{
+    pcr_exception_try (x) {
+        pcr_string *lhs = pcr_string_new("До свидания, луна?", x);
+        pcr_string *rhs = pcr_string_new("Привет, мир!", x);
+
+        return pcr_string_cmp(lhs, rhs, x) < 0;
+    }
+
+    return false;
+}
+
+
+#define DESC_CMP_8 "pcr_string_cmp() detects a lexicographically greater" \
+                   " ASCII string"
+static bool test_cmp_8(void)
+{
+    pcr_exception_try (x) {
+        pcr_string *lhs = pcr_string_new("Goodbye, moon?", x);
+        pcr_string *rhs = pcr_string_new("Hello, world!", x);
+
+        return pcr_string_cmp(rhs, lhs, x) > 0;
+    }
+
+    return false;
+}
+
+
+#define DESC_CMP_9 "pcr_string_cmp() detects a lexicographically greater" \
+                   " Unicode string"
+static bool test_cmp_9(void)
+{
+    pcr_exception_try (x) {
+        pcr_string *lhs = pcr_string_new("До свидания, луна?", x);
+        pcr_string *rhs = pcr_string_new("Привет, мир!", x);
+
+        return pcr_string_cmp(rhs, lhs, x) > 0;
+    }
+
+    return false;
+}
 
 
 extern pcr_testsuite *
@@ -273,6 +358,18 @@ pcr_string_testsuite(pcr_exception ex)
         tc = pcr_testcase_new(&test_cmp_2, DESC_CMP_2, x);
         pcr_testsuite_push(ts, tc, x);
         tc = pcr_testcase_new(&test_cmp_3, DESC_CMP_3, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_cmp_4, DESC_CMP_4, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_cmp_5, DESC_CMP_5, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_cmp_6, DESC_CMP_6, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_cmp_7, DESC_CMP_7, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_cmp_8, DESC_CMP_9, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_cmp_9, DESC_CMP_9, x);
         pcr_testsuite_push(ts, tc, x);
 
         return ts;
