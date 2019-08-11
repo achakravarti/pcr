@@ -21,7 +21,8 @@ extern pcr_vector *pcr_vector_new(size_t elemsz, pcr_exception ex)
         pcr_vector *ctx = pcr_mempool_alloc(sizeof *ctx, x);
 
         ctx->sz = elemsz;
-        ctx->len = ctx->ref = 0;
+        ctx->len = 0;
+        ctx->ref = 1;
         ctx->cap = 4;
         ctx->sorted = false;
         ctx->payload = pcr_mempool_alloc(elemsz * ctx->cap, x);
@@ -89,12 +90,13 @@ static pcr_vector *vec_fork(pcr_vector **ctx, pcr_exception ex)
     pcr_exception_try (x) {
         pcr_vector *hnd = *ctx;
         if (hnd->ref > 1) {
+            hnd->ref--;
             pcr_vector *frk = pcr_vector_new(hnd->sz, x);
 
             frk->sz = hnd->sz;
             frk->len = hnd->len;
             frk->cap = hnd->cap;
-            frk->ref = --hnd->ref;
+            frk->ref = 1;
             frk->sorted = hnd->sorted;
 
             const size_t newsz = frk->sz * frk->cap;
