@@ -2,6 +2,11 @@
 #include "./suites.h"
 
 
+/******************************************************************************
+ * pcr_string_new() test cases
+ */
+
+
 #define DESC_NEW_1 "pcr_string_new() can create an empty string"
 static bool test_new_1(void)
 {
@@ -58,6 +63,72 @@ static bool test_new_4(void)
 }
 
 
+/******************************************************************************
+ * pcr_string_copy() test cases
+ */
+
+
+#define DESC_COPY_1 "pcr_string_copy() can copy an empty string"
+static bool test_copy_1(void)
+{
+    pcr_exception_try (x) {
+        pcr_string *test = pcr_string_new("", x);
+        pcr_string *copy = pcr_string_copy(test, x);
+
+        return copy && !*copy;
+    }
+
+    return false;
+}
+
+
+#define DESC_COPY_2 "pcr_string_copy() can copy an ASCII string"
+static bool test_copy_2(void)
+{
+    pcr_exception_try (x) {
+        const char *expect = "Hello, world!";
+        pcr_string *test = pcr_string_new(expect, x);
+        pcr_string *copy = pcr_string_copy(test, x);
+
+        return test && !strcmp(copy, expect);
+    }
+
+    return false;
+}
+
+
+#define DESC_COPY_3 "pcr_string_copy() can copy a Unicode string"
+static bool test_copy_3(void)
+{
+    pcr_exception_try (x) {
+        const char *expect = "Привет, мир!";
+        pcr_string *test = pcr_string_new(expect, x);
+        pcr_string *copy = pcr_string_copy(test, x);
+
+        return test && !strcmp(copy, expect);
+    }
+
+    return false;
+}
+
+
+#define DESC_COPY_4 "pcr_string_copy() throws PCR_EXCEPTION_HANDLE if passed a" \
+                   " NULL pointer for @ctx"
+static bool test_copy_4(void)
+{
+    pcr_exception_try (x) {
+        (void) pcr_string_copy(NULL, x);
+    }
+
+    pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        return true;
+    }
+
+    return false;
+}
+
+
+
 extern pcr_testsuite *
 pcr_string_testsuite(pcr_exception ex)
 {
@@ -66,14 +137,20 @@ pcr_string_testsuite(pcr_exception ex)
 
         pcr_testcase *tc = pcr_testcase_new(&test_new_1, DESC_NEW_1, x);
         pcr_testsuite_push(ts, tc, x);
-
         tc = pcr_testcase_new(&test_new_2, DESC_NEW_2, x);
         pcr_testsuite_push(ts, tc, x);
-
         tc = pcr_testcase_new(&test_new_3, DESC_NEW_3, x);
         pcr_testsuite_push(ts, tc, x);
-
         tc = pcr_testcase_new(&test_new_4, DESC_NEW_4, x);
+        pcr_testsuite_push(ts, tc, x);
+
+        tc = pcr_testcase_new(&test_copy_1, DESC_COPY_1, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_copy_2, DESC_COPY_2, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_copy_3, DESC_COPY_3, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_copy_4, DESC_COPY_4, x);
         pcr_testsuite_push(ts, tc, x);
 
         return ts;
