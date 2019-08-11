@@ -185,6 +185,53 @@ static bool test_len_4(void)
 }
 
 
+/******************************************************************************
+ * pcr_string_cmp() test cases
+ */
+
+
+#define DESC_CMP_1 "pcr_string_cmp() detects two equal null strings"
+static bool test_cmp_1(void)
+{
+    pcr_exception_try (x) {
+        pcr_string *lhs = pcr_string_new("", x);
+        pcr_string *rhs = pcr_string_new("", x);
+
+        return !pcr_string_cmp(lhs, rhs, x);
+    }
+
+    return false;
+}
+
+
+#define DESC_CMP_2 "pcr_string_cmp() detects two equal ASCII strings"
+static bool test_cmp_2(void)
+{
+    pcr_exception_try (x) {
+        pcr_string *lhs = pcr_string_new("Hello, world!", x);
+        pcr_string *rhs = pcr_string_new("Hello, world!", x);
+
+        return !pcr_string_cmp(lhs, rhs, x);
+    }
+
+    return false;
+}
+
+
+#define DESC_CMP_3 "pcr_string_cmp() detects two equal Unicode strings"
+static bool test_cmp_3(void)
+{
+    pcr_exception_try (x) {
+        pcr_string *lhs = pcr_string_new("Привет, мир!", x);
+        pcr_string *rhs = pcr_string_new("Привет, мир!", x);
+
+        return !pcr_string_cmp(lhs, rhs, x);
+    }
+
+    return false;
+}
+
+
 
 
 
@@ -219,6 +266,13 @@ pcr_string_testsuite(pcr_exception ex)
         tc = pcr_testcase_new(&test_len_3, DESC_LEN_3, x);
         pcr_testsuite_push(ts, tc, x);
         tc = pcr_testcase_new(&test_len_4, DESC_LEN_4, x);
+        pcr_testsuite_push(ts, tc, x);
+
+        tc = pcr_testcase_new(&test_cmp_1, DESC_CMP_1, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_cmp_2, DESC_CMP_2, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_cmp_3, DESC_CMP_3, x);
         pcr_testsuite_push(ts, tc, x);
 
         return ts;
