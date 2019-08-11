@@ -320,6 +320,38 @@ static bool test_cmp_9(void)
 }
 
 
+#define DESC_CMP_10 "pcr_string_cmp() throws PCR_EXCEPTION_HANDLE if passed a" \
+                   " NULL pointer for @lhs"
+static bool test_cmp_10(void)
+{
+    pcr_exception_try (x) {
+        (void) pcr_string_cmp(NULL, "Hello, world!", x);
+    }
+
+    pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        return true;
+    }
+
+    return false;
+}
+
+
+#define DESC_CMP_11 "pcr_string_cmp() throws PCR_EXCEPTION_HANDLE if passed a" \
+                   " NULL pointer for @rhs"
+static bool test_cmp_11(void)
+{
+    pcr_exception_try (x) {
+        (void) pcr_string_cmp("Hello, world!", NULL, x);
+    }
+
+    pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        return true;
+    }
+
+    return false;
+}
+
+
 extern pcr_testsuite *
 pcr_string_testsuite(pcr_exception ex)
 {
@@ -370,6 +402,10 @@ pcr_string_testsuite(pcr_exception ex)
         tc = pcr_testcase_new(&test_cmp_8, DESC_CMP_9, x);
         pcr_testsuite_push(ts, tc, x);
         tc = pcr_testcase_new(&test_cmp_9, DESC_CMP_9, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_cmp_10, DESC_CMP_10, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_cmp_11, DESC_CMP_11, x);
         pcr_testsuite_push(ts, tc, x);
 
         return ts;
