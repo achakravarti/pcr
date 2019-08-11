@@ -10,11 +10,9 @@ pcr_string_new(const char *cstr, pcr_exception ex)
     pcr_assert_handle(cstr, ex);
 
     pcr_exception_try (x) {
-        const size_t len = utf8len(cstr) + 1;
-        pcr_string *ctx = pcr_mempool_alloc(sizeof *ctx * len, x);
-
-        (void) utf8cpy(ctx, cstr);
-        ctx[len] = '\0';
+        const size_t sz = strlen(cstr) + 1;
+        pcr_string *ctx = pcr_mempool_alloc(sz, x);
+        (void) strncpy(ctx, cstr, sz);
 
         return ctx;
     }

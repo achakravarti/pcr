@@ -35,8 +35,6 @@ static bool test_new_3(void)
         const char *expect = "Привет, мир!";
         pcr_string *test = pcr_string_new(expect, x);
 
-        pcr_log_trace("expect = %s", expect);
-        pcr_log_trace("test   = %s", test);
         return test && !strcmp(test, expect);
     }
 
