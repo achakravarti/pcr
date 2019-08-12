@@ -46,7 +46,7 @@ extern int
 pcr_string_cmp(const pcr_string *lhs, const pcr_string *rhs, pcr_exception ex)
 {
     pcr_assert_handle(lhs && rhs, ex);
-    return utf8cmp(lhs, rhs);
+    return strcmp(lhs, rhs);
 }
 
 
@@ -57,12 +57,12 @@ pcr_string_add(const pcr_string *ctx, const pcr_string *add, pcr_exception ex)
 
 
     pcr_exception_try (x) {
-        const size_t llen = utf8len(ctx);
-        const size_t rlen = utf8len(add);
+        const size_t llen = strlen(ctx) + 1;
+        const size_t rlen = strlen(add) + 1;
 
-        pcr_string *cat = pcr_mempool_alloc(sizeof *cat * (llen + rlen + 1), x);
-        (void) utf8ncpy(cat, ctx, llen);
-        return utf8ncat(cat, add, rlen);
+        pcr_string *cat = pcr_mempool_alloc(sizeof *cat * (llen + rlen), x);
+        (void) strncpy(cat, ctx, llen);
+        return strncat(cat, add, rlen);
     }
 
     pcr_exception_unwind(ex);
