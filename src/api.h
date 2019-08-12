@@ -238,7 +238,7 @@ pcr_string_parsefloat(double value, pcr_exception ex);
  */
 
 typedef bool
-(pcr_unittest)(void);
+(pcr_unittest)(pcr_exception ex);
 
 typedef struct pcr_testcase pcr_testcase;
 
