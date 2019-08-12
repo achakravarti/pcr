@@ -639,14 +639,17 @@ static bool test_find_11(pcr_exception ex)
  */
 
 
-#define DESC_REPLACE_1 "pcr_string_replace() replaces a null string"
+#define DESC_REPLACE_1 "pcr_string_replace() throws PCR_EXCEPTION_STRING if" \
+                       " passed a null string for @needle"
 static bool test_replace_1(pcr_exception ex)
 {
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("", x);
-        test = pcr_string_replace(test, "", "Hello, world!", x);
+        (void) pcr_string_replace(test, "", "Hello, world!", x);
+    }
 
-        return !strcmp(test, "Hello, world!");
+    pcr_exception_catch (PCR_EXCEPTION_STRING) {
+        return true;
     }
 
     pcr_exception_unwind(ex);
@@ -798,7 +801,7 @@ static bool test_replace_10(pcr_exception ex)
 }
 
 
-#define DESC_REPLACE_11 "pcr_string_replace() throws PCR_EXCEPTION_HANDLE if" \
+#define DESC_REPLACE_11 "pcr_string_replace() throws PCR_EXCEPTION_STRING if" \
                         " passed a NULL pointer for @needle"
 static bool test_replace_11(pcr_exception ex)
 {
@@ -807,7 +810,7 @@ static bool test_replace_11(pcr_exception ex)
         (void) pcr_string_replace(test, NULL, "", x);
     }
 
-    pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+    pcr_exception_catch (PCR_EXCEPTION_STRING) {
         return true;
     }
 
@@ -839,14 +842,18 @@ static bool test_replace_12(pcr_exception ex)
  */
 
 
-#define DESC_REPLACEALL_1 "pcr_string_replaceall() replaces a null string"
+#define DESC_REPLACEALL_1 "pcr_string_replaceall() throws"                \
+                          " PCR_EXCEPTION_STRING if passed a null string" \
+                          " for @needle"
 static bool test_replaceall_1(pcr_exception ex)
 {
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("", x);
-        test = pcr_string_replaceall(test, "", "Hello, world!", x);
+        (void) pcr_string_replaceall(test, "", "Hello, world!", x);
+    }
 
-        return !strcmp(test, "Hello, world!");
+    pcr_exception_catch (PCR_EXCEPTION_STRING) {
+        return true;
     }
 
     pcr_exception_unwind(ex);
@@ -1002,7 +1009,7 @@ static bool test_replaceall_10(pcr_exception ex)
 
 
 #define DESC_REPLACEALL_11 "pcr_string_replaceall() throws"                 \
-                           " PCR_EXCEPTION_HANDLE if passed a NULL pointer" \
+                           " PCR_EXCEPTION_STRING if passed a NULL pointer" \
                            " for @needle"
 static bool test_replaceall_11(pcr_exception ex)
 {
@@ -1011,7 +1018,7 @@ static bool test_replaceall_11(pcr_exception ex)
         (void) pcr_string_replaceall(test, NULL, "", x);
     }
 
-    pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+    pcr_exception_catch (PCR_EXCEPTION_STRING) {
         return true;
     }
 
