@@ -95,7 +95,8 @@ extern pcr_string *
 pcr_string_replace(const pcr_string *haystack, const pcr_string *needle,
                    const pcr_string *replace, pcr_exception ex)
 {
-    pcr_assert_handle(haystack && needle && replace, ex);
+    pcr_assert_handle(haystack && replace, ex);
+    pcr_assert_string(needle, ex);
 
     pcr_exception_try (x) {
         char *pos = strstr(haystack, needle);
@@ -130,10 +131,8 @@ pcr_string_replaceall(const pcr_string *haystack, const pcr_string *needle,
     pcr_exception_try (x) {
         pcr_string *repl = pcr_string_replace(haystack, needle, replace, x);
 
-        if (pcr_hint_likely ((*needle))) {
-            while (strstr(repl, needle))
-                repl = pcr_string_replace(repl, needle, replace, x);
-        }
+        while (strstr(repl, needle))
+            repl = pcr_string_replace(repl, needle, replace, x);
 
         return repl;
     }
