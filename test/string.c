@@ -8,19 +8,20 @@
 
 
 #define DESC_NEW_1 "pcr_string_new() can create an empty string"
-static bool test_new_1(void)
+static bool test_new_1(pcr_exception ex)
 {
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("", x);
         return test && !*test;
     }
 
+    pcr_exception_unwind(ex);
     return false;
 }
 
 
 #define DESC_NEW_2 "pcr_string_new() can create an ASCII string"
-static bool test_new_2(void)
+static bool test_new_2(pcr_exception ex)
 {
     pcr_exception_try (x) {
         const char *expect = "Hello, world!";
@@ -29,12 +30,13 @@ static bool test_new_2(void)
         return test && !strcmp(test, expect);
     }
 
+    pcr_exception_unwind(ex);
     return false;
 }
 
 
 #define DESC_NEW_3 "pcr_string_new() can create a Unicode string"
-static bool test_new_3(void)
+static bool test_new_3(pcr_exception ex)
 {
     pcr_exception_try (x) {
         const char *expect = "Привет, мир!";
@@ -43,13 +45,14 @@ static bool test_new_3(void)
         return test && !strcmp(test, expect);
     }
 
+    pcr_exception_unwind(ex);
     return false;
 }
 
 
 #define DESC_NEW_4 "pcr_string_new() throws PCR_EXCEPTION_HANDLE if passed a" \
                    " NULL pointer for @cstr"
-static bool test_new_4(void)
+static bool test_new_4(pcr_exception ex)
 {
     pcr_exception_try (x) {
         (void) pcr_string_new(NULL, x);
@@ -59,6 +62,7 @@ static bool test_new_4(void)
         return true;
     }
 
+    pcr_exception_unwind(ex);
     return false;
 }
 
@@ -69,7 +73,7 @@ static bool test_new_4(void)
 
 
 #define DESC_COPY_1 "pcr_string_copy() can copy an empty string"
-static bool test_copy_1(void)
+static bool test_copy_1(pcr_exception ex)
 {
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("", x);
@@ -78,12 +82,13 @@ static bool test_copy_1(void)
         return copy && !*copy;
     }
 
+    pcr_exception_unwind(ex);
     return false;
 }
 
 
 #define DESC_COPY_2 "pcr_string_copy() can copy an ASCII string"
-static bool test_copy_2(void)
+static bool test_copy_2(pcr_exception ex)
 {
     pcr_exception_try (x) {
         const char *expect = "Hello, world!";
@@ -93,12 +98,13 @@ static bool test_copy_2(void)
         return test && !strcmp(copy, expect);
     }
 
+    pcr_exception_unwind(ex);
     return false;
 }
 
 
 #define DESC_COPY_3 "pcr_string_copy() can copy a Unicode string"
-static bool test_copy_3(void)
+static bool test_copy_3(pcr_exception ex)
 {
     pcr_exception_try (x) {
         const char *expect = "Привет, мир!";
@@ -108,13 +114,14 @@ static bool test_copy_3(void)
         return test && !strcmp(copy, expect);
     }
 
+    pcr_exception_unwind(ex);
     return false;
 }
 
 
 #define DESC_COPY_4 "pcr_string_copy() throws PCR_EXCEPTION_HANDLE if passed a" \
                    " NULL pointer for @ctx"
-static bool test_copy_4(void)
+static bool test_copy_4(pcr_exception ex)
 {
     pcr_exception_try (x) {
         (void) pcr_string_copy(NULL, x);
@@ -124,6 +131,7 @@ static bool test_copy_4(void)
         return true;
     }
 
+    pcr_exception_unwind(ex);
     return false;
 }
 
@@ -134,44 +142,47 @@ static bool test_copy_4(void)
 
 
 #define DESC_LEN_1 "pcr_string_len() reports 0 for a null string"
-static bool test_len_1(void)
+static bool test_len_1(pcr_exception ex)
 {
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("", x);
         return pcr_string_len(test, x) == 0;
     }
 
+    pcr_exception_unwind(ex);
     return false;
 }
 
 
 #define DESC_LEN_2 "pcr_string_len() reports the length of an ASCII string"
-static bool test_len_2(void)
+static bool test_len_2(pcr_exception ex)
 {
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello, world!", x);
         return pcr_string_len(test, x) == 13;
     }
 
+    pcr_exception_unwind(ex);
     return false;
 }
 
 
 #define DESC_LEN_3 "pcr_string_len() reports the length of a Unicode string"
-static bool test_len_3(void)
+static bool test_len_3(pcr_exception ex)
 {
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Привет, мир!", x);
         return pcr_string_len(test, x) == 12;
     }
 
+    pcr_exception_unwind(ex);
     return false;
 }
 
 
 #define DESC_LEN_4 "pcr_string_len() throws PCR_EXCEPTION_HANDLE if passed a" \
                    " NULL pointer for @ctx"
-static bool test_len_4(void)
+static bool test_len_4(pcr_exception ex)
 {
     pcr_exception_try (x) {
         (void) pcr_string_len(NULL, x);
@@ -181,6 +192,7 @@ static bool test_len_4(void)
         return true;
     }
 
+    pcr_exception_unwind(ex);
     return false;
 }
 
@@ -191,7 +203,7 @@ static bool test_len_4(void)
 
 
 #define DESC_CMP_1 "pcr_string_cmp() detects two equal null strings"
-static bool test_cmp_1(void)
+static bool test_cmp_1(pcr_exception ex)
 {
     pcr_exception_try (x) {
         pcr_string *lhs = pcr_string_new("", x);
@@ -200,12 +212,13 @@ static bool test_cmp_1(void)
         return !pcr_string_cmp(lhs, rhs, x);
     }
 
+    pcr_exception_unwind(ex);
     return false;
 }
 
 
 #define DESC_CMP_2 "pcr_string_cmp() detects two equal ASCII strings"
-static bool test_cmp_2(void)
+static bool test_cmp_2(pcr_exception ex)
 {
     pcr_exception_try (x) {
         pcr_string *lhs = pcr_string_new("Hello, world!", x);
@@ -214,12 +227,13 @@ static bool test_cmp_2(void)
         return !pcr_string_cmp(lhs, rhs, x);
     }
 
+    pcr_exception_unwind(ex);
     return false;
 }
 
 
 #define DESC_CMP_3 "pcr_string_cmp() detects two equal Unicode strings"
-static bool test_cmp_3(void)
+static bool test_cmp_3(pcr_exception ex)
 {
     pcr_exception_try (x) {
         pcr_string *lhs = pcr_string_new("Привет, мир!", x);
@@ -228,12 +242,13 @@ static bool test_cmp_3(void)
         return !pcr_string_cmp(lhs, rhs, x);
     }
 
+    pcr_exception_unwind(ex);
     return false;
 }
 
 
 #define DESC_CMP_4 "pcr_string_cmp() detects two unequal ASCII strings"
-static bool test_cmp_4(void)
+static bool test_cmp_4(pcr_exception ex)
 {
     pcr_exception_try (x) {
         pcr_string *lhs = pcr_string_new("Hello, world!", x);
@@ -242,12 +257,13 @@ static bool test_cmp_4(void)
         return pcr_string_cmp(lhs, rhs, x);
     }
 
+    pcr_exception_unwind(ex);
     return false;
 }
 
 
 #define DESC_CMP_5 "pcr_string_cmp() detects two unequal Unicode strings"
-static bool test_cmp_5(void)
+static bool test_cmp_5(pcr_exception ex)
 {
     pcr_exception_try (x) {
         pcr_string *lhs = pcr_string_new("Привет, мир!", x);
@@ -256,13 +272,14 @@ static bool test_cmp_5(void)
         return pcr_string_cmp(lhs, rhs, x);
     }
 
+    pcr_exception_unwind(ex);
     return false;
 }
 
 
 #define DESC_CMP_6 "pcr_string_cmp() detects a lexicographically smaller" \
                    " ASCII string"
-static bool test_cmp_6(void)
+static bool test_cmp_6(pcr_exception ex)
 {
     pcr_exception_try (x) {
         pcr_string *lhs = pcr_string_new("Goodbye, moon?", x);
@@ -271,13 +288,14 @@ static bool test_cmp_6(void)
         return pcr_string_cmp(lhs, rhs, x) < 0;
     }
 
+    pcr_exception_unwind(ex);
     return false;
 }
 
 
 #define DESC_CMP_7 "pcr_string_cmp() detects a lexicographically smaller" \
                    " Unicode string"
-static bool test_cmp_7(void)
+static bool test_cmp_7(pcr_exception ex)
 {
     pcr_exception_try (x) {
         pcr_string *lhs = pcr_string_new("До свидания, луна?", x);
@@ -286,13 +304,14 @@ static bool test_cmp_7(void)
         return pcr_string_cmp(lhs, rhs, x) < 0;
     }
 
+    pcr_exception_unwind(ex);
     return false;
 }
 
 
 #define DESC_CMP_8 "pcr_string_cmp() detects a lexicographically greater" \
                    " ASCII string"
-static bool test_cmp_8(void)
+static bool test_cmp_8(pcr_exception ex)
 {
     pcr_exception_try (x) {
         pcr_string *lhs = pcr_string_new("Goodbye, moon?", x);
@@ -301,13 +320,14 @@ static bool test_cmp_8(void)
         return pcr_string_cmp(rhs, lhs, x) > 0;
     }
 
+    pcr_exception_unwind(ex);
     return false;
 }
 
 
 #define DESC_CMP_9 "pcr_string_cmp() detects a lexicographically greater" \
                    " Unicode string"
-static bool test_cmp_9(void)
+static bool test_cmp_9(pcr_exception ex)
 {
     pcr_exception_try (x) {
         pcr_string *lhs = pcr_string_new("До свидания, луна?", x);
@@ -316,13 +336,14 @@ static bool test_cmp_9(void)
         return pcr_string_cmp(rhs, lhs, x) > 0;
     }
 
+    pcr_exception_unwind(ex);
     return false;
 }
 
 
 #define DESC_CMP_10 "pcr_string_cmp() throws PCR_EXCEPTION_HANDLE if passed a" \
                    " NULL pointer for @lhs"
-static bool test_cmp_10(void)
+static bool test_cmp_10(pcr_exception ex)
 {
     pcr_exception_try (x) {
         (void) pcr_string_cmp(NULL, "Hello, world!", x);
@@ -332,13 +353,14 @@ static bool test_cmp_10(void)
         return true;
     }
 
+    pcr_exception_unwind(ex);
     return false;
 }
 
 
 #define DESC_CMP_11 "pcr_string_cmp() throws PCR_EXCEPTION_HANDLE if passed a" \
                    " NULL pointer for @rhs"
-static bool test_cmp_11(void)
+static bool test_cmp_11(pcr_exception ex)
 {
     pcr_exception_try (x) {
         (void) pcr_string_cmp("Hello, world!", NULL, x);
@@ -348,10 +370,105 @@ static bool test_cmp_11(void)
         return true;
     }
 
+    pcr_exception_unwind(ex);
     return false;
 }
 
 
+/******************************************************************************
+ * pcr_string_add() test cases
+ */
+
+
+#define DESC_ADD_1 "pcr_string_add() adds two null strings"
+static bool test_add_1(pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        pcr_string *test = pcr_string_new("", x);
+        test = pcr_string_add(test, "", x);
+
+        return !*test;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+#define DESC_ADD_2 "pcr_string_add() adds two ASCII strings"
+static bool test_add_2(pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        pcr_string *test = pcr_string_new("Hello", x);
+        test = pcr_string_add(test, ", ", x);
+        test = pcr_string_add(test, "world", x);
+        test = pcr_string_add(test, "!", x);
+
+        return !strcmp(test, "Hello, world!");
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+#define DESC_ADD_3 "pcr_string_add() adds two Unicode strings"
+static bool test_add_3(pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        const char *expect = "До свидания, луна?";
+
+        pcr_string *test = pcr_string_new("До свидания", x);
+        test = pcr_string_add(test, ", ", x);
+        test = pcr_string_add(test, "луна", x);
+        test = pcr_string_add(test, "?", x);
+
+        return !strcmp(test, expect);
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+#define DESC_ADD_4 "pcr_string_add() throws PCR_EXCEPTION_HANDLE if passed a" \
+                   " NULL pointer for @ctx"
+static bool test_add_4(pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        pcr_string *test = pcr_string_new("Hello", x);
+        (void) test;
+
+        test = pcr_string_add(NULL, ", ", x);
+        (void) test;
+    }
+
+    pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        return true;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+
+#define DESC_ADD_5 "pcr_string_add() throws PCR_EXCEPTION_HANDLE if passed a" \
+                   " NULL pointer for @add"
+static bool test_add_5(pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        pcr_string *test = pcr_string_new("Hello", x);
+        test = pcr_string_add(test, NULL, x);
+        (void) test;
+    }
+
+    pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        return true;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
 extern pcr_testsuite *
 pcr_string_testsuite(pcr_exception ex)
 {
@@ -406,6 +523,17 @@ pcr_string_testsuite(pcr_exception ex)
         tc = pcr_testcase_new(&test_cmp_10, DESC_CMP_10, x);
         pcr_testsuite_push(ts, tc, x);
         tc = pcr_testcase_new(&test_cmp_11, DESC_CMP_11, x);
+        pcr_testsuite_push(ts, tc, x);
+
+        tc = pcr_testcase_new(&test_add_1, DESC_ADD_1, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_add_2, DESC_ADD_2, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_add_3, DESC_ADD_3, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_add_4, DESC_ADD_4, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_add_5, DESC_ADD_5, x);
         pcr_testsuite_push(ts, tc, x);
 
         return ts;
