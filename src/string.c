@@ -74,7 +74,7 @@ pcr_string_add(const pcr_string *ctx, const pcr_string *add, pcr_exception ex)
 //3     5         => 8
 extern size_t
 pcr_string_find(const pcr_string *haystack, const pcr_string *needle,
-                    pcr_exception ex)
+                pcr_exception ex)
 {
     pcr_assert_handle(haystack && needle, ex);
 
@@ -93,7 +93,7 @@ pcr_string_find(const pcr_string *haystack, const pcr_string *needle,
 // https://gist.github.com/stanislaw/f62c36823242c4ffea1b
 extern pcr_string *
 pcr_string_replace(const pcr_string *haystack, const pcr_string *needle,
-                        const pcr_string *replace, pcr_exception ex)
+                   const pcr_string *replace, pcr_exception ex)
 {
     pcr_assert_handle(haystack && needle && replace, ex);
 
@@ -125,13 +125,15 @@ pcr_string_replace(const pcr_string *haystack, const pcr_string *needle,
 // https://gist.github.com/stanislaw/f62c36823242c4ffea1b
 extern pcr_string *
 pcr_string_replaceall(const pcr_string *haystack, const pcr_string *needle,
-                            const pcr_string *replace, pcr_exception ex)
+                      const pcr_string *replace, pcr_exception ex)
 {
     pcr_exception_try (x) {
         pcr_string *repl = pcr_string_replace(haystack, needle, replace, x);
 
-        while (strstr(repl, needle))
-            repl = pcr_string_replace(repl, needle, replace, x);
+        if (pcr_hint_likely ((*needle))) {
+            while (strstr(repl, needle))
+                repl = pcr_string_replace(repl, needle, replace, x);
+        }
 
         return repl;
     }
