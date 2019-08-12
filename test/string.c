@@ -469,6 +469,171 @@ static bool test_add_5(pcr_exception ex)
     pcr_exception_unwind(ex);
     return false;
 }
+
+
+/******************************************************************************
+ * pcr_string_find() test cases
+ */
+
+
+#define DESC_FIND_1 "pcr_string_find() can find a null string"
+static bool test_find_1(pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        pcr_string *test = pcr_string_new("", x);
+        return pcr_string_find(test, "", x) == 1;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+#define DESC_FIND_2 "pcr_string_find() can find an ASCII string with 1" \
+                    " character"
+static bool test_find_2(pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        pcr_string *test = pcr_string_new("Hello, world!", x);
+        return pcr_string_find(test, "w", x) == 8;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+#define DESC_FIND_3 "pcr_string_find() can find a Unicode string with 1" \
+                    " character"
+static bool test_find_3(pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        pcr_string *test = pcr_string_new("Привет, мир!", x);
+        return pcr_string_find(test, "м", x) == 9;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+#define DESC_FIND_4 "pcr_string_find() can find an ASCII string"
+static bool test_find_4(pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        pcr_string *test = pcr_string_new("Hello, world!", x);
+        return pcr_string_find(test, "world", x) == 8;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+#define DESC_FIND_5 "pcr_string_find() can find a Unicode string"
+static bool test_find_5(pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        pcr_string *test = pcr_string_new("Привет, мир!", x);
+        return pcr_string_find(test, "мир", x) == 9;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+
+#define DESC_FIND_6 "pcr_string_find() can detect the absence of an ASCII" \
+                    " string with 1 character"
+static bool test_find_6(pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        pcr_string *test = pcr_string_new("Hello, world!", x);
+        return pcr_string_find(test, "h", x) == 0;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+#define DESC_FIND_7 "pcr_string_find() can detect the absence of a Unicode" \
+                    " string with 1 character"
+static bool test_find_7(pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        pcr_string *test = pcr_string_new("Привет, мир!", x);
+        return pcr_string_find(test, "л", x) == 0;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+#define DESC_FIND_8 "pcr_string_find() can detect the absence of an ASCII" \
+                    " string"
+static bool test_find_8(pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        pcr_string *test = pcr_string_new("Hello, world!", x);
+        return pcr_string_find(test, "moon", x) == 0;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+#define DESC_FIND_9 "pcr_string_find() can detect the absence of a Unicode" \
+                    " string"
+static bool test_find_9(pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        pcr_string *test = pcr_string_new("Привет, мир!", x);
+        return pcr_string_find(test, "луна", x) == 0;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+#define DESC_FIND_10 "pcr_string_find() throws PCR_EXCEPTION_HANDLE if passed" \
+                     " a NULL pointer for @haystack"
+static bool test_find_10(pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        (void) pcr_string_find(NULL, "Hello", x);
+    }
+
+    pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        return true;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+#define DESC_FIND_11 "pcr_string_find() throws PCR_EXCEPTION_HANDLE if passed" \
+                     " a NULL pointer for @needle"
+static bool test_find_11(pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        (void) pcr_string_find("Hello", NULL, x);
+    }
+
+    pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        return true;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
 extern pcr_testsuite *
 pcr_string_testsuite(pcr_exception ex)
 {
@@ -534,6 +699,29 @@ pcr_string_testsuite(pcr_exception ex)
         tc = pcr_testcase_new(&test_add_4, DESC_ADD_4, x);
         pcr_testsuite_push(ts, tc, x);
         tc = pcr_testcase_new(&test_add_5, DESC_ADD_5, x);
+        pcr_testsuite_push(ts, tc, x);
+
+        tc = pcr_testcase_new(&test_find_1, DESC_FIND_1, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_find_2, DESC_FIND_2, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_find_3, DESC_FIND_3, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_find_4, DESC_FIND_4, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_find_5, DESC_FIND_5, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_find_6, DESC_FIND_6, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_find_7, DESC_FIND_7, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_find_8, DESC_FIND_8, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_find_9, DESC_FIND_9, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_find_10, DESC_FIND_10, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_find_11, DESC_FIND_11, x);
         pcr_testsuite_push(ts, tc, x);
 
         return ts;
