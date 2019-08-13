@@ -230,7 +230,7 @@ extern pcr_string *
 pcr_string_int(int64_t value, pcr_exception ex);
 
 extern pcr_string *
-pcr_string_parsefloat(double value, pcr_exception ex);
+pcr_string_float(double value, pcr_exception ex);
 
 
 /******************************************************************************

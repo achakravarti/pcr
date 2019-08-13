@@ -132,7 +132,7 @@ pcr_attribute_string(const pcr_attribute *ctx, pcr_exception ex)
 
             case PCR_ATTRIBUTE_FLOAT:
                 pcr_assert_handle(ctx->value, x);
-                return pcr_string_parsefloat(*((double *) ctx->value), x);
+                return pcr_string_float(*((double *) ctx->value), x);
                 break;
 
             case PCR_ATTRIBUTE_TEXT:
