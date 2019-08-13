@@ -1046,6 +1046,50 @@ static bool test_replaceall_12(pcr_exception ex)
 }
 
 
+/******************************************************************************
+ * pcr_string_int() test cases
+ */
+
+
+#define DESC_INT_1 "pcr_string_int() stringifies 0"
+static bool
+test_int_1(pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        return !strcmp(pcr_string_int(0, x), "0");
+    }
+
+    pcr_exception_unwind (ex);
+    return false;
+}
+
+
+#define DESC_INT_2 "pcr_string_int() stringifies a negative integer"
+static bool
+test_int_2(pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        return !strcmp(pcr_string_int(-1024, x), "-1024");
+    }
+
+    pcr_exception_unwind (ex);
+    return false;
+}
+
+
+#define DESC_INT_3 "pcr_string_int() stringifies a positive integer"
+static bool
+test_int_3(pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        return !strcmp(pcr_string_int(1024, x), "1024");
+    }
+
+    pcr_exception_unwind (ex);
+    return false;
+}
+
+
 extern pcr_testsuite *
 pcr_string_testsuite(pcr_exception ex)
 {
@@ -1184,6 +1228,13 @@ pcr_string_testsuite(pcr_exception ex)
         tc = pcr_testcase_new(&test_replaceall_11, DESC_REPLACEALL_11, x);
         pcr_testsuite_push(ts, tc, x);
         tc = pcr_testcase_new(&test_replaceall_12, DESC_REPLACEALL_12, x);
+        pcr_testsuite_push(ts, tc, x);
+
+        tc = pcr_testcase_new(&test_int_1, DESC_INT_1, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_int_2, DESC_INT_2, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_int_3, DESC_INT_3, x);
         pcr_testsuite_push(ts, tc, x);
 
         return ts;

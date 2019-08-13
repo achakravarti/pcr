@@ -146,11 +146,9 @@ extern pcr_string *
 pcr_string_int(int64_t value, pcr_exception ex)
 {
     pcr_exception_try (x) {
-        size_t len = snprintf(NULL, 0, "%"PRId64, value);
-        pcr_assert_range(len >= 0, ex);
-
+        size_t len = snprintf(NULL, 0, "%"PRId64, value) + 1;
         pcr_string *str = pcr_mempool_alloc(sizeof *str * len, x);
-        snprintf(str, len, "%"PRId64, value);
+        (void) snprintf(str, len, "%"PRId64, value);
 
         return str;
     }
@@ -164,9 +162,7 @@ extern pcr_string *
 pcr_string_float(double value, pcr_exception ex)
 {
     pcr_exception_try (x) {
-        size_t len = snprintf(NULL, 0, "%lf", value);
-        pcr_assert_range(len >= 0, ex);
-
+        size_t len = snprintf(NULL, 0, "%lf", value) + 1;
         pcr_string *str = pcr_mempool_alloc(sizeof *str * len, x);
         snprintf(str, len, "%lf", value);
 
