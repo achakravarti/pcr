@@ -10,11 +10,9 @@ pcr_string_new(const char *cstr, pcr_exception ex)
     pcr_assert_handle(cstr, ex);
 
     pcr_exception_try (x) {
-        const size_t len = utf8len(cstr) + 1;
-        pcr_string *ctx = pcr_mempool_alloc(sizeof *ctx * len, x);
-
-        (void) utf8cpy(ctx, cstr);
-        ctx[len] = '\0';
+        const size_t sz = strlen(cstr) + 1;
+        pcr_string *ctx = pcr_mempool_alloc(sz, x);
+        (void) strncpy(ctx, cstr, sz);
 
         return ctx;
     }
@@ -48,7 +46,7 @@ extern int
 pcr_string_cmp(const pcr_string *lhs, const pcr_string *rhs, pcr_exception ex)
 {
     pcr_assert_handle(lhs && rhs, ex);
-    return utf8cmp(lhs, rhs);
+    return strcmp(lhs, rhs);
 }
 
 
@@ -59,12 +57,12 @@ pcr_string_add(const pcr_string *ctx, const pcr_string *add, pcr_exception ex)
 
 
     pcr_exception_try (x) {
-        const size_t llen = utf8len(ctx);
-        const size_t rlen = utf8len(add);
+        const size_t llen = strlen(ctx) + 1;
+        const size_t rlen = strlen(add) + 1;
 
-        pcr_string *cat = pcr_mempool_alloc(sizeof *cat * (llen + rlen + 1), x);
-        (void) utf8ncpy(cat, ctx, llen);
-        return utf8ncat(cat, add, rlen);
+        pcr_string *cat = pcr_mempool_alloc(sizeof *cat * (llen + rlen), x);
+        (void) strncpy(cat, ctx, llen);
+        return strncat(cat, add, rlen);
     }
 
     pcr_exception_unwind(ex);
@@ -76,7 +74,7 @@ pcr_string_add(const pcr_string *ctx, const pcr_string *add, pcr_exception ex)
 //3     5         => 8
 extern size_t
 pcr_string_find(const pcr_string *haystack, const pcr_string *needle,
-                    pcr_exception ex)
+                pcr_exception ex)
 {
     pcr_assert_handle(haystack && needle, ex);
 
@@ -95,9 +93,10 @@ pcr_string_find(const pcr_string *haystack, const pcr_string *needle,
 // https://gist.github.com/stanislaw/f62c36823242c4ffea1b
 extern pcr_string *
 pcr_string_replace(const pcr_string *haystack, const pcr_string *needle,
-                        const pcr_string *replace, pcr_exception ex)
+                   const pcr_string *replace, pcr_exception ex)
 {
-    pcr_assert_handle(haystack && needle && replace, ex);
+    pcr_assert_handle(haystack && replace, ex);
+    pcr_assert_string(needle, ex);
 
     pcr_exception_try (x) {
         char *pos = strstr(haystack, needle);
@@ -127,7 +126,7 @@ pcr_string_replace(const pcr_string *haystack, const pcr_string *needle,
 // https://gist.github.com/stanislaw/f62c36823242c4ffea1b
 extern pcr_string *
 pcr_string_replaceall(const pcr_string *haystack, const pcr_string *needle,
-                            const pcr_string *replace, pcr_exception ex)
+                      const pcr_string *replace, pcr_exception ex)
 {
     pcr_exception_try (x) {
         pcr_string *repl = pcr_string_replace(haystack, needle, replace, x);
@@ -144,14 +143,12 @@ pcr_string_replaceall(const pcr_string *haystack, const pcr_string *needle,
 
 
 extern pcr_string *
-pcr_string_parseint(int64_t value, pcr_exception ex)
+pcr_string_int(int64_t value, pcr_exception ex)
 {
     pcr_exception_try (x) {
-        size_t len = snprintf(NULL, 0, "%"PRId64, value);
-        pcr_assert_range(len >= 0, ex);
-
+        size_t len = snprintf(NULL, 0, "%"PRId64, value) + 1;
         pcr_string *str = pcr_mempool_alloc(sizeof *str * len, x);
-        snprintf(str, len, "%"PRId64, value);
+        (void) snprintf(str, len, "%"PRId64, value);
 
         return str;
     }
@@ -162,12 +159,10 @@ pcr_string_parseint(int64_t value, pcr_exception ex)
 
 
 extern pcr_string *
-pcr_string_parsefloat(double value, pcr_exception ex)
+pcr_string_float(double value, pcr_exception ex)
 {
     pcr_exception_try (x) {
-        size_t len = snprintf(NULL, 0, "%lf", value);
-        pcr_assert_range(len >= 0, ex);
-
+        size_t len = snprintf(NULL, 0, "%lf", value) + 1;
         pcr_string *str = pcr_mempool_alloc(sizeof *str * len, x);
         snprintf(str, len, "%lf", value);
 

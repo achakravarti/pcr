@@ -93,10 +93,14 @@ extern bool pcr_testcase_run(pcr_testcase *ctx, pcr_exception ex)
 {
     pcr_assert_handle(ctx, ex);
 
-    bool res = ctx->test();
-    log_write("[%s]: %s\n", res ? "OK" : "**FAIL**", ctx->desc);
+    pcr_exception_try (x) {
+        bool res = ctx->test(x);
+        log_write("[%s]: %s\n", res ? "OK" : "**FAIL**", ctx->desc);
+        return res;
+    }
 
-    return res;
+    pcr_exception_unwind(ex);
+    return false;
 }
 
 

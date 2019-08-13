@@ -227,10 +227,10 @@ pcr_string_replaceall(const pcr_string *haystack, const pcr_string *needle,
                             const pcr_string *replace, pcr_exception ex);
 
 extern pcr_string *
-pcr_string_parseint(int64_t value, pcr_exception ex);
+pcr_string_int(int64_t value, pcr_exception ex);
 
 extern pcr_string *
-pcr_string_parsefloat(double value, pcr_exception ex);
+pcr_string_float(double value, pcr_exception ex);
 
 
 /******************************************************************************
@@ -238,7 +238,7 @@ pcr_string_parsefloat(double value, pcr_exception ex);
  */
 
 typedef bool
-(pcr_unittest)(void);
+(pcr_unittest)(pcr_exception ex);
 
 typedef struct pcr_testcase pcr_testcase;
 
