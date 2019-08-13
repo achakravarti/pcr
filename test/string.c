@@ -1136,159 +1136,65 @@ test_float_3(pcr_exception ex)
 }
 
 
+/******************************************************************************
+ * pcr_string_testsuite() interface
+ */
+
+
+static pcr_unittest *unit_tests[] = {
+    &test_new_1, &test_new_2, &test_new_3, &test_new_4, &test_copy_1,
+    &test_copy_2, &test_copy_3, &test_copy_4, &test_len_1, &test_len_2,
+    &test_len_3, &test_len_4, &test_cmp_1, &test_cmp_2, &test_cmp_3,
+    &test_cmp_4, &test_cmp_5, &test_cmp_6, &test_cmp_7, &test_cmp_8,
+    &test_cmp_9, &test_cmp_10, &test_cmp_11, &test_add_1, &test_add_2,
+    &test_add_3, &test_add_4, &test_add_5, &test_find_1, &test_find_2,
+    &test_find_3, &test_find_4, &test_find_5, &test_find_6, &test_find_7,
+    &test_find_8, &test_find_9, &test_find_10, &test_find_11, &test_replace_1,
+    &test_replace_2, &test_replace_3, &test_replace_4, &test_replace_5,
+    &test_replace_6, &test_replace_6, &test_replace_7, &test_replace_7,
+    &test_replace_8, &test_replace_9, &test_replace_10, &test_replace_11,
+    &test_replace_12, &test_replaceall_1, &test_replaceall_2,
+    &test_replaceall_3, &test_replaceall_4, &test_replaceall_5,
+    &test_replaceall_6, &test_replaceall_7, &test_replaceall_8,
+    &test_replaceall_9, &test_replaceall_10, &test_replaceall_11,
+    &test_replaceall_12, &test_int_1, &test_int_2, &test_int_3, &test_float_1,
+    &test_float_2, &test_float_3
+};
+
+
+static pcr_string *UNIT_DESCS[] = {
+    DESC_NEW_1, DESC_NEW_2, DESC_NEW_3, DESC_NEW_4, DESC_COPY_1,
+    DESC_COPY_2, DESC_COPY_3, DESC_COPY_4, DESC_LEN_1, DESC_LEN_2,
+    DESC_LEN_3, DESC_LEN_4, DESC_CMP_1, DESC_CMP_2, DESC_CMP_3,
+    DESC_CMP_4, DESC_CMP_5, DESC_CMP_6, DESC_CMP_7, DESC_CMP_8,
+    DESC_CMP_9, DESC_CMP_10, DESC_CMP_11, DESC_ADD_1, DESC_ADD_2,
+    DESC_ADD_3, DESC_ADD_4, DESC_ADD_5, DESC_FIND_1, DESC_FIND_2,
+    DESC_FIND_3, DESC_FIND_4, DESC_FIND_5, DESC_FIND_6, DESC_FIND_7,
+    DESC_FIND_8, DESC_FIND_9, DESC_FIND_10, DESC_FIND_11, DESC_REPLACE_1,
+    DESC_REPLACE_2, DESC_REPLACE_3, DESC_REPLACE_4, DESC_REPLACE_5,
+    DESC_REPLACE_6, DESC_REPLACE_6, DESC_REPLACE_7, DESC_REPLACE_7,
+    DESC_REPLACE_8, DESC_REPLACE_9, DESC_REPLACE_10, DESC_REPLACE_11,
+    DESC_REPLACE_12, DESC_REPLACEALL_1, DESC_REPLACEALL_2,
+    DESC_REPLACEALL_3, DESC_REPLACEALL_4, DESC_REPLACEALL_5,
+    DESC_REPLACEALL_6, DESC_REPLACEALL_7, DESC_REPLACEALL_8,
+    DESC_REPLACEALL_9, DESC_REPLACEALL_10, DESC_REPLACEALL_11,
+    DESC_REPLACEALL_12, DESC_INT_1, DESC_INT_2, DESC_INT_3, DESC_FLOAT_1,
+    DESC_FLOAT_2, DESC_FLOAT_3
+};
+
+
 extern pcr_testsuite *
 pcr_string_testsuite(pcr_exception ex)
 {
     pcr_exception_try (x) {
         pcr_testsuite *ts = pcr_testsuite_new("PCR String (pcr_string)", x);
 
-        pcr_testcase *tc = pcr_testcase_new(&test_new_1, DESC_NEW_1, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_new_2, DESC_NEW_2, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_new_3, DESC_NEW_3, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_new_4, DESC_NEW_4, x);
-        pcr_testsuite_push(ts, tc, x);
-
-        tc = pcr_testcase_new(&test_copy_1, DESC_COPY_1, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_copy_2, DESC_COPY_2, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_copy_3, DESC_COPY_3, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_copy_4, DESC_COPY_4, x);
-        pcr_testsuite_push(ts, tc, x);
-
-        tc = pcr_testcase_new(&test_len_1, DESC_LEN_1, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_len_2, DESC_LEN_2, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_len_3, DESC_LEN_3, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_len_4, DESC_LEN_4, x);
-        pcr_testsuite_push(ts, tc, x);
-
-        tc = pcr_testcase_new(&test_cmp_1, DESC_CMP_1, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_cmp_2, DESC_CMP_2, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_cmp_3, DESC_CMP_3, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_cmp_4, DESC_CMP_4, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_cmp_5, DESC_CMP_5, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_cmp_6, DESC_CMP_6, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_cmp_7, DESC_CMP_7, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_cmp_8, DESC_CMP_9, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_cmp_9, DESC_CMP_9, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_cmp_10, DESC_CMP_10, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_cmp_11, DESC_CMP_11, x);
-        pcr_testsuite_push(ts, tc, x);
-
-        tc = pcr_testcase_new(&test_add_1, DESC_ADD_1, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_add_2, DESC_ADD_2, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_add_3, DESC_ADD_3, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_add_4, DESC_ADD_4, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_add_5, DESC_ADD_5, x);
-        pcr_testsuite_push(ts, tc, x);
-
-        tc = pcr_testcase_new(&test_find_1, DESC_FIND_1, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_find_2, DESC_FIND_2, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_find_3, DESC_FIND_3, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_find_4, DESC_FIND_4, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_find_5, DESC_FIND_5, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_find_6, DESC_FIND_6, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_find_7, DESC_FIND_7, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_find_8, DESC_FIND_8, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_find_9, DESC_FIND_9, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_find_10, DESC_FIND_10, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_find_11, DESC_FIND_11, x);
-        pcr_testsuite_push(ts, tc, x);
-
-        tc = pcr_testcase_new(&test_replace_1, DESC_REPLACE_1, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_replace_2, DESC_REPLACE_2, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_replace_3, DESC_REPLACE_3, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_replace_4, DESC_REPLACE_4, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_replace_5, DESC_REPLACE_5, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_replace_6, DESC_REPLACE_6, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_replace_7, DESC_REPLACE_7, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_replace_8, DESC_REPLACE_8, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_replace_9, DESC_REPLACE_9, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_replace_10, DESC_REPLACE_10, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_replace_11, DESC_REPLACE_11, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_replace_12, DESC_REPLACE_12, x);
-        pcr_testsuite_push(ts, tc, x);
-
-        tc = pcr_testcase_new(&test_replaceall_1, DESC_REPLACEALL_1, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_replaceall_2, DESC_REPLACEALL_2, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_replaceall_3, DESC_REPLACEALL_3, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_replaceall_4, DESC_REPLACEALL_4, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_replaceall_5, DESC_REPLACEALL_5, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_replaceall_6, DESC_REPLACEALL_6, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_replaceall_7, DESC_REPLACEALL_7, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_replaceall_8, DESC_REPLACEALL_8, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_replaceall_9, DESC_REPLACEALL_9, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_replaceall_10, DESC_REPLACEALL_10, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_replaceall_11, DESC_REPLACEALL_11, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_replaceall_12, DESC_REPLACEALL_12, x);
-        pcr_testsuite_push(ts, tc, x);
-
-        tc = pcr_testcase_new(&test_int_1, DESC_INT_1, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_int_2, DESC_INT_2, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_int_3, DESC_INT_3, x);
-        pcr_testsuite_push(ts, tc, x);
-
-        tc = pcr_testcase_new(&test_float_1, DESC_FLOAT_1, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_float_2, DESC_FLOAT_2, x);
-        pcr_testsuite_push(ts, tc, x);
-        tc = pcr_testcase_new(&test_float_3, DESC_FLOAT_3, x);
-        pcr_testsuite_push(ts, tc, x);
+        register pcr_testcase *tc;
+        register size_t len = sizeof unit_tests / sizeof *unit_tests;
+        for (register size_t i = 0; i < len; i++) {
+            tc = pcr_testcase_new(unit_tests[i], UNIT_DESCS[i], x);
+            pcr_testsuite_push(ts, tc, x);
+        }
 
         return ts;
     }
