@@ -127,7 +127,7 @@ pcr_attribute_string(const pcr_attribute *ctx, pcr_exception ex)
         switch (ctx->type) {
             case PCR_ATTRIBUTE_INT:
                 pcr_assert_handle(ctx->value, x);
-                return pcr_string_parseint(*((int64_t *) ctx->value), x);
+                return pcr_string_int(*((int64_t *) ctx->value), x);
                 break;
 
             case PCR_ATTRIBUTE_FLOAT:

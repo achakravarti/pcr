@@ -143,7 +143,7 @@ pcr_string_replaceall(const pcr_string *haystack, const pcr_string *needle,
 
 
 extern pcr_string *
-pcr_string_parseint(int64_t value, pcr_exception ex)
+pcr_string_int(int64_t value, pcr_exception ex)
 {
     pcr_exception_try (x) {
         size_t len = snprintf(NULL, 0, "%"PRId64, value);
