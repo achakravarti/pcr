@@ -1090,6 +1090,52 @@ test_int_3(pcr_exception ex)
 }
 
 
+/******************************************************************************
+ * pcr_string_float() test cases
+ */
+
+
+#define DESC_FLOAT_1 "pcr_string_float() stringifies 0"
+static bool
+test_float_1(pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        return !strcmp(pcr_string_float(0, x), "0.000000");
+    }
+
+    pcr_exception_unwind (ex);
+    return false;
+}
+
+
+#define DESC_FLOAT_2 "pcr_string_float() stringifies a negative floating" \
+                     " point number"
+static bool
+test_float_2(pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        return !strcmp(pcr_string_float(-3.141592654, x), "-3.141593");
+    }
+
+    pcr_exception_unwind (ex);
+    return false;
+}
+
+
+#define DESC_FLOAT_3 "pcr_string_float() stringifies a positive floating" \
+                     " point number"
+static bool
+test_float_3(pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        return !strcmp(pcr_string_float(3.141592654, x), "3.141593");
+    }
+
+    pcr_exception_unwind (ex);
+    return false;
+}
+
+
 extern pcr_testsuite *
 pcr_string_testsuite(pcr_exception ex)
 {
@@ -1235,6 +1281,13 @@ pcr_string_testsuite(pcr_exception ex)
         tc = pcr_testcase_new(&test_int_2, DESC_INT_2, x);
         pcr_testsuite_push(ts, tc, x);
         tc = pcr_testcase_new(&test_int_3, DESC_INT_3, x);
+        pcr_testsuite_push(ts, tc, x);
+
+        tc = pcr_testcase_new(&test_float_1, DESC_FLOAT_1, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_float_2, DESC_FLOAT_2, x);
+        pcr_testsuite_push(ts, tc, x);
+        tc = pcr_testcase_new(&test_float_3, DESC_FLOAT_3, x);
         pcr_testsuite_push(ts, tc, x);
 
         return ts;
