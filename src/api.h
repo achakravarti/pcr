@@ -208,6 +208,9 @@ pcr_string_copy(const pcr_string *ctx, pcr_exception ex);
 extern size_t
 pcr_string_len(const pcr_string *ctx, pcr_exception ex);
 
+extern size_t
+pcr_string_sz(const pcr_string *ctx, pcr_exception ex);
+
 extern int
 pcr_string_cmp(const pcr_string *lhs, const pcr_string *rhs, pcr_exception ex);
 
