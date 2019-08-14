@@ -4,7 +4,6 @@
 
 struct pcr_testcase {
     pcr_unittest *test;
-    pcr_string *desc;
 };
 
 
@@ -57,15 +56,14 @@ static void log_border(void)
 
 
 extern pcr_testcase *pcr_testcase_new(pcr_unittest *test,
-                                            const pcr_string *desc,
+                                            //const pcr_string *desc,
                                             pcr_exception ex)
 {
-    pcr_assert_handle(test && desc, ex);
+    pcr_assert_handle(test, ex);
 
     pcr_exception_try (x) {
         pcr_testcase *tc = pcr_mempool_alloc(sizeof *tc, x);
         tc->test = test;
-        tc->desc = pcr_string_copy(desc, x);
 
         return tc;
     }
@@ -81,7 +79,7 @@ extern pcr_testcase *pcr_testcase_copy(const pcr_testcase *ctx,
     pcr_assert_handle(ctx, ex);
 
     pcr_exception_try (x) {
-        return pcr_testcase_new(ctx->test, ctx->desc, x);
+        return pcr_testcase_new(ctx->test, x);
     }
 
     pcr_exception_unwind(ex);
@@ -94,8 +92,12 @@ extern bool pcr_testcase_run(pcr_testcase *ctx, pcr_exception ex)
     pcr_assert_handle(ctx, ex);
 
     pcr_exception_try (x) {
-        bool res = ctx->test(x);
-        log_write("[%s]: %s\n", res ? "OK" : "**FAIL**", ctx->desc);
+        pcr_string *desc = NULL;
+        bool res = ctx->test(&desc, x);
+
+        pcr_assert_string(desc, x);
+        log_write("[%s]: %s\n", res ? "OK" : "**FAIL**", desc);
+
         return res;
     }
 

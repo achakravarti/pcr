@@ -241,12 +241,12 @@ pcr_string_float(double value, pcr_exception ex);
  */
 
 typedef bool
-(pcr_unittest)(pcr_exception ex);
+(pcr_unittest)(pcr_string **desc, pcr_exception ex);
 
 typedef struct pcr_testcase pcr_testcase;
 
 extern pcr_testcase *
-pcr_testcase_new(pcr_unittest *test, const pcr_string *desc, pcr_exception ex);
+pcr_testcase_new(pcr_unittest *test, pcr_exception ex);
 
 extern pcr_testcase *
 pcr_testcase_copy(const pcr_testcase *ctx, pcr_exception ex);

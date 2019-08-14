@@ -7,9 +7,10 @@
  * pcr_attribute_new() test cases
  */
 
-#define DESC_NEW_1 "pcr_attribute_new() can create a null attribute"
-static bool test_new_1(pcr_exception ex)
+static bool test_new_1(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_attribute_new() can create a null attribute";
+
     pcr_exception_try (x) {
         pcr_attribute *test = pcr_attribute_new(PCR_ATTRIBUTE_NULL, "key",
                                                 NULL, x);
@@ -27,9 +28,10 @@ static bool test_new_1(pcr_exception ex)
 }
 
 
-#define DESC_NEW_2 "pcr_attribute_new() can create an int attribute"
-static bool test_new_2(pcr_exception ex)
+static bool test_new_2(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_attribute_new() can create an int attribute";
+
     pcr_exception_try (x) {
         const pcr_string *KEY = "foo";
         const int64_t VALUE = -1024;
@@ -48,9 +50,10 @@ static bool test_new_2(pcr_exception ex)
 }
 
 
-#define DESC_NEW_3 "pcr_attribute_new() can create a float attribute"
-static bool test_new_3(pcr_exception ex)
+static bool test_new_3(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_attribute_new() can create a float attribute";
+
     pcr_exception_try (x) {
         const pcr_string *KEY = "frobnoz";
         const double VALUE = -3.141592654;
@@ -70,9 +73,10 @@ static bool test_new_3(pcr_exception ex)
 }
 
 
-#define DESC_NEW_4 "pcr_attribute_new() can create an ASCII string attribute"
-static bool test_new_4(pcr_exception ex)
+static bool test_new_4(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_attribute_new() can create an ASCII string attribute";
+
     pcr_exception_try (x) {
         const pcr_string *KEY = "bar";
         const pcr_string *VALUE = "Hello, world!";
@@ -92,10 +96,11 @@ static bool test_new_4(pcr_exception ex)
 }
 
 
-#define DESC_NEW_5 "pcr_attribute_new() throws PCR_EXCEPTION_STRING if passed" \
-                   " a NULL pointer for @key"
-static bool test_new_5(pcr_exception ex)
+static bool test_new_5(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_attribute_new() throws PCR_EXCEPTION_STRING if passed a NULL"
+            " pointer for @key";
+
     pcr_exception_try (x) {
         (void) pcr_attribute_new(PCR_ATTRIBUTE_NULL, NULL, NULL, x);
     }
@@ -109,10 +114,11 @@ static bool test_new_5(pcr_exception ex)
 }
 
 
-#define DESC_NEW_6 "pcr_attribute_new() throws PCR_EXCEPTION_STRING if passed" \
-                   " a null string for @key"
-static bool test_new_6(pcr_exception ex)
+static bool test_new_6(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_attribute_new() throws PCR_EXCEPTION_STRING if passed a null"
+            " string for @key";
+
     pcr_exception_try (x) {
         (void) pcr_attribute_new(PCR_ATTRIBUTE_NULL, "", NULL, x);
     }
@@ -126,11 +132,11 @@ static bool test_new_6(pcr_exception ex)
 }
 
 
-#define DESC_NEW_7 "pcr_attribute_new() does not throw PCR_EXCEPTION_HANDLE" \
-                   " if passed a null pointer for @value when @field is"     \
-                   " PCR_ATTRIBUTE_NULL"
-static bool test_new_7(pcr_exception ex)
+static bool test_new_7(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_attribute_new() does not throw PCR_EXCEPTION_HANDLE if passed"
+            " a null pointer for @value when @field is PCR_ATTRIBUTE_NULL";
+
     pcr_exception_try (x) {
         (void) pcr_attribute_new(PCR_ATTRIBUTE_NULL, "foo", NULL, x);
         return true;
@@ -141,11 +147,11 @@ static bool test_new_7(pcr_exception ex)
 }
 
 
-#define DESC_NEW_8 "pcr_attribute_new() throws PCR_EXCEPTION_HANDLE if passed" \
-                   " a null pointer for @value when @field is not            " \
-                   " PCR_ATTRIBUTE_NULL"
-static bool test_new_8(pcr_exception ex)
+static bool test_new_8(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_attribute_new() throws PCR_EXCEPTION_HANDLE if passed a null"
+            " pointer for @value when @field is not PCR_ATTRIBUTE_NULL";
+
     pcr_exception_try (x) {
         (void) pcr_attribute_new(PCR_ATTRIBUTE_INT, "foo", NULL, x);
     }
@@ -169,11 +175,6 @@ static pcr_unittest *unit_tests[] = {
     test_new_7, test_new_8
 };
 
-static const pcr_string *UNIT_DESCS[] = {
-    DESC_NEW_1, DESC_NEW_2, DESC_NEW_3, DESC_NEW_4, DESC_NEW_5, DESC_NEW_6,
-    DESC_NEW_7, DESC_NEW_8
-};
-
 
 extern pcr_testsuite *
 pcr_attribute_testsuite(pcr_exception ex)
@@ -182,12 +183,9 @@ pcr_attribute_testsuite(pcr_exception ex)
         const pcr_string *name = "PCR Attribute (pcr_attribute)";
         pcr_testsuite *ts = pcr_testsuite_new(name, x);
 
-        register pcr_testcase *tc;
         register size_t len = sizeof unit_tests / sizeof *unit_tests;
-        for (register size_t i = 0; i < len; i++) {
-            tc = pcr_testcase_new(unit_tests[i], UNIT_DESCS[i], x);
-            pcr_testsuite_push(ts, tc, x);
-        }
+        for (register size_t i = 0; i < len; i++)
+            pcr_testsuite_push(ts, pcr_testcase_new(unit_tests[i], x), x);
 
         return ts;
     }

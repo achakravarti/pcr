@@ -7,9 +7,10 @@
  */
 
 
-#define DESC_NEW_1 "pcr_string_new() can create an empty string"
-static bool test_new_1(pcr_exception ex)
+static bool test_new_1(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_new() can create an empty string";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("", x);
         return test && !*test;
@@ -20,9 +21,10 @@ static bool test_new_1(pcr_exception ex)
 }
 
 
-#define DESC_NEW_2 "pcr_string_new() can create an ASCII string"
-static bool test_new_2(pcr_exception ex)
+static bool test_new_2(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_new() can create an ASCII string";
+
     pcr_exception_try (x) {
         const char *expect = "Hello, world!";
         pcr_string *test = pcr_string_new(expect, x);
@@ -35,9 +37,10 @@ static bool test_new_2(pcr_exception ex)
 }
 
 
-#define DESC_NEW_3 "pcr_string_new() can create a Unicode string"
-static bool test_new_3(pcr_exception ex)
+static bool test_new_3(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_new() can create a Unicode string";
+
     pcr_exception_try (x) {
         const char *expect = "Привет, мир!";
         pcr_string *test = pcr_string_new(expect, x);
@@ -50,10 +53,11 @@ static bool test_new_3(pcr_exception ex)
 }
 
 
-#define DESC_NEW_4 "pcr_string_new() throws PCR_EXCEPTION_HANDLE if passed a" \
-                   " NULL pointer for @cstr"
-static bool test_new_4(pcr_exception ex)
+static bool test_new_4(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_new() throws PCR_EXCEPTION_HANDLE if passed a NULL"
+            " pointer for @cstr";
+
     pcr_exception_try (x) {
         (void) pcr_string_new(NULL, x);
     }
@@ -72,9 +76,10 @@ static bool test_new_4(pcr_exception ex)
  */
 
 
-#define DESC_COPY_1 "pcr_string_copy() can copy an empty string"
-static bool test_copy_1(pcr_exception ex)
+static bool test_copy_1(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_copy() can copy an empty string";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("", x);
         pcr_string *copy = pcr_string_copy(test, x);
@@ -87,9 +92,10 @@ static bool test_copy_1(pcr_exception ex)
 }
 
 
-#define DESC_COPY_2 "pcr_string_copy() can copy an ASCII string"
-static bool test_copy_2(pcr_exception ex)
+static bool test_copy_2(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_copy() can copy an ASCII string";
+
     pcr_exception_try (x) {
         const char *expect = "Hello, world!";
         pcr_string *test = pcr_string_new(expect, x);
@@ -103,9 +109,10 @@ static bool test_copy_2(pcr_exception ex)
 }
 
 
-#define DESC_COPY_3 "pcr_string_copy() can copy a Unicode string"
-static bool test_copy_3(pcr_exception ex)
+static bool test_copy_3(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_copy() can copy a Unicode string";
+
     pcr_exception_try (x) {
         const char *expect = "Привет, мир!";
         pcr_string *test = pcr_string_new(expect, x);
@@ -119,10 +126,11 @@ static bool test_copy_3(pcr_exception ex)
 }
 
 
-#define DESC_COPY_4 "pcr_string_copy() throws PCR_EXCEPTION_HANDLE if passed a" \
-                   " NULL pointer for @ctx"
-static bool test_copy_4(pcr_exception ex)
+static bool test_copy_4(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_copy() throws PCR_EXCEPTION_HANDLE if passed a NULL"
+            " pointer for @ctx";
+
     pcr_exception_try (x) {
         (void) pcr_string_copy(NULL, x);
     }
@@ -141,9 +149,10 @@ static bool test_copy_4(pcr_exception ex)
  */
 
 
-#define DESC_LEN_1 "pcr_string_len() reports 0 for a null string"
-static bool test_len_1(pcr_exception ex)
+static bool test_len_1(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_len() reports 0 for a null string";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("", x);
         return pcr_string_len(test, x) == 0;
@@ -154,9 +163,10 @@ static bool test_len_1(pcr_exception ex)
 }
 
 
-#define DESC_LEN_2 "pcr_string_len() reports the length of an ASCII string"
-static bool test_len_2(pcr_exception ex)
+static bool test_len_2(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_len() reports the length of an ASCII string";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello, world!", x);
         return pcr_string_len(test, x) == 13;
@@ -167,9 +177,10 @@ static bool test_len_2(pcr_exception ex)
 }
 
 
-#define DESC_LEN_3 "pcr_string_len() reports the length of a Unicode string"
-static bool test_len_3(pcr_exception ex)
+static bool test_len_3(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_len() reports the length of a Unicode string";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Привет, мир!", x);
         return pcr_string_len(test, x) == 12;
@@ -180,10 +191,11 @@ static bool test_len_3(pcr_exception ex)
 }
 
 
-#define DESC_LEN_4 "pcr_string_len() throws PCR_EXCEPTION_HANDLE if passed a" \
-                   " NULL pointer for @ctx"
-static bool test_len_4(pcr_exception ex)
+static bool test_len_4(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_len() throws PCR_EXCEPTION_HANDLE if passed a NULL"
+            " pointer for @ctx";
+
     pcr_exception_try (x) {
         (void) pcr_string_len(NULL, x);
     }
@@ -202,9 +214,10 @@ static bool test_len_4(pcr_exception ex)
  */
 
 
-#define DESC_CMP_1 "pcr_string_cmp() detects two equal null strings"
-static bool test_cmp_1(pcr_exception ex)
+static bool test_cmp_1(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_cmp() detects two equal null strings";
+
     pcr_exception_try (x) {
         pcr_string *lhs = pcr_string_new("", x);
         pcr_string *rhs = pcr_string_new("", x);
@@ -217,9 +230,10 @@ static bool test_cmp_1(pcr_exception ex)
 }
 
 
-#define DESC_CMP_2 "pcr_string_cmp() detects two equal ASCII strings"
-static bool test_cmp_2(pcr_exception ex)
+static bool test_cmp_2(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_cmp() detects two equal ASCII strings";
+
     pcr_exception_try (x) {
         pcr_string *lhs = pcr_string_new("Hello, world!", x);
         pcr_string *rhs = pcr_string_new("Hello, world!", x);
@@ -232,9 +246,10 @@ static bool test_cmp_2(pcr_exception ex)
 }
 
 
-#define DESC_CMP_3 "pcr_string_cmp() detects two equal Unicode strings"
-static bool test_cmp_3(pcr_exception ex)
+static bool test_cmp_3(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_cmp() detects two equal Unicode strings";
+
     pcr_exception_try (x) {
         pcr_string *lhs = pcr_string_new("Привет, мир!", x);
         pcr_string *rhs = pcr_string_new("Привет, мир!", x);
@@ -247,9 +262,10 @@ static bool test_cmp_3(pcr_exception ex)
 }
 
 
-#define DESC_CMP_4 "pcr_string_cmp() detects two unequal ASCII strings"
-static bool test_cmp_4(pcr_exception ex)
+static bool test_cmp_4(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_cmp() detects two unequal ASCII strings";
+
     pcr_exception_try (x) {
         pcr_string *lhs = pcr_string_new("Hello, world!", x);
         pcr_string *rhs = pcr_string_new("Goodbye, moon?", x);
@@ -262,9 +278,10 @@ static bool test_cmp_4(pcr_exception ex)
 }
 
 
-#define DESC_CMP_5 "pcr_string_cmp() detects two unequal Unicode strings"
-static bool test_cmp_5(pcr_exception ex)
+static bool test_cmp_5(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_cmp() detects two unequal Unicode strings";
+
     pcr_exception_try (x) {
         pcr_string *lhs = pcr_string_new("Привет, мир!", x);
         pcr_string *rhs = pcr_string_new("До свидания, луна?", x);
@@ -277,10 +294,10 @@ static bool test_cmp_5(pcr_exception ex)
 }
 
 
-#define DESC_CMP_6 "pcr_string_cmp() detects a lexicographically smaller" \
-                   " ASCII string"
-static bool test_cmp_6(pcr_exception ex)
+static bool test_cmp_6(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_cmp() detects a lexicographically smaller ASCII string";
+
     pcr_exception_try (x) {
         pcr_string *lhs = pcr_string_new("Goodbye, moon?", x);
         pcr_string *rhs = pcr_string_new("Hello, world!", x);
@@ -293,10 +310,11 @@ static bool test_cmp_6(pcr_exception ex)
 }
 
 
-#define DESC_CMP_7 "pcr_string_cmp() detects a lexicographically smaller" \
-                   " Unicode string"
-static bool test_cmp_7(pcr_exception ex)
+static bool test_cmp_7(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_cmp() detects a lexicographically smaller Unicode"
+            " string";
+
     pcr_exception_try (x) {
         pcr_string *lhs = pcr_string_new("До свидания, луна?", x);
         pcr_string *rhs = pcr_string_new("Привет, мир!", x);
@@ -309,10 +327,10 @@ static bool test_cmp_7(pcr_exception ex)
 }
 
 
-#define DESC_CMP_8 "pcr_string_cmp() detects a lexicographically greater" \
-                   " ASCII string"
-static bool test_cmp_8(pcr_exception ex)
+static bool test_cmp_8(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_cmp() detects a lexicographically greater ASCII string";
+
     pcr_exception_try (x) {
         pcr_string *lhs = pcr_string_new("Goodbye, moon?", x);
         pcr_string *rhs = pcr_string_new("Hello, world!", x);
@@ -325,10 +343,11 @@ static bool test_cmp_8(pcr_exception ex)
 }
 
 
-#define DESC_CMP_9 "pcr_string_cmp() detects a lexicographically greater" \
-                   " Unicode string"
-static bool test_cmp_9(pcr_exception ex)
+static bool test_cmp_9(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_cmp() detects a lexicographically greater Unicode"
+            " string";
+
     pcr_exception_try (x) {
         pcr_string *lhs = pcr_string_new("До свидания, луна?", x);
         pcr_string *rhs = pcr_string_new("Привет, мир!", x);
@@ -341,10 +360,11 @@ static bool test_cmp_9(pcr_exception ex)
 }
 
 
-#define DESC_CMP_10 "pcr_string_cmp() throws PCR_EXCEPTION_HANDLE if passed a" \
-                   " NULL pointer for @lhs"
-static bool test_cmp_10(pcr_exception ex)
+static bool test_cmp_10(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_cmp() throws PCR_EXCEPTION_HANDLE if passed a NULL"
+            " pointer for @lhs";
+
     pcr_exception_try (x) {
         (void) pcr_string_cmp(NULL, "Hello, world!", x);
     }
@@ -358,10 +378,11 @@ static bool test_cmp_10(pcr_exception ex)
 }
 
 
-#define DESC_CMP_11 "pcr_string_cmp() throws PCR_EXCEPTION_HANDLE if passed a" \
-                   " NULL pointer for @rhs"
-static bool test_cmp_11(pcr_exception ex)
+static bool test_cmp_11(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_cmp() throws PCR_EXCEPTION_HANDLE if passed a NULL"
+            " pointer for @rhs";
+
     pcr_exception_try (x) {
         (void) pcr_string_cmp("Hello, world!", NULL, x);
     }
@@ -380,9 +401,10 @@ static bool test_cmp_11(pcr_exception ex)
  */
 
 
-#define DESC_ADD_1 "pcr_string_add() adds two null strings"
-static bool test_add_1(pcr_exception ex)
+static bool test_add_1(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_add() adds two null strings";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("", x);
         test = pcr_string_add(test, "", x);
@@ -395,9 +417,10 @@ static bool test_add_1(pcr_exception ex)
 }
 
 
-#define DESC_ADD_2 "pcr_string_add() adds two ASCII strings"
-static bool test_add_2(pcr_exception ex)
+static bool test_add_2(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_add() adds two ASCII strings";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello", x);
         test = pcr_string_add(test, ", ", x);
@@ -412,9 +435,10 @@ static bool test_add_2(pcr_exception ex)
 }
 
 
-#define DESC_ADD_3 "pcr_string_add() adds two Unicode strings"
-static bool test_add_3(pcr_exception ex)
+static bool test_add_3(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_add() adds two Unicode strings";
+
     pcr_exception_try (x) {
         const char *expect = "До свидания, луна?";
 
@@ -430,10 +454,12 @@ static bool test_add_3(pcr_exception ex)
     return false;
 }
 
-#define DESC_ADD_4 "pcr_string_add() throws PCR_EXCEPTION_HANDLE if passed a" \
-                   " NULL pointer for @ctx"
-static bool test_add_4(pcr_exception ex)
+
+static bool test_add_4(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_add() throws PCR_EXCEPTION_HANDLE if passed a NULL"
+            " pointer for @ctx";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello", x);
         (void) test;
@@ -451,11 +477,11 @@ static bool test_add_4(pcr_exception ex)
 }
 
 
-
-#define DESC_ADD_5 "pcr_string_add() throws PCR_EXCEPTION_HANDLE if passed a" \
-                   " NULL pointer for @add"
-static bool test_add_5(pcr_exception ex)
+static bool test_add_5(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_add() throws PCR_EXCEPTION_HANDLE if passed a NULL"
+            " pointer for @add";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello", x);
         test = pcr_string_add(test, NULL, x);
@@ -476,9 +502,10 @@ static bool test_add_5(pcr_exception ex)
  */
 
 
-#define DESC_FIND_1 "pcr_string_find() can find a null string"
-static bool test_find_1(pcr_exception ex)
+static bool test_find_1(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_find() can find a null string";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("", x);
         return pcr_string_find(test, "", x) == 1;
@@ -489,10 +516,10 @@ static bool test_find_1(pcr_exception ex)
 }
 
 
-#define DESC_FIND_2 "pcr_string_find() can find an ASCII string with 1" \
-                    " character"
-static bool test_find_2(pcr_exception ex)
+static bool test_find_2(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_find() can find an ASCII string with 1 character";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello, world!", x);
         return pcr_string_find(test, "w", x) == 8;
@@ -503,10 +530,10 @@ static bool test_find_2(pcr_exception ex)
 }
 
 
-#define DESC_FIND_3 "pcr_string_find() can find a Unicode string with 1" \
-                    " character"
-static bool test_find_3(pcr_exception ex)
+static bool test_find_3(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_find() can find a Unicode string with 1 character";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Привет, мир!", x);
         return pcr_string_find(test, "м", x) == 9;
@@ -517,9 +544,10 @@ static bool test_find_3(pcr_exception ex)
 }
 
 
-#define DESC_FIND_4 "pcr_string_find() can find an ASCII string"
-static bool test_find_4(pcr_exception ex)
+static bool test_find_4(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_find() can find an ASCII string";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello, world!", x);
         return pcr_string_find(test, "world", x) == 8;
@@ -530,9 +558,10 @@ static bool test_find_4(pcr_exception ex)
 }
 
 
-#define DESC_FIND_5 "pcr_string_find() can find a Unicode string"
-static bool test_find_5(pcr_exception ex)
+static bool test_find_5(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_find() can find a Unicode string";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Привет, мир!", x);
         return pcr_string_find(test, "мир", x) == 9;
@@ -544,10 +573,11 @@ static bool test_find_5(pcr_exception ex)
 
 
 
-#define DESC_FIND_6 "pcr_string_find() can detect the absence of an ASCII" \
-                    " string with 1 character"
-static bool test_find_6(pcr_exception ex)
+static bool test_find_6(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_find() can detect the absence of an ASCII string with 1"
+            " character";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello, world!", x);
         return pcr_string_find(test, "h", x) == 0;
@@ -558,10 +588,11 @@ static bool test_find_6(pcr_exception ex)
 }
 
 
-#define DESC_FIND_7 "pcr_string_find() can detect the absence of a Unicode" \
-                    " string with 1 character"
-static bool test_find_7(pcr_exception ex)
+static bool test_find_7(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_find() can detect the absence of a Unicode string with"
+            " 1 character";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Привет, мир!", x);
         return pcr_string_find(test, "л", x) == 0;
@@ -572,10 +603,10 @@ static bool test_find_7(pcr_exception ex)
 }
 
 
-#define DESC_FIND_8 "pcr_string_find() can detect the absence of an ASCII" \
-                    " string"
-static bool test_find_8(pcr_exception ex)
+static bool test_find_8(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_find() can detect the absence of an ASCII string";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello, world!", x);
         return pcr_string_find(test, "moon", x) == 0;
@@ -586,10 +617,10 @@ static bool test_find_8(pcr_exception ex)
 }
 
 
-#define DESC_FIND_9 "pcr_string_find() can detect the absence of a Unicode" \
-                    " string"
-static bool test_find_9(pcr_exception ex)
+static bool test_find_9(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_find() can detect the absence of a Unicode string";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Привет, мир!", x);
         return pcr_string_find(test, "луна", x) == 0;
@@ -600,10 +631,11 @@ static bool test_find_9(pcr_exception ex)
 }
 
 
-#define DESC_FIND_10 "pcr_string_find() throws PCR_EXCEPTION_HANDLE if passed" \
-                     " a NULL pointer for @haystack"
-static bool test_find_10(pcr_exception ex)
+static bool test_find_10(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_find() throws PCR_EXCEPTION_HANDLE if passed a NULL"
+            " pointer for @haystack";
+
     pcr_exception_try (x) {
         (void) pcr_string_find(NULL, "Hello", x);
     }
@@ -617,10 +649,11 @@ static bool test_find_10(pcr_exception ex)
 }
 
 
-#define DESC_FIND_11 "pcr_string_find() throws PCR_EXCEPTION_HANDLE if passed" \
-                     " a NULL pointer for @needle"
-static bool test_find_11(pcr_exception ex)
+static bool test_find_11(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_find() throws PCR_EXCEPTION_HANDLE if passed a NULL"
+            " pointer for @needle";
+
     pcr_exception_try (x) {
         (void) pcr_string_find("Hello", NULL, x);
     }
@@ -639,10 +672,11 @@ static bool test_find_11(pcr_exception ex)
  */
 
 
-#define DESC_REPLACE_1 "pcr_string_replace() throws PCR_EXCEPTION_STRING if" \
-                       " passed a null string for @needle"
-static bool test_replace_1(pcr_exception ex)
+static bool test_replace_1(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_replace() throws PCR_EXCEPTION_STRING if passed a null"
+            " string for @needle";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("", x);
         (void) pcr_string_replace(test, "", "Hello, world!", x);
@@ -657,10 +691,11 @@ static bool test_replace_1(pcr_exception ex)
 }
 
 
-#define DESC_REPLACE_2 "pcr_string_replace() replaces an ASCII character with" \
-                       " a null character"
-static bool test_replace_2(pcr_exception ex)
+static bool test_replace_2(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_replace() replaces an ASCII character with a null"
+            " character";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello, world!", x);
         test = pcr_string_replace(test, "!", "", x);
@@ -673,10 +708,11 @@ static bool test_replace_2(pcr_exception ex)
 }
 
 
-#define DESC_REPLACE_3 "pcr_string_replace() replaces a Unicode character" \
-                       " with a null character"
-static bool test_replace_3(pcr_exception ex)
+static bool test_replace_3(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_replace() replaces a Unicode character with a null"
+            " character";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Привет, мир!", x);
         test = pcr_string_replace(test, "т", "", x);
@@ -689,10 +725,11 @@ static bool test_replace_3(pcr_exception ex)
 }
 
 
-#define DESC_REPLACE_4 "pcr_string_replace() replaces only the first instance" \
-                       " in an ASCII string"
-static bool test_replace_4(pcr_exception ex)
+static bool test_replace_4(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_replace() replaces only the first instance in an ASCII"
+            " string";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello, world!", x);
         test = pcr_string_replace(test, "l", "y", x);
@@ -705,10 +742,11 @@ static bool test_replace_4(pcr_exception ex)
 }
 
 
-#define DESC_REPLACE_5 "pcr_string_replace() replaces only the first instance" \
-                       " in a Unicode string"
-static bool test_replace_5(pcr_exception ex)
+static bool test_replace_5(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_replace() replaces only the first instance in a Unicode"
+            " string";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Привет, мир!", x);
         test = pcr_string_replace(test, "р", "r", x);
@@ -721,9 +759,10 @@ static bool test_replace_5(pcr_exception ex)
 }
 
 
-#define DESC_REPLACE_6 "pcr_string_replace() replaces an ASCII substring"
-static bool test_replace_6(pcr_exception ex)
+static bool test_replace_6(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_replace() replaces an ASCII substring";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello, world!", x);
         test = pcr_string_replace(test, "world", "moon", x);
@@ -736,9 +775,10 @@ static bool test_replace_6(pcr_exception ex)
 }
 
 
-#define DESC_REPLACE_7 "pcr_string_replace() replaces a Unicode substring"
-static bool test_replace_7(pcr_exception ex)
+static bool test_replace_7(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_replace() replaces a Unicode substring";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Привет, мир!", x);
         test = pcr_string_replace(test, "Привет", "До свидания", x);
@@ -751,9 +791,10 @@ static bool test_replace_7(pcr_exception ex)
 }
 
 
-#define DESC_REPLACE_8 "pcr_string_replace() replaces an entire ASCII string"
-static bool test_replace_8(pcr_exception ex)
+static bool test_replace_8(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_replace() replaces an entire ASCII string";
+
     pcr_exception_try (x) {
         const pcr_string *expect = "Goodbye, moon?";
         pcr_string *test = pcr_string_new("Hello, world!", x);
@@ -767,9 +808,10 @@ static bool test_replace_8(pcr_exception ex)
 }
 
 
-#define DESC_REPLACE_9 "pcr_string_replace() replaces an entire Unicode string"
-static bool test_replace_9(pcr_exception ex)
+static bool test_replace_9(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_replace() replaces an entire Unicode string";
+
     pcr_exception_try (x) {
         const pcr_string *expect = "До свидания, луна?";
         pcr_string *test = pcr_string_new("Привет, мир!", x);
@@ -783,10 +825,11 @@ static bool test_replace_9(pcr_exception ex)
 }
 
 
-#define DESC_REPLACE_10 "pcr_string_replace() throws PCR_EXCEPTION_HANDLE if" \
-                        " passed a NULL pointer for @haystack"
-static bool test_replace_10(pcr_exception ex)
+static bool test_replace_10(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_replace() throws PCR_EXCEPTION_HANDLE if passed a NULL"
+            " pointer for @haystack";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello, world!", x);
         (void) pcr_string_replace(NULL, test, "", x);
@@ -801,10 +844,11 @@ static bool test_replace_10(pcr_exception ex)
 }
 
 
-#define DESC_REPLACE_11 "pcr_string_replace() throws PCR_EXCEPTION_STRING if" \
-                        " passed a NULL pointer for @needle"
-static bool test_replace_11(pcr_exception ex)
+static bool test_replace_11(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_replace() throws PCR_EXCEPTION_STRING if passed a NULL"
+            " pointer for @needle";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello, world!", x);
         (void) pcr_string_replace(test, NULL, "", x);
@@ -819,10 +863,11 @@ static bool test_replace_11(pcr_exception ex)
 }
 
 
-#define DESC_REPLACE_12 "pcr_string_replace() throws PCR_EXCEPTION_HANDLE if" \
-                        " passed a NULL pointer for @replace"
-static bool test_replace_12(pcr_exception ex)
+static bool test_replace_12(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_replace() throws PCR_EXCEPTION_HANDLE if passed a NULL"
+            " pointer for @replace";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello, world!", x);
         (void) pcr_string_replace(test, "Hello", NULL, x);
@@ -842,11 +887,11 @@ static bool test_replace_12(pcr_exception ex)
  */
 
 
-#define DESC_REPLACEALL_1 "pcr_string_replaceall() throws"                \
-                          " PCR_EXCEPTION_STRING if passed a null string" \
-                          " for @needle"
-static bool test_replaceall_1(pcr_exception ex)
+static bool test_replaceall_1(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_replaceall() throws PCR_EXCEPTION_STRING if passed a"
+            " null string for @needle";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("", x);
         (void) pcr_string_replaceall(test, "", "Hello, world!", x);
@@ -861,10 +906,11 @@ static bool test_replaceall_1(pcr_exception ex)
 }
 
 
-#define DESC_REPLACEALL_2 "pcr_string_replaceall() replaces an ASCII" \
-                          " character with a null character"
-static bool test_replaceall_2(pcr_exception ex)
+static bool test_replaceall_2(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_replaceall() replaces an ASCII character with a null"
+            " character";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello, world!", x);
         test = pcr_string_replaceall(test, "!", "", x);
@@ -877,10 +923,11 @@ static bool test_replaceall_2(pcr_exception ex)
 }
 
 
-#define DESC_REPLACEALL_3 "pcr_string_replaceall() replaces a Unicode" \
-                          " character with a null character"
-static bool test_replaceall_3(pcr_exception ex)
+static bool test_replaceall_3(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_replaceall() replaces a Unicode character with a null"
+            " character";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Привет, мир!", x);
         test = pcr_string_replaceall(test, "т", "", x);
@@ -893,10 +940,11 @@ static bool test_replaceall_3(pcr_exception ex)
 }
 
 
-#define DESC_REPLACEALL_4 "pcr_string_replaceall() replaces all the" \
-                          " instances in an ASCII string"
-static bool test_replaceall_4(pcr_exception ex)
+static bool test_replaceall_4(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_replaceall() replaces all the instances in an ASCII"
+            " string";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello, world!", x);
         test = pcr_string_replaceall(test, "l", "y", x);
@@ -909,10 +957,11 @@ static bool test_replaceall_4(pcr_exception ex)
 }
 
 
-#define DESC_REPLACEALL_5 "pcr_string_replaceall() replaces all the" \
-                          " instances in a Unicode string"
-static bool test_replaceall_5(pcr_exception ex)
+static bool test_replaceall_5(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_replaceall() replaces all the instances in a Unicode"
+            " string";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Привет, мир!", x);
         test = pcr_string_replaceall(test, "р", "r", x);
@@ -925,9 +974,10 @@ static bool test_replaceall_5(pcr_exception ex)
 }
 
 
-#define DESC_REPLACEALL_6 "pcr_string_replaceall() replaces an ASCII substring"
-static bool test_replaceall_6(pcr_exception ex)
+static bool test_replaceall_6(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_replaceall() replaces an ASCII substring";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello, world!", x);
         test = pcr_string_replaceall(test, "world", "moon", x);
@@ -940,9 +990,10 @@ static bool test_replaceall_6(pcr_exception ex)
 }
 
 
-#define DESC_REPLACEALL_7 "pcr_string_replaceall() replaces a Unicode substring"
-static bool test_replaceall_7(pcr_exception ex)
+static bool test_replaceall_7(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_replaceall() replaces a Unicode substring";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Привет, мир!", x);
         test = pcr_string_replaceall(test, "Привет", "До свидания", x);
@@ -955,10 +1006,10 @@ static bool test_replaceall_7(pcr_exception ex)
 }
 
 
-#define DESC_REPLACEALL_8 "pcr_string_replaceall() replaces an entire ASCII" \
-                          " string"
-static bool test_replaceall_8(pcr_exception ex)
+static bool test_replaceall_8(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_replaceall() replaces an entire ASCII string";
+
     pcr_exception_try (x) {
         const pcr_string *expect = "Goodbye, moon?";
         pcr_string *test = pcr_string_new("Hello, world!", x);
@@ -972,10 +1023,10 @@ static bool test_replaceall_8(pcr_exception ex)
 }
 
 
-#define DESC_REPLACEALL_9 "pcr_string_replaceall() replaces an entire Unicode" \
-                          " string"
-static bool test_replaceall_9(pcr_exception ex)
+static bool test_replaceall_9(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_replaceall() replaces an entire Unicode string";
+
     pcr_exception_try (x) {
         const pcr_string *expect = "До свидания, луна?";
         pcr_string *test = pcr_string_new("Привет, мир!", x);
@@ -989,11 +1040,11 @@ static bool test_replaceall_9(pcr_exception ex)
 }
 
 
-#define DESC_REPLACEALL_10 "pcr_string_replaceall() throws"                 \
-                           " PCR_EXCEPTION_HANDLE if passed a NULL pointer" \
-                           " for @haystack"
-static bool test_replaceall_10(pcr_exception ex)
+static bool test_replaceall_10(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_replaceall() throws PCR_EXCEPTION_HANDLE if passed a"
+            " NULL pointer for @haystack";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello, world!", x);
         (void) pcr_string_replaceall(NULL, test, "", x);
@@ -1008,11 +1059,11 @@ static bool test_replaceall_10(pcr_exception ex)
 }
 
 
-#define DESC_REPLACEALL_11 "pcr_string_replaceall() throws"                 \
-                           " PCR_EXCEPTION_STRING if passed a NULL pointer" \
-                           " for @needle"
-static bool test_replaceall_11(pcr_exception ex)
+static bool test_replaceall_11(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_replaceall() throws PCR_EXCEPTION_STRING if passed a"
+            " NULL pointer for @needle";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello, world!", x);
         (void) pcr_string_replaceall(test, NULL, "", x);
@@ -1027,11 +1078,11 @@ static bool test_replaceall_11(pcr_exception ex)
 }
 
 
-#define DESC_REPLACEALL_12 "pcr_string_replaceall() throws"                 \
-                           " PCR_EXCEPTION_HANDLE if passed a NULL pointer" \
-                           " for @replace"
-static bool test_replaceall_12(pcr_exception ex)
+static bool test_replaceall_12(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_replaceall() throws PCR_EXCEPTION_HANDLE if passed a"
+            " NULL pointer for @replace";
+
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello, world!", x);
         (void) pcr_string_replaceall(test, "Hello", NULL, x);
@@ -1051,10 +1102,11 @@ static bool test_replaceall_12(pcr_exception ex)
  */
 
 
-#define DESC_INT_1 "pcr_string_int() stringifies 0"
 static bool
-test_int_1(pcr_exception ex)
+test_int_1(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_int() stringifies 0";
+
     pcr_exception_try (x) {
         return !strcmp(pcr_string_int(0, x), "0");
     }
@@ -1064,10 +1116,11 @@ test_int_1(pcr_exception ex)
 }
 
 
-#define DESC_INT_2 "pcr_string_int() stringifies a negative integer"
 static bool
-test_int_2(pcr_exception ex)
+test_int_2(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_int() stringifies a negative integer";
+
     pcr_exception_try (x) {
         return !strcmp(pcr_string_int(-1024, x), "-1024");
     }
@@ -1077,10 +1130,11 @@ test_int_2(pcr_exception ex)
 }
 
 
-#define DESC_INT_3 "pcr_string_int() stringifies a positive integer"
 static bool
-test_int_3(pcr_exception ex)
+test_int_3(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_int() stringifies a positive integer";
+
     pcr_exception_try (x) {
         return !strcmp(pcr_string_int(1024, x), "1024");
     }
@@ -1095,10 +1149,11 @@ test_int_3(pcr_exception ex)
  */
 
 
-#define DESC_FLOAT_1 "pcr_string_float() stringifies 0"
 static bool
-test_float_1(pcr_exception ex)
+test_float_1(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_float() stringifies 0";
+
     pcr_exception_try (x) {
         return !strcmp(pcr_string_float(0, x), "0.000000");
     }
@@ -1108,11 +1163,11 @@ test_float_1(pcr_exception ex)
 }
 
 
-#define DESC_FLOAT_2 "pcr_string_float() stringifies a negative floating" \
-                     " point number"
 static bool
-test_float_2(pcr_exception ex)
+test_float_2(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_float() stringifies a negative floating point number";
+
     pcr_exception_try (x) {
         return !strcmp(pcr_string_float(-3.141592654, x), "-3.141593");
     }
@@ -1122,11 +1177,11 @@ test_float_2(pcr_exception ex)
 }
 
 
-#define DESC_FLOAT_3 "pcr_string_float() stringifies a positive floating" \
-                     " point number"
 static bool
-test_float_3(pcr_exception ex)
+test_float_3(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_string_float() stringifies a positive floating point number";
+
     pcr_exception_try (x) {
         return !strcmp(pcr_string_float(3.141592654, x), "3.141593");
     }
@@ -1162,39 +1217,15 @@ static pcr_unittest *unit_tests[] = {
 };
 
 
-static pcr_string *UNIT_DESCS[] = {
-    DESC_NEW_1, DESC_NEW_2, DESC_NEW_3, DESC_NEW_4, DESC_COPY_1,
-    DESC_COPY_2, DESC_COPY_3, DESC_COPY_4, DESC_LEN_1, DESC_LEN_2,
-    DESC_LEN_3, DESC_LEN_4, DESC_CMP_1, DESC_CMP_2, DESC_CMP_3,
-    DESC_CMP_4, DESC_CMP_5, DESC_CMP_6, DESC_CMP_7, DESC_CMP_8,
-    DESC_CMP_9, DESC_CMP_10, DESC_CMP_11, DESC_ADD_1, DESC_ADD_2,
-    DESC_ADD_3, DESC_ADD_4, DESC_ADD_5, DESC_FIND_1, DESC_FIND_2,
-    DESC_FIND_3, DESC_FIND_4, DESC_FIND_5, DESC_FIND_6, DESC_FIND_7,
-    DESC_FIND_8, DESC_FIND_9, DESC_FIND_10, DESC_FIND_11, DESC_REPLACE_1,
-    DESC_REPLACE_2, DESC_REPLACE_3, DESC_REPLACE_4, DESC_REPLACE_5,
-    DESC_REPLACE_6, DESC_REPLACE_6, DESC_REPLACE_7, DESC_REPLACE_7,
-    DESC_REPLACE_8, DESC_REPLACE_9, DESC_REPLACE_10, DESC_REPLACE_11,
-    DESC_REPLACE_12, DESC_REPLACEALL_1, DESC_REPLACEALL_2,
-    DESC_REPLACEALL_3, DESC_REPLACEALL_4, DESC_REPLACEALL_5,
-    DESC_REPLACEALL_6, DESC_REPLACEALL_7, DESC_REPLACEALL_8,
-    DESC_REPLACEALL_9, DESC_REPLACEALL_10, DESC_REPLACEALL_11,
-    DESC_REPLACEALL_12, DESC_INT_1, DESC_INT_2, DESC_INT_3, DESC_FLOAT_1,
-    DESC_FLOAT_2, DESC_FLOAT_3
-};
-
-
 extern pcr_testsuite *
 pcr_string_testsuite(pcr_exception ex)
 {
     pcr_exception_try (x) {
         pcr_testsuite *ts = pcr_testsuite_new("PCR String (pcr_string)", x);
 
-        register pcr_testcase *tc;
         register size_t len = sizeof unit_tests / sizeof *unit_tests;
-        for (register size_t i = 0; i < len; i++) {
-            tc = pcr_testcase_new(unit_tests[i], UNIT_DESCS[i], x);
-            pcr_testsuite_push(ts, tc, x);
-        }
+        for (register size_t i = 0; i < len; i++)
+            pcr_testsuite_push(ts, pcr_testcase_new(unit_tests[i], x), x);
 
         return ts;
     }
