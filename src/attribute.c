@@ -22,11 +22,11 @@ static size_t value_size(PCR_ATTRIBUTE type, const void *value,
             break;
 
         case PCR_ATTRIBUTE_TEXT:
-            return pcr_string_len((pcr_string *) value, ex);
+            return pcr_string_sz((pcr_string *) value, ex);
             break;
 
         default:
-            return sizeof (void *);
+            return 0;
             break;
     }
 }
@@ -37,6 +37,8 @@ pcr_attribute_new(PCR_ATTRIBUTE type, const pcr_string *key, const void *value,
                   pcr_exception ex)
 {
     pcr_assert_string(key, ex);
+    if (pcr_hint_likely (type != PCR_ATTRIBUTE_NULL))
+        pcr_assert_handle(value, ex);
 
     pcr_exception_try (x) {
         pcr_attribute *ctx = pcr_mempool_alloc(sizeof *ctx, x);
@@ -45,8 +47,10 @@ pcr_attribute_new(PCR_ATTRIBUTE type, const pcr_string *key, const void *value,
         ctx->key = pcr_string_copy(key, x);
 
         size_t sz = value_size(type, value, x);
-        ctx->value = pcr_mempool_alloc(sz, x);
-        memcpy(ctx->value, value, sz);
+        if (pcr_hint_likely (sz)) {
+            ctx->value = pcr_mempool_alloc(sz, x);
+            memcpy(ctx->value, value, sz);
+        }
 
         return ctx;
     }
@@ -92,9 +96,13 @@ pcr_attribute_value(const pcr_attribute *ctx, pcr_exception ex)
     pcr_assert_handle(ctx, ex);
 
     pcr_exception_try (x) {
+        void *value = NULL;
         size_t sz = value_size(ctx->type, ctx->value, x);
-        void *value = pcr_mempool_alloc(sz, x);
-        memcpy(value, ctx->value, sz);
+
+        if (pcr_hint_likely (sz)) {
+            value = pcr_mempool_alloc(sz, x);
+            memcpy(value, ctx->value, sz);
+        }
 
         return value;
     }
