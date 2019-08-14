@@ -536,6 +536,122 @@ test_valuesz_6(pcr_string **desc, pcr_exception ex)
 }
 
 
+static bool
+test_string_1(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_attribute_string() stringifies a null attribute";
+
+    pcr_exception_try (x) {
+        const PCR_ATTRIBUTE type = PCR_ATTRIBUTE_NULL;
+        const pcr_string *key = "dummy";
+        const void *value = NULL;
+
+        pcr_attribute *test = pcr_attribute_new(type, key, value, x);
+        return !pcr_string_cmp(pcr_attribute_string(test, x), "NULL", x);
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+static bool
+test_string_2(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_attribute_string() stringifies an int attribute";
+
+    pcr_exception_try (x) {
+        const PCR_ATTRIBUTE type = PCR_ATTRIBUTE_INT;
+        const pcr_string *key = "int_value";
+        const int64_t value = -1024;
+
+        pcr_attribute *test = pcr_attribute_new(type, key, &value, x);
+        pcr_string *valstr = pcr_string_int(value, x);
+        return !pcr_string_cmp(pcr_attribute_string(test, x), valstr, x);
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+static bool
+test_string_3(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_attribute_string() stringifies a float attribute";
+
+    pcr_exception_try (x) {
+        const PCR_ATTRIBUTE type = PCR_ATTRIBUTE_FLOAT;
+        const pcr_string *key = "float_value";
+        const double value = -3.141592654;
+
+        pcr_attribute *test = pcr_attribute_new(type, key, &value, x);
+        pcr_string *valstr = pcr_string_float(value, x);
+        return !pcr_string_cmp(pcr_attribute_string(test, x), valstr, x);
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+static bool
+test_string_4(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_attribute_string() stringifies an ASCII text attribute";
+
+    pcr_exception_try (x) {
+        const pcr_string *key = "bar";
+        const pcr_string *value = pcr_string_new("Hello, world!", x);
+        const PCR_ATTRIBUTE type  = PCR_ATTRIBUTE_TEXT;
+
+        pcr_attribute *test = pcr_attribute_new(type, key, value, x);
+        return !pcr_string_cmp(pcr_attribute_string(test, x), value, x);
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+static bool
+test_string_5(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_attribute_string() stringifies a Unicode text attribute";
+
+    pcr_exception_try (x) {
+        const pcr_string *key = "bar";
+        const pcr_string *value = pcr_string_new("Привет, мир!", x);
+        const PCR_ATTRIBUTE type  = PCR_ATTRIBUTE_TEXT;
+
+        pcr_attribute *test = pcr_attribute_new(type, key, value, x);
+        return !pcr_string_cmp(pcr_attribute_string(test, x), value, x);
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+static bool
+test_string_6(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_attribute_string() throws PCR_EXCEPTION_HANDLE if passed a"
+            " null pointer for @ctx";
+
+    pcr_exception_try (x) {
+        (void) pcr_attribute_string(NULL, x);
+    }
+
+    pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        return true;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
 /******************************************************************************
  * pcr_attribute_testsuite() interface
  */
@@ -546,7 +662,8 @@ static pcr_unittest *unit_tests[] = {
     test_new_7, test_new_8, test_new_9, test_copy_1, test_copy_2, test_copy_3,
     test_copy_4, test_copy_5, test_copy_6, test_key_1, test_value_1,
     test_type_1, test_valuesz_1, test_valuesz_2, test_valuesz_3, test_valuesz_4,
-    test_valuesz_5, test_valuesz_6
+    test_valuesz_5, test_valuesz_6, test_string_1, test_string_2, test_string_3,
+    test_string_4, test_string_5, test_string_6
 };
 
 
