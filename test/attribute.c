@@ -7,7 +7,8 @@
  * pcr_attribute_new() test cases
  */
 
-static bool test_new_1(pcr_string **desc, pcr_exception ex)
+static bool
+test_new_1(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_attribute_new() can create a null attribute";
 
@@ -28,7 +29,8 @@ static bool test_new_1(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_new_2(pcr_string **desc, pcr_exception ex)
+static bool
+test_new_2(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_attribute_new() can create an int attribute";
 
@@ -50,7 +52,8 @@ static bool test_new_2(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_new_3(pcr_string **desc, pcr_exception ex)
+static bool
+test_new_3(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_attribute_new() can create a float attribute";
 
@@ -73,7 +76,8 @@ static bool test_new_3(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_new_4(pcr_string **desc, pcr_exception ex)
+static bool
+test_new_4(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_attribute_new() can create an ASCII string attribute";
 
@@ -96,7 +100,8 @@ static bool test_new_4(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_new_5(pcr_string **desc, pcr_exception ex)
+static bool
+test_new_5(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_attribute_new() can create a Unicode string attribute";
 
@@ -119,7 +124,8 @@ static bool test_new_5(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_new_6(pcr_string **desc, pcr_exception ex)
+static bool
+test_new_6(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_attribute_new() throws PCR_EXCEPTION_STRING if passed a NULL"
             " pointer for @key";
@@ -137,7 +143,8 @@ static bool test_new_6(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_new_7(pcr_string **desc, pcr_exception ex)
+static bool
+test_new_7(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_attribute_new() throws PCR_EXCEPTION_STRING if passed a null"
             " string for @key";
@@ -155,7 +162,8 @@ static bool test_new_7(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_new_8(pcr_string **desc, pcr_exception ex)
+static bool
+test_new_8(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_attribute_new() does not throw PCR_EXCEPTION_HANDLE if passed"
             " a null pointer for @value when @field is PCR_ATTRIBUTE_NULL";
@@ -170,7 +178,8 @@ static bool test_new_8(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_new_9(pcr_string **desc, pcr_exception ex)
+static bool
+test_new_9(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_attribute_new() throws PCR_EXCEPTION_HANDLE if passed a null"
             " pointer for @value when @field is not PCR_ATTRIBUTE_NULL";
@@ -193,7 +202,8 @@ static bool test_new_9(pcr_string **desc, pcr_exception ex)
  */
 
 
-static bool test_copy_1(pcr_string **desc, pcr_exception ex)
+static bool
+test_copy_1(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_attribute_copy() can copy a null attribute";
 
@@ -215,7 +225,8 @@ static bool test_copy_1(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_copy_2(pcr_string **desc, pcr_exception ex)
+static bool
+test_copy_2(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_attribute_copy() can copy an int attribute";
 
@@ -238,7 +249,8 @@ static bool test_copy_2(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_copy_3(pcr_string **desc, pcr_exception ex)
+static bool
+test_copy_3(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_attribute_copy() can copy a float attribute";
 
@@ -262,7 +274,8 @@ static bool test_copy_3(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_copy_4(pcr_string **desc, pcr_exception ex)
+static bool
+test_copy_4(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_attribute_copy() can copy an ASCII string attribute";
 
@@ -286,7 +299,8 @@ static bool test_copy_4(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_copy_5(pcr_string **desc, pcr_exception ex)
+static bool
+test_copy_5(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_attribute_copy() can copy a Unicode string attribute";
 
@@ -310,13 +324,86 @@ static bool test_copy_5(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_copy_6(pcr_string **desc, pcr_exception ex)
+static bool
+test_copy_6(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_attribute_copy() throws PCR_EXCEPTION_HANDLE if passed a NULL"
             " pointer for @ctx";
 
     pcr_exception_try (x) {
         (void) pcr_attribute_copy(NULL, x);
+    }
+
+    pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        return true;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+/******************************************************************************
+ * pcr_attribute_key() test cases
+ */
+
+
+static bool
+test_key_1(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_attribute_key() throws PCR_EXCEPTION_HANDLE if passed a NULL"
+            " pointer for @ctx";
+
+    pcr_exception_try (x) {
+        (void) pcr_attribute_key(NULL, x);
+    }
+
+    pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        return true;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+/******************************************************************************
+ * pcr_attribute_value() test cases
+ */
+
+
+static bool
+test_value_1(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_attribute_value() throws PCR_EXCEPTION_HANDLE if passed a NULL"
+            " pointer for @ctx";
+
+    pcr_exception_try (x) {
+        (void) pcr_attribute_value(NULL, x);
+    }
+
+    pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        return true;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+/******************************************************************************
+ * pcr_attribute_type() test cases
+ */
+
+
+static bool
+test_type_1(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_attribute_type() throws PCR_EXCEPTION_HANDLE if passed a NULL"
+            " pointer for @ctx";
+
+    pcr_exception_try (x) {
+        (void) pcr_attribute_type(NULL, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
@@ -336,7 +423,8 @@ static bool test_copy_6(pcr_string **desc, pcr_exception ex)
 static pcr_unittest *unit_tests[] = {
     test_new_1, test_new_2, test_new_3, test_new_4, test_new_5, test_new_6,
     test_new_7, test_new_8, test_new_9, test_copy_1, test_copy_2, test_copy_3,
-    test_copy_4, test_copy_5, test_copy_6
+    test_copy_4, test_copy_5, test_copy_6, test_key_1, test_value_1,
+    test_type_1
 };
 
 
