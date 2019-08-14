@@ -416,6 +416,127 @@ test_type_1(pcr_string **desc, pcr_exception ex)
 
 
 /******************************************************************************
+ * pcr_attribute_valuesz() test cases
+ */
+
+
+static bool
+test_valuesz_1(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_attribute_valuesz() returns 0 for a null attribute";
+
+    pcr_exception_try (x) {
+        const PCR_ATTRIBUTE type = PCR_ATTRIBUTE_NULL;
+        const pcr_string *key = "dummy";
+        const void *value = NULL;
+
+        pcr_attribute *test = pcr_attribute_new(type, key, value, x);
+        return !pcr_attribute_valuesz(test, x);
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+static bool
+test_valuesz_2(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_attribute_valuesz() returns the size of an int attribute";
+
+    pcr_exception_try (x) {
+        const PCR_ATTRIBUTE type = PCR_ATTRIBUTE_INT;
+        const pcr_string *key = "int_value";
+        const int64_t value = -1024;
+
+        pcr_attribute *test = pcr_attribute_new(type, key, &value, x);
+        return pcr_attribute_valuesz(test, x) == sizeof value;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+static bool
+test_valuesz_3(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_attribute_valuesz() returns the size of a float attribute";
+
+    pcr_exception_try (x) {
+        const PCR_ATTRIBUTE type = PCR_ATTRIBUTE_FLOAT;
+        const pcr_string *key = "float_value";
+        const double value = -3.141592654;
+
+        pcr_attribute *test = pcr_attribute_new(type, key, &value, x);
+        return pcr_attribute_valuesz(test, x) == sizeof value;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+static bool
+test_valuesz_4(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_attribute_valuesz() returns the size of an ASCII text"
+            " attribute";
+
+    pcr_exception_try (x) {
+        const pcr_string *key = "bar";
+        const pcr_string *value = pcr_string_new("Hello, world!", x);
+        const PCR_ATTRIBUTE type  = PCR_ATTRIBUTE_TEXT;
+
+        pcr_attribute *test = pcr_attribute_new(type, key, value, x);
+        return pcr_attribute_valuesz(test, x) == pcr_string_sz(value, x);
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+static bool
+test_valuesz_5(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_attribute_valuesz() returns the size of a Unicode text"
+            " attribute";
+
+    pcr_exception_try (x) {
+        const pcr_string *key = "bar";
+        const pcr_string *value = pcr_string_new("Привет, мир!", x);
+        const PCR_ATTRIBUTE type  = PCR_ATTRIBUTE_TEXT;
+
+        pcr_attribute *test = pcr_attribute_new(type, key, value, x);
+        return pcr_attribute_valuesz(test, x) == pcr_string_sz(value, x);
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+static bool
+test_valuesz_6(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_attribute_valuesz() throws PCR_EXCEPTION_HANDLE if passed a"
+            " null pointer for @ctx";
+
+    pcr_exception_try (x) {
+        (void) pcr_attribute_valuesz(NULL, x);
+    }
+
+    pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        return true;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+/******************************************************************************
  * pcr_attribute_testsuite() interface
  */
 
@@ -424,7 +545,8 @@ static pcr_unittest *unit_tests[] = {
     test_new_1, test_new_2, test_new_3, test_new_4, test_new_5, test_new_6,
     test_new_7, test_new_8, test_new_9, test_copy_1, test_copy_2, test_copy_3,
     test_copy_4, test_copy_5, test_copy_6, test_key_1, test_value_1,
-    test_type_1
+    test_type_1, test_valuesz_1, test_valuesz_2, test_valuesz_3, test_valuesz_4,
+    test_valuesz_5, test_valuesz_6
 };
 
 
