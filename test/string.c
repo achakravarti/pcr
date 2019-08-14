@@ -210,6 +210,75 @@ static bool test_len_4(pcr_string **desc, pcr_exception ex)
 
 
 /******************************************************************************
+ * pcr_string_sz() test cases
+ */
+
+
+static bool test_sz_1(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_string_sz() reports 1 for a null string";
+
+    pcr_exception_try (x) {
+        pcr_string *test = pcr_string_new("", x);
+        return pcr_string_sz(test, x) == 1;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+static bool test_sz_2(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_string_sz() reports the size of an ASCII string";
+
+    pcr_exception_try (x) {
+        const pcr_string *sample = "Hello, world!";
+        pcr_string *test = pcr_string_new(sample, x);
+
+        return pcr_string_sz(test, x) == strlen(sample) + 1;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+static bool test_sz_3(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_string_sz() reports the size of a Unicode string";
+
+    pcr_exception_try (x) {
+        const pcr_string *sample = "Привет, мир!";
+
+        pcr_string *test = pcr_string_new(sample, x);
+        return pcr_string_sz(test, x) == strlen(sample) + 1;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+static bool test_sz_4(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_string_sz() throws PCR_EXCEPTION_HANDLE if passed a NULL"
+            " pointer for @ctx";
+
+    pcr_exception_try (x) {
+        (void) pcr_string_sz(NULL, x);
+    }
+
+    pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        return true;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+/******************************************************************************
  * pcr_string_cmp() test cases
  */
 
@@ -1199,19 +1268,19 @@ test_float_3(pcr_string **desc, pcr_exception ex)
 static pcr_unittest *unit_tests[] = {
     test_new_1, test_new_2, test_new_3, test_new_4, test_copy_1, test_copy_2,
     test_copy_3, test_copy_4, test_len_1, test_len_2, test_len_3, test_len_4,
-    test_cmp_1, test_cmp_2, test_cmp_3, test_cmp_4, test_cmp_5, test_cmp_6,
-    test_cmp_7, test_cmp_8, test_cmp_9, test_cmp_10, test_cmp_11, test_add_1,
-    test_add_2, test_add_3, test_add_4, test_add_5, test_find_1, test_find_2,
-    test_find_3, test_find_4, test_find_5, test_find_6, test_find_7,
-    test_find_8, test_find_9, test_find_10, test_find_11, test_replace_1,
-    test_replace_2, test_replace_3, test_replace_4, test_replace_5,
-    test_replace_6, test_replace_6, test_replace_7, test_replace_7,
-    test_replace_8, test_replace_9, test_replace_10, test_replace_11,
-    test_replace_12, test_replaceall_1, test_replaceall_2, test_replaceall_3,
-    test_replaceall_4, test_replaceall_5, test_replaceall_6, test_replaceall_7,
-    test_replaceall_8, test_replaceall_9, test_replaceall_10,
-    test_replaceall_11, test_replaceall_12, test_int_1, test_int_2, test_int_3,
-    test_float_1, test_float_2, test_float_3
+    test_sz_1, test_sz_2, test_sz_3, test_sz_4, test_cmp_1, test_cmp_2,
+    test_cmp_3, test_cmp_4, test_cmp_5, test_cmp_6, test_cmp_7, test_cmp_8,
+    test_cmp_9, test_cmp_10, test_cmp_11, test_add_1, test_add_2, test_add_3,
+    test_add_4, test_add_5, test_find_1, test_find_2, test_find_3, test_find_4,
+    test_find_5, test_find_6, test_find_7, test_find_8, test_find_9,
+    test_find_10, test_find_11, test_replace_1, test_replace_2, test_replace_3,
+    test_replace_4, test_replace_5, test_replace_6, test_replace_6,
+    test_replace_7, test_replace_7, test_replace_8, test_replace_9,
+    test_replace_10, test_replace_11, test_replace_12, test_replaceall_1,
+    test_replaceall_2, test_replaceall_3, test_replaceall_4, test_replaceall_5,
+    test_replaceall_6, test_replaceall_7, test_replaceall_8, test_replaceall_9,
+    test_replaceall_10, test_replaceall_11, test_replaceall_12, test_int_1,
+    test_int_2, test_int_3, test_float_1, test_float_2, test_float_3
 };
 
 
