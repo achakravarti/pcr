@@ -8,8 +8,16 @@ int main(void)
     pcr_log_open("test.log", true);
 
     pcr_exception_try (x) {
+
+        pcr_testsuite *suites[] = {
+            pcr_string_testsuite(x), pcr_attribute_testsuite(x)
+        };
+
         pcr_testharness_init("bld/test.log", x);
-        pcr_testharness_push(pcr_string_testsuite(x), x);
+        register size_t len = sizeof suites / sizeof *suites;
+        for (register size_t i = 0; i < len; i++)
+            pcr_testharness_push(suites[i], x);
+
         pcr_testharness_run(x);
         pcr_testharness_exit();
     }
