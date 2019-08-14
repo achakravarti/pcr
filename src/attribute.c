@@ -161,6 +161,8 @@ pcr_attribute_string(const pcr_attribute *ctx, pcr_exception ex)
 extern pcr_string *
 pcr_attribute_json(const pcr_attribute *ctx, pcr_exception ex)
 {
+    pcr_assert_handle(ctx, ex);
+
     pcr_exception_try (x) {
         pcr_string *json = pcr_string_new("\"", x);
         json = pcr_string_add(json, ctx->key, x);
