@@ -17,7 +17,8 @@ pcr_sql_new(const pcr_string *unbound, pcr_exception ex)
 
         ctx->ref = 1;
         ctx->unbound = pcr_string_copy(unbound, x);
-        ctx->bound = pcr_string_copy(unbound, x);
+        //ctx->bound = pcr_string_copy(unbound, x);
+        ctx->bound = pcr_string_new("", x);
 
         return ctx;
     }
@@ -57,6 +58,7 @@ extern pcr_string *
 pcr_sql_bound(const pcr_sql *ctx, pcr_exception ex)
 {
     pcr_assert_handle(ctx, ex);
+    pcr_assert_state(*ctx->bound, ex);
 
     pcr_exception_try (x) {
         return pcr_string_copy(ctx->bound, x);
@@ -136,7 +138,8 @@ pcr_sql_reset(pcr_sql **ctx, pcr_exception ex)
 
     pcr_exception_try (x) {
         pcr_sql *hnd = sql_fork(ctx, x);
-        hnd->bound = pcr_string_copy(hnd->unbound, x);
+        //hnd->bound = pcr_string_copy(hnd->unbound, x);
+        hnd->bound = pcr_string_new("", x);
     }
 
     pcr_exception_unwind(ex);
