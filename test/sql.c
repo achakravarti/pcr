@@ -77,12 +77,75 @@ test_new_4(pcr_string **desc, pcr_exception ex)
 
 
 /******************************************************************************
+ * pcr_sql_copy() interface
+ */
+
+
+static bool
+test_copy_1(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_sql_copy() clones an existing SQL instance";
+
+    pcr_exception_try (x) {
+        pcr_sql *test = pcr_sql_new(PSQL_SELECT, x);
+        pcr_sql *copy = pcr_sql_copy(test, x);
+
+        return !pcr_string_cmp(pcr_sql_unbound(test, x),
+                               pcr_sql_unbound(copy, x), x)
+               && pcr_sql_refcount(test, x) == pcr_sql_refcount(copy, x);
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+static bool
+test_copy_2(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_sql_copy() updates the reference count of an SQL instance";
+
+    pcr_exception_try (x) {
+        pcr_sql *test = pcr_sql_new(PSQL_SELECT, x);
+        pcr_sql *cpy1 = pcr_sql_copy(test, x);
+        pcr_sql *cpy2 = pcr_sql_copy(cpy1, x);
+
+        (void) cpy2;
+        return pcr_sql_refcount(test, x) == 3;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+static bool
+test_copy_3(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_sql_copy() throws PCR_EXCEPTION_HANDLE if passed a null"
+            " for @ctx";
+
+    pcr_exception_try (x) {
+        (void) pcr_sql_copy(NULL, x);
+    }
+
+    pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        return true;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+/******************************************************************************
  * pcr_sql_testsuite() interface
  */
 
 
 static pcr_unittest *unit_tests[] = {
-    &test_new_1, &test_new_2, &test_new_3, &test_new_4
+    &test_new_1, &test_new_2, &test_new_3, &test_new_4, &test_copy_1,
+    &test_copy_2, &test_copy_3
 };
 
 
