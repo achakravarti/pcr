@@ -77,7 +77,7 @@ test_new_4(pcr_string **desc, pcr_exception ex)
 
 
 /******************************************************************************
- * pcr_sql_copy() interface
+ * pcr_sql_copy() test cases
  */
 
 
@@ -139,13 +139,106 @@ test_copy_3(pcr_string **desc, pcr_exception ex)
 
 
 /******************************************************************************
+ * pcr_sql_refcount() test cases
+ */
+
+
+static bool
+test_refcount_1(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_sql_refcount() throws PCR_EXCEPTION_HANDLE if passed a null"
+            " pointer for @ctx";
+
+    pcr_exception_try (x) {
+        (void) pcr_sql_refcount(NULL, x);
+    }
+
+    pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        return true;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+/******************************************************************************
+ * pcr_sql_unbound() test cases
+ */
+
+
+static bool
+test_unbound_1(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_sql_unbound() throws PCR_EXCEPTION_HANDLE if passed a null"
+            " pointer for @ctx";
+
+    pcr_exception_try (x) {
+        (void) pcr_sql_unbound(NULL, x);
+    }
+
+    pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        return true;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+/******************************************************************************
+ * pcr_sql_bound() test cases
+ */
+
+
+static bool
+test_bound_1(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_sql_bound() throws PCR_EXCEPTION_HANDLE if passed a null"
+            " pointer for @ctx";
+
+    pcr_exception_try (x) {
+        (void) pcr_sql_bound(NULL, x);
+    }
+
+    pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        return true;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+static bool
+test_bound_2(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_sql_bound() throws PCR_EXCEPTION_STATE if called without bound"
+            " parameters";
+
+    pcr_exception_try (x) {
+        pcr_sql *test = pcr_sql_new(PSQL_SELECT, x);
+        (void) pcr_sql_bound(test, x);
+    }
+
+    pcr_exception_catch (PCR_EXCEPTION_STATE) {
+        return true;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+/******************************************************************************
  * pcr_sql_testsuite() interface
  */
 
 
 static pcr_unittest *unit_tests[] = {
     &test_new_1, &test_new_2, &test_new_3, &test_new_4, &test_copy_1,
-    &test_copy_2, &test_copy_3
+    &test_copy_2, &test_copy_3, &test_refcount_1, &test_unbound_1,
+    &test_bound_1, &test_bound_2
 };
 
 
