@@ -23,23 +23,23 @@ test_new_1(pcr_string **desc, pcr_exception ex)
 }
 
 
-/*static bool
+static bool
 test_new_2(pcr_string **desc, pcr_exception ex)
 {
-    *desc = "pcr_sql_new() creates an empty bound SQL statement";
+    *desc = "pcr_sql_new() creates an SQL object with a refcount of 1";
 
     pcr_exception_try (x) {
         pcr_sql *test = pcr_sql_new(PSQL_SELECT, x);
-        return !pcr_string_cmp(pcr_sql_bound(test, x), "", x);
+        return pcr_sql_refcount(test, x) == 1;
     }
 
     pcr_exception_unwind(ex);
     return false;
-}*/
+}
 
 
 static bool
-test_new_2(pcr_string **desc, pcr_exception ex)
+test_new_3(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_sql_new() throws PCR_EXCEPTION_STRING if passed a null pointer"
             " for @unbound";
@@ -58,7 +58,7 @@ test_new_2(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_new_3(pcr_string **desc, pcr_exception ex)
+test_new_4(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_sql_new() throws PCR_EXCEPTION_STRING if passed an empty"
             " string for @unbound";
@@ -82,7 +82,7 @@ test_new_3(pcr_string **desc, pcr_exception ex)
 
 
 static pcr_unittest *unit_tests[] = {
-    &test_new_1, &test_new_2, &test_new_3
+    &test_new_1, &test_new_2, &test_new_3, &test_new_4
 };
 
 

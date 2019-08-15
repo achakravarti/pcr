@@ -390,6 +390,9 @@ pcr_sql_new(const pcr_string *unbound, pcr_exception ex);
 extern pcr_sql *
 pcr_sql_copy(const pcr_sql *ctx, pcr_exception ex);
 
+extern size_t
+pcr_sql_refcount(const pcr_sql *ctx, pcr_exception ex);
+
 extern pcr_string *
 pcr_sql_unbound(const pcr_sql *ctx, pcr_exception ex);
 
