@@ -17,7 +17,6 @@ pcr_sql_new(const pcr_string *unbound, pcr_exception ex)
 
         ctx->ref = 1;
         ctx->unbound = pcr_string_copy(unbound, x);
-        //ctx->bound = pcr_string_copy(unbound, x);
         ctx->bound = pcr_string_new("", x);
 
         return ctx;
@@ -124,7 +123,7 @@ pcr_sql_bind(pcr_sql **ctx, const pcr_attribute *attr, pcr_exception ex)
         }
 
         hnd = sql_fork(ctx, x);
-        hnd->bound = pcr_string_replaceall(hnd->bound, param, arg, x);
+        hnd->bound = pcr_string_replaceall(hnd->unbound, param, arg, x);
     }
 
     pcr_exception_unwind(ex);
