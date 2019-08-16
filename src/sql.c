@@ -138,7 +138,6 @@ pcr_sql_reset(pcr_sql **ctx, pcr_exception ex)
 
     pcr_exception_try (x) {
         pcr_sql *hnd = sql_fork(ctx, x);
-        //hnd->bound = pcr_string_copy(hnd->unbound, x);
         hnd->bound = pcr_string_new("", x);
     }
 

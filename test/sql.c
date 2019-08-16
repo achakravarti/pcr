@@ -466,6 +466,55 @@ test_bind_9(pcr_string **desc, pcr_exception ex)
 
 
 /******************************************************************************
+ * pcr_sql_reset() test cases
+ */
+
+static bool
+test_reset_1(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_sql_reset() resets the bound SQL statement";
+
+    pcr_exception_try (x) {
+        const pcr_string *psql = "SELECT * FROM users WHERE fname = @fname";
+        pcr_sql *test = pcr_sql_new(psql, x);
+
+        pcr_attribute *attr = pcr_attribute_new(PCR_ATTRIBUTE_TEXT, "fname",
+                                                "foo", x);
+        pcr_sql_bind(&test, attr, x);
+
+        pcr_sql_reset(&test, x);
+        (void) pcr_sql_bound(test, x);
+    }
+
+    pcr_exception_catch (PCR_EXCEPTION_STATE) {
+        return true;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+static bool
+test_reset_2(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_sql_reset() throws PCR_EXCEPTION_HANDLE if passed a null"
+            " pointer for @ctx";
+
+    pcr_exception_try (x) {
+        (void) pcr_sql_reset(NULL, x);
+    }
+
+    pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        return true;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+/******************************************************************************
  * pcr_sql_testsuite() interface
  */
 
@@ -475,7 +524,7 @@ static pcr_unittest *unit_tests[] = {
     &test_copy_2, &test_copy_3, &test_refcount_1, &test_unbound_1,
     &test_bound_1, &test_bound_2, &test_bind_1, &test_bind_2, &test_bind_3,
     &test_bind_4, &test_bind_5, &test_bind_6, &test_bind_7, &test_bind_8,
-    &test_bind_9
+    &test_bind_9, &test_reset_1, &test_reset_2
 };
 
 
