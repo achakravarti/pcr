@@ -108,8 +108,7 @@ pcr_sql_bind(pcr_sql **ctx, const pcr_attribute *attr, pcr_exception ex)
     pcr_assert_handle(ctx && (hnd = *ctx), ex);
 
     pcr_exception_try (x) {
-        pcr_string *param = pcr_string_new("@", x);
-        param = pcr_string_add(param, pcr_attribute_key(attr, x), x);
+        pcr_string *param = pcr_attribute_key(attr, x);
         pcr_assert_state(pcr_string_find(hnd->unbound, param, x), x);
 
         pcr_string *arg = pcr_attribute_string(attr, x);

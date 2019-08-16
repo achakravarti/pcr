@@ -249,7 +249,7 @@ test_bind_1(pcr_string **desc, pcr_exception ex)
     pcr_exception_try (x) {
         const pcr_string *psql = "SELECT * FROM users WHERE fname = @fname";
         pcr_sql *test = pcr_sql_new(psql, x);
-        pcr_sql_bind_null(&test, "fname", x);
+        pcr_sql_bind_null(&test, "@fname", x);
 
         const pcr_string *sql = "SELECT * FROM users WHERE fname = NULL";
         return !pcr_string_cmp(sql, pcr_sql_bound(test, x), x);
@@ -268,7 +268,7 @@ test_bind_2(pcr_string **desc, pcr_exception ex)
     pcr_exception_try (x) {
         const pcr_string *psql = "SELECT * FROM users WHERE age > @age";
         pcr_sql *test = pcr_sql_new(psql, x);
-        pcr_sql_bind_int(&test, "age", 43, x);
+        pcr_sql_bind_int(&test, "@age", 43, x);
 
         const pcr_string *sql = "SELECT * FROM users WHERE age > 43";
         return !pcr_string_cmp(sql, pcr_sql_bound(test, x), x);
@@ -287,7 +287,7 @@ test_bind_3(pcr_string **desc, pcr_exception ex)
     pcr_exception_try (x) {
         const pcr_string *psql = "SELECT * FROM users WHERE time <= @time";
         pcr_sql *test = pcr_sql_new(psql, x);
-        pcr_sql_bind_float(&test, "time", 123.456789, x);
+        pcr_sql_bind_float(&test, "@time", 123.456789, x);
 
         const pcr_string *sql = "SELECT * FROM users WHERE time <= 123.456789";
         return !pcr_string_cmp(sql, pcr_sql_bound(test, x), x);
@@ -306,7 +306,7 @@ test_bind_4(pcr_string **desc, pcr_exception ex)
     pcr_exception_try (x) {
         const pcr_string *psql = "SELECT id FROM msgs WHERE msg = @msg";
         pcr_sql *test = pcr_sql_new(psql, x);
-        pcr_sql_bind_text(&test, "msg", "Hello, world!", x);
+        pcr_sql_bind_text(&test, "@msg", "Hello, world!", x);
 
         const pcr_string *sql = "SELECT id FROM msgs WHERE msg = \'Hello, world"
                                 "!\'";
@@ -326,7 +326,7 @@ test_bind_5(pcr_string **desc, pcr_exception ex)
     pcr_exception_try (x) {
         const pcr_string *psql = "SELECT id FROM msgs WHERE msg = @msg";
         pcr_sql *test = pcr_sql_new(psql, x);
-        pcr_sql_bind_text(&test, "msg", "Привет, мир!", x);
+        pcr_sql_bind_text(&test, "@msg", "Привет, мир!", x);
 
         const pcr_string *sql = "SELECT id FROM msgs WHERE msg = \'Привет, мир!"
                                 "\'";
@@ -349,25 +349,11 @@ test_bind_6(pcr_string **desc, pcr_exception ex)
                                  " en = @en AND ru = @ru";
         pcr_sql *test = pcr_sql_new(psql, x);
 
-        pcr_attribute *attr = pcr_attribute_new(PCR_ATTRIBUTE_NULL, "user",
-                                                NULL, x);
-        pcr_sql_bind(&test, attr, x);
-
-        const int64_t attempts = 1024;
-        attr = pcr_attribute_new(PCR_ATTRIBUTE_INT, "attempts", &attempts, x);
-        pcr_sql_bind(&test, attr, x);
-
-        const double time = 123.456789;
-        attr = pcr_attribute_new(PCR_ATTRIBUTE_FLOAT, "time", &time, x);
-        pcr_sql_bind(&test, attr, x);
-
-        const pcr_string *en = "Hello, world!";
-        attr = pcr_attribute_new(PCR_ATTRIBUTE_TEXT, "en", en, x);
-        pcr_sql_bind(&test, attr, x);
-
-        const pcr_string *ru = "Привет, мир!";
-        attr = pcr_attribute_new(PCR_ATTRIBUTE_TEXT, "ru", ru, x);
-        pcr_sql_bind(&test, attr, x);
+        pcr_sql_bind_null(&test, "@user", x);
+        pcr_sql_bind_int(&test, "@attempts", 1024, x);
+        pcr_sql_bind_float(&test, "@time", 123.456789, x);
+        pcr_sql_bind_text(&test, "@en",  "Hello, world!", x);
+        pcr_sql_bind_text(&test, "@ru", "Привет, мир!", x);
 
         pcr_log_trace("bound = %s", pcr_sql_bound(test, x));
         const pcr_string *sql = "SELECT * FROM foo WHERE user <> NULL AND"
@@ -389,9 +375,7 @@ test_bind_7(pcr_string **desc, pcr_exception ex)
             " handle for @ctx";
 
     pcr_exception_try (x) {
-        pcr_attribute *attr = pcr_attribute_new(PCR_ATTRIBUTE_TEXT, "key",
-                                                "val", x);
-        pcr_sql_bind(NULL, attr, x);
+        pcr_sql_bind_null(NULL, "key", x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
@@ -410,10 +394,8 @@ test_bind_8(pcr_string **desc, pcr_exception ex)
             " pointer for @ctx";
 
     pcr_exception_try (x) {
-        pcr_attribute *attr = pcr_attribute_new(PCR_ATTRIBUTE_TEXT, "key",
-                                                "val", x);
         pcr_sql *test = NULL;
-        pcr_sql_bind(&test, attr, x);
+        pcr_sql_bind_null(&test, "key", x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
