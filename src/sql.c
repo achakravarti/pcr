@@ -123,7 +123,8 @@ pcr_sql_bind(pcr_sql **ctx, const pcr_attribute *attr, pcr_exception ex)
         }
 
         hnd = sql_fork(ctx, x);
-        hnd->bound = pcr_string_replaceall(*hnd->bound ? hnd->bound : hnd->unbound,
+        hnd->bound = pcr_string_replaceall(*hnd->bound ? hnd->bound
+                                                       : hnd->unbound,
                                            param, arg, x);
     }
 

@@ -315,6 +315,31 @@ extern pcr_attribute *
 pcr_attribute_new(PCR_ATTRIBUTE type, const pcr_string *key, const void *value,
                   pcr_exception ex);
 
+inline pcr_attribute *
+pcr_attribute_new_null(const pcr_string *key, pcr_exception ex)
+{
+    return pcr_attribute_new(PCR_ATTRIBUTE_NULL, key, NULL, ex);
+}
+
+inline pcr_attribute *
+pcr_attribute_new_int(const pcr_string *key, int64_t value, pcr_exception ex)
+{
+    return pcr_attribute_new(PCR_ATTRIBUTE_INT, key, &value, ex);
+}
+
+inline pcr_attribute *
+pcr_attribute_new_float(const pcr_string *key, double value, pcr_exception ex)
+{
+    return pcr_attribute_new(PCR_ATTRIBUTE_FLOAT, key, &value, ex);
+}
+
+inline pcr_attribute *
+pcr_attribute_new_text(const pcr_string *key, const pcr_string *value,
+                       pcr_exception ex)
+{
+    return pcr_attribute_new(PCR_ATTRIBUTE_TEXT, key, value, ex);
+}
+
 extern pcr_attribute *
 pcr_attribute_copy(const pcr_attribute *ctx, pcr_exception ex);
 
@@ -401,6 +426,33 @@ pcr_sql_bound(const pcr_sql *ctx, pcr_exception ex);
 
 extern void
 pcr_sql_bind(pcr_sql **ctx, const pcr_attribute *attr, pcr_exception ex);
+
+inline void
+pcr_sql_bind_null(pcr_sql **ctx, const pcr_string *key, pcr_exception ex)
+{
+    pcr_sql_bind(ctx, pcr_attribute_new_null(key, ex), ex);
+}
+
+inline void
+pcr_sql_bind_int(pcr_sql **ctx, const pcr_string *key, int64_t value,
+                 pcr_exception ex)
+{
+    pcr_sql_bind(ctx, pcr_attribute_new_int(key, value, ex), ex);
+}
+
+inline void
+pcr_sql_bind_float(pcr_sql **ctx, const pcr_string *key, double value,
+                   pcr_exception ex)
+{
+    pcr_sql_bind(ctx, pcr_attribute_new_float(key, value, ex), ex);
+}
+
+inline void
+pcr_sql_bind_text(pcr_sql **ctx, const pcr_string *key, const pcr_string *value,
+                  pcr_exception ex)
+{
+    pcr_sql_bind(ctx, pcr_attribute_new_text(key, value, ex), ex);
+}
 
 extern void
 pcr_sql_reset(pcr_sql **ctx, pcr_exception ex);

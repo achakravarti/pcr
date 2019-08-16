@@ -13,15 +13,14 @@ test_new_1(pcr_string **desc, pcr_exception ex)
     *desc = "pcr_attribute_new() can create a null attribute";
 
     pcr_exception_try (x) {
-        pcr_attribute *test = pcr_attribute_new(PCR_ATTRIBUTE_NULL, "key",
-                                                NULL, x);
+        pcr_attribute *test = pcr_attribute_new_null("key", x);
 
         PCR_ATTRIBUTE type = pcr_attribute_type(test, x);
         pcr_string *key = pcr_attribute_key(test, x);
         void *value = pcr_attribute_value(test, x);
 
         return type == PCR_ATTRIBUTE_NULL && !pcr_string_cmp(key, "key", x)
-                       && !value;
+               && !value;
     }
 
     pcr_exception_unwind(ex);
@@ -38,7 +37,7 @@ test_new_2(pcr_string **desc, pcr_exception ex)
         const pcr_string *KEY = "foo";
         const int64_t VALUE = -1024;
         const PCR_ATTRIBUTE TYPE  = PCR_ATTRIBUTE_INT;
-        pcr_attribute *test = pcr_attribute_new(TYPE, KEY, &VALUE, x);
+        pcr_attribute *test = pcr_attribute_new_int(KEY, VALUE, x);
 
         PCR_ATTRIBUTE type = pcr_attribute_type(test, x);
         pcr_string *key = pcr_attribute_key(test, x);
@@ -61,7 +60,7 @@ test_new_3(pcr_string **desc, pcr_exception ex)
         const pcr_string *KEY = "frobnoz";
         const double VALUE = -3.141592654;
         const PCR_ATTRIBUTE TYPE  = PCR_ATTRIBUTE_FLOAT;
-        pcr_attribute *test = pcr_attribute_new(TYPE, KEY, &VALUE, x);
+        pcr_attribute *test = pcr_attribute_new_float(KEY, VALUE, x);
 
         PCR_ATTRIBUTE type = pcr_attribute_type(test, x);
         pcr_string *key = pcr_attribute_key(test, x);
@@ -85,7 +84,7 @@ test_new_4(pcr_string **desc, pcr_exception ex)
         const pcr_string *KEY = "bar";
         const pcr_string *VALUE = "Hello, world!";
         const PCR_ATTRIBUTE TYPE  = PCR_ATTRIBUTE_TEXT;
-        pcr_attribute *test = pcr_attribute_new(TYPE, KEY, VALUE, x);
+        pcr_attribute *test = pcr_attribute_new_text(KEY, VALUE, x);
 
         PCR_ATTRIBUTE type = pcr_attribute_type(test, x);
         pcr_string *key = pcr_attribute_key(test, x);
@@ -109,7 +108,7 @@ test_new_5(pcr_string **desc, pcr_exception ex)
         const pcr_string *KEY = "bar";
         const pcr_string *VALUE = "Привет, мир!";
         const PCR_ATTRIBUTE TYPE  = PCR_ATTRIBUTE_TEXT;
-        pcr_attribute *test = pcr_attribute_new(TYPE, KEY, VALUE, x);
+        pcr_attribute *test = pcr_attribute_new_text(KEY, VALUE, x);
 
         PCR_ATTRIBUTE type = pcr_attribute_type(test, x);
         pcr_string *key = pcr_attribute_key(test, x);
