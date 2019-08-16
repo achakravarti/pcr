@@ -197,7 +197,6 @@ pcr_vector_muterate(pcr_vector **ctx, pcr_muterator *mtr, void *opt,
  */
 
 typedef char pcr_string;
-typedef pcr_vector pcr_string_vector;
 
 extern pcr_string *
 pcr_string_new(const char *cstr, pcr_exception ex);
@@ -234,6 +233,104 @@ pcr_string_int(int64_t value, pcr_exception ex);
 
 extern pcr_string *
 pcr_string_float(double value, pcr_exception ex);
+
+
+/******************************************************************************
+ * INTERFACE: pcr_string_vector
+ */
+
+typedef pcr_vector pcr_string_vector;
+
+inline pcr_string_vector *
+pcr_string_vector_new(pcr_exception ex)
+{
+    return pcr_vector_new(sizeof (pcr_string *), ex);
+}
+
+inline pcr_string_vector *
+pcr_string_vector_copy(const pcr_string_vector *ctx, pcr_exception ex)
+{
+    return pcr_vector_copy(ctx, ex);
+}
+
+inline size_t
+pcr_string_vector_len(const pcr_string_vector *ctx, pcr_exception ex)
+{
+    return pcr_vector_len(ctx, ex);
+}
+
+inline size_t
+pcr_string_vector_refcount(const pcr_string_vector *ctx, pcr_exception ex)
+{
+    return pcr_vector_refcount(ctx, ex);
+}
+
+inline bool
+pcr_string_vector_sorted(const pcr_string_vector *ctx, pcr_exception ex)
+{
+    return pcr_vector_sorted(ctx, ex);
+}
+
+inline pcr_string *
+pcr_string_vector_elem(const pcr_string_vector *ctx, size_t idx,
+                       pcr_exception ex)
+{
+    return (pcr_string *) pcr_vector_elem(ctx, idx, ex);
+}
+
+inline void
+pcr_string_vector_elem_set(pcr_vector **ctx, size_t idx, const pcr_string *elem,
+                           pcr_exception ex)
+{
+    pcr_string *str = pcr_string_new(elem, ex);
+    pcr_vector_setelem(ctx, &str, idx, ex);
+}
+
+inline void
+pcr_string_vector_push(pcr_string_vector **ctx, const pcr_string *elem,
+                       pcr_exception ex)
+{
+    pcr_string *str = pcr_string_new(elem, ex);
+    pcr_vector_push(ctx, &str, ex);
+}
+
+inline int
+__pcr_string_vector_comparator(const void *ctx, const void *cmp)
+{
+    pcr_exception_try (x) {
+        return !pcr_string_cmp((pcr_string *) ctx, (pcr_string *) cmp, x);
+    }
+
+    return -1;
+}
+
+inline void
+pcr_string_vector_sort(pcr_string_vector **ctx, pcr_exception ex)
+{
+    pcr_vector_sort(ctx, &__pcr_string_vector_comparator, ex);
+}
+
+inline size_t
+pcr_string_vector_search(pcr_string_vector **ctx, const pcr_string *key,
+                         pcr_exception ex)
+{
+    return pcr_vector_search(ctx, key, &__pcr_string_vector_comparator, ex);
+}
+
+inline void
+pcr_string_vector_iterate(const pcr_string_vector *ctx, pcr_iterator *itr,
+                          void *opt, pcr_exception ex)
+{
+    pcr_vector_iterate(ctx, itr, opt, ex);
+}
+
+
+inline void
+pcr_string_vector_muterate(pcr_string_vector **ctx, pcr_muterator *mtr,
+                           void *opt, pcr_exception ex)
+{
+    pcr_vector_muterate(ctx, mtr, opt, ex);
+}
 
 
 /******************************************************************************
