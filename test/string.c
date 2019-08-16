@@ -1288,13 +1288,10 @@ extern pcr_testsuite *
 pcr_string_testsuite(pcr_exception ex)
 {
     pcr_exception_try (x) {
-        pcr_testsuite *ts = pcr_testsuite_new("PCR String (pcr_string)", x);
+        const pcr_string *name = "PCR String (pcr_string)";
+        const size_t len = sizeof unit_tests / sizeof *unit_tests;
 
-        register size_t len = sizeof unit_tests / sizeof *unit_tests;
-        for (register size_t i = 0; i < len; i++)
-            pcr_testsuite_push(ts, pcr_testcase_new(unit_tests[i], x), x);
-
-        return ts;
+        return pcr_testsuite_new_2(name, unit_tests, len, x);
     }
 
     pcr_exception_unwind(ex);
