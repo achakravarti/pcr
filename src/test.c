@@ -10,7 +10,8 @@ struct pcr_testcase {
 static thread_local FILE *log_hnd = NULL;
 
 
-static inline void log_open(const pcr_string *path)
+static inline void
+log_open(const pcr_string *path)
 {
     if (pcr_hint_unlikely (log_hnd))
         (void) fclose(log_hnd);
@@ -20,7 +21,8 @@ static inline void log_open(const pcr_string *path)
 }
 
 
-static inline void log_close(void)
+static inline
+void log_close(void)
 {
     if (pcr_hint_likely (log_hnd)) {
         (void) fclose(log_hnd);
@@ -42,7 +44,8 @@ static inline void log_close(void)
     } while (0)
 
 
-static void log_border(void)
+static void
+log_border(void)
 {
     if (pcr_hint_likely (log_hnd)) {
         fputs("\n", log_hnd);
@@ -55,9 +58,8 @@ static void log_border(void)
 }
 
 
-extern pcr_testcase *pcr_testcase_new(pcr_unittest *test,
-                                            //const pcr_string *desc,
-                                            pcr_exception ex)
+extern pcr_testcase *
+pcr_testcase_new(pcr_unittest *test, pcr_exception ex)
 {
     pcr_assert_handle(test, ex);
 
@@ -73,8 +75,8 @@ extern pcr_testcase *pcr_testcase_new(pcr_unittest *test,
 }
 
 
-extern pcr_testcase *pcr_testcase_copy(const pcr_testcase *ctx,
-                                            pcr_exception ex)
+extern pcr_testcase *
+pcr_testcase_copy(const pcr_testcase *ctx, pcr_exception ex)
 {
     pcr_assert_handle(ctx, ex);
 
@@ -87,7 +89,8 @@ extern pcr_testcase *pcr_testcase_copy(const pcr_testcase *ctx,
 }
 
 
-extern bool pcr_testcase_run(pcr_testcase *ctx, pcr_exception ex)
+extern bool
+pcr_testcase_run(pcr_testcase *ctx, pcr_exception ex)
 {
     pcr_assert_handle(ctx, ex);
 
@@ -112,7 +115,8 @@ struct pcr_testsuite {
 };
 
 
-extern pcr_testsuite *pcr_testsuite_new(const pcr_string *name, pcr_exception ex)
+extern pcr_testsuite *
+pcr_testsuite_new(const pcr_string *name, pcr_exception ex)
 {
     pcr_assert_handle(name, ex);
 
@@ -129,8 +133,27 @@ extern pcr_testsuite *pcr_testsuite_new(const pcr_string *name, pcr_exception ex
 }
 
 
-extern pcr_testsuite *pcr_testsuite_copy(const pcr_testsuite *ctx,
-                                            pcr_exception ex)
+extern pcr_testsuite *
+pcr_testsuite_new_2(const pcr_string *name, pcr_unittest **tests, size_t len,
+                    pcr_exception ex)
+{
+    pcr_assert_range(len, ex);
+
+    pcr_exception_try (x) {
+        pcr_testsuite *ts = pcr_testsuite_new(name, x);
+        for (register size_t i = 0; i < len; i++)
+            pcr_testsuite_push(ts, pcr_testcase_new(tests[i], x), x);
+
+        return ts;
+    }
+
+    pcr_exception_unwind(ex);
+    return NULL;
+}
+
+
+extern pcr_testsuite *
+pcr_testsuite_copy(const pcr_testsuite *ctx, pcr_exception ex)
 {
     pcr_assert_handle(ctx, ex);
 
@@ -147,7 +170,8 @@ extern pcr_testsuite *pcr_testsuite_copy(const pcr_testsuite *ctx,
 }
 
 
-extern size_t pcr_testsuite_len(const pcr_testsuite *ctx, pcr_exception ex)
+extern size_t
+pcr_testsuite_len(const pcr_testsuite *ctx, pcr_exception ex)
 {
     pcr_assert_handle(ctx, ex);
 
@@ -160,8 +184,9 @@ extern size_t pcr_testsuite_len(const pcr_testsuite *ctx, pcr_exception ex)
 }
 
 
-extern void pcr_testsuite_push(pcr_testsuite *ctx, const pcr_testcase *tc,
-                                    pcr_exception ex)
+extern void
+pcr_testsuite_push(pcr_testsuite *ctx, const pcr_testcase *tc,
+                   pcr_exception ex)
 {
     pcr_assert_handle(ctx && tc, ex);
 
@@ -173,7 +198,8 @@ extern void pcr_testsuite_push(pcr_testsuite *ctx, const pcr_testcase *tc,
 }
 
 
-static void tc_run(void *elem, size_t idx, void *opt, pcr_exception ex)
+static void
+tc_run(void *elem, size_t idx, void *opt, pcr_exception ex)
 {
     pcr_exception_try (x) {
         pcr_testcase *tc = (pcr_testcase *) elem;
@@ -187,7 +213,8 @@ static void tc_run(void *elem, size_t idx, void *opt, pcr_exception ex)
 }
 
 
-extern uint64_t pcr_testsuite_run(pcr_testsuite *ctx, pcr_exception ex)
+extern uint64_t
+pcr_testsuite_run(pcr_testsuite *ctx, pcr_exception ex)
 {
     pcr_assert_handle(ctx, ex);
 
@@ -218,7 +245,8 @@ struct {
 } *th_hnd;
 
 
-extern void pcr_testharness_init(const pcr_string *log, pcr_exception ex)
+extern void
+pcr_testharness_init(const pcr_string *log, pcr_exception ex)
 {
     pcr_exception_try (x) {
         log_open(log);
@@ -232,13 +260,15 @@ extern void pcr_testharness_init(const pcr_string *log, pcr_exception ex)
 }
 
 
-extern void pcr_testharness_exit(void)
+extern void
+pcr_testharness_exit(void)
 {
     log_close();
 }
 
 
-extern void pcr_testharness_push(const pcr_testsuite *ts, pcr_exception ex)
+extern void
+pcr_testharness_push(const pcr_testsuite *ts, pcr_exception ex)
 {
     pcr_assert_state(th_hnd, ex);
     pcr_assert_handle(ts, ex);
@@ -251,7 +281,8 @@ extern void pcr_testharness_push(const pcr_testsuite *ts, pcr_exception ex)
 }
 
 
-static void ts_run(void *elem, size_t idx, void *opt, pcr_exception ex)
+static void
+ts_run(void *elem, size_t idx, void *opt, pcr_exception ex)
 {
     pcr_exception_try (x) {
         pcr_testsuite *ts = (pcr_testsuite *) elem;
@@ -263,7 +294,8 @@ static void ts_run(void *elem, size_t idx, void *opt, pcr_exception ex)
 }
 
 
-extern void pcr_testharness_run(pcr_exception ex)
+extern void
+pcr_testharness_run(pcr_exception ex)
 {
     pcr_assert_state(th_hnd, ex);
 

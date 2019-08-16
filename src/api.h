@@ -374,6 +374,10 @@ extern pcr_testsuite *
 pcr_testsuite_new(const pcr_string *name, pcr_exception ex);
 
 extern pcr_testsuite *
+pcr_testsuite_new_2(const pcr_string *name, pcr_unittest **tests, size_t len,
+                    pcr_exception ex);
+
+extern pcr_testsuite *
 pcr_testsuite_copy(const pcr_testsuite *ctx, pcr_exception ex);
 
 extern size_t
