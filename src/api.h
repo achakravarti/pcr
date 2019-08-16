@@ -248,6 +248,18 @@ pcr_string_vector_new(pcr_exception ex)
 }
 
 inline pcr_string_vector *
+pcr_string_vector_new_2(const pcr_string **arr, size_t len, pcr_exception ex)
+{
+    pcr_string_vector *vec = pcr_string_vector_new(ex);
+    for (register size_t i = 0; i < len; i++) {
+        pcr_string *str = pcr_string_new(arr[i], ex);
+        pcr_vector_push(&vec, &str, ex);
+    }
+
+    return vec;
+}
+
+inline pcr_string_vector *
 pcr_string_vector_copy(const pcr_string_vector *ctx, pcr_exception ex)
 {
     return pcr_vector_copy(ctx, ex);
