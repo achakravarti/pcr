@@ -461,10 +461,7 @@ test_reset_1(pcr_string **desc, pcr_exception ex)
     pcr_exception_try (x) {
         const pcr_string *psql = "SELECT * FROM users WHERE fname = @fname";
         pcr_sql *test = pcr_sql_new(psql, x);
-
-        pcr_attribute *attr = pcr_attribute_new(PCR_ATTRIBUTE_TEXT, "fname",
-                                                "foo", x);
-        pcr_sql_bind(&test, attr, x);
+        pcr_sql_bind_text(&test, "@fname", "foo", x);
 
         pcr_sql_reset(&test, x);
         (void) pcr_sql_bound(test, x);
