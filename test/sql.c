@@ -322,7 +322,6 @@ test_bind_4(pcr_string **desc, pcr_exception ex)
         pcr_attribute *attr = pcr_attribute_new(PCR_ATTRIBUTE_TEXT, "msg", val,
                                                 x);
         pcr_sql_bind(&test, attr, x);
-        pcr_log_trace("bound = %s", pcr_sql_bound(test, x));
 
         const pcr_string *sql = "SELECT id FROM msgs WHERE msg = \'Hello, world"
                                 "!\'";
@@ -340,6 +339,17 @@ test_bind_5(pcr_string **desc, pcr_exception ex)
     *desc = "pcr_sql_bind() binds a Unicode text parameter";
 
     pcr_exception_try (x) {
+        const pcr_string *psql = "SELECT id FROM msgs WHERE msg = @msg";
+        pcr_sql *test = pcr_sql_new(psql, x);
+
+        const pcr_string *val = "Привет, мир!";
+        pcr_attribute *attr = pcr_attribute_new(PCR_ATTRIBUTE_TEXT, "msg", val,
+                                                x);
+        pcr_sql_bind(&test, attr, x);
+
+        const pcr_string *sql = "SELECT id FROM msgs WHERE msg = \'Привет, мир!"
+                                "\'";
+        return !pcr_string_cmp(sql, pcr_sql_bound(test, x), x);
     }
 
     pcr_exception_unwind(ex);
@@ -353,6 +363,37 @@ test_bind_6(pcr_string **desc, pcr_exception ex)
     *desc = "pcr_sql_bind() binds multiple parameters of different types";
 
     pcr_exception_try (x) {
+        const pcr_string *psql = "SELECT * FROM foo WHERE user <> @user AND"
+                                 " attempts > @attempts AND time <= @time AND"
+                                 " en = @en AND ru = @ru";
+        pcr_sql *test = pcr_sql_new(psql, x);
+
+        pcr_attribute *attr = pcr_attribute_new(PCR_ATTRIBUTE_NULL, "user",
+                                                NULL, x);
+        pcr_sql_bind(&test, attr, x);
+
+        const int64_t attempts = 1024;
+        attr = pcr_attribute_new(PCR_ATTRIBUTE_INT, "attempts", &attempts, x);
+        pcr_sql_bind(&test, attr, x);
+
+        const double time = 123.456789;
+        attr = pcr_attribute_new(PCR_ATTRIBUTE_FLOAT, "time", &time, x);
+        pcr_sql_bind(&test, attr, x);
+
+        const pcr_string *en = "Hello, world!";
+        attr = pcr_attribute_new(PCR_ATTRIBUTE_TEXT, "en", en, x);
+        pcr_sql_bind(&test, attr, x);
+
+        const pcr_string *ru = "Привет, мир!";
+        attr = pcr_attribute_new(PCR_ATTRIBUTE_TEXT, "ru", ru, x);
+        pcr_sql_bind(&test, attr, x);
+
+        pcr_log_trace("bound = %s", pcr_sql_bound(test, x));
+        const pcr_string *sql = "SELECT * FROM foo WHERE user <> NULL AND"
+                                " attempts > 1024 AND time <= 123.456789 AND"
+                                " en = \'Hello, world!\' AND"
+                                " ru = \'Привет, мир!\'";
+        return !pcr_string_cmp(sql, pcr_sql_bound(test, x), x);
     }
 
     pcr_exception_unwind(ex);
