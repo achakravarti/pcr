@@ -449,6 +449,28 @@ test_bind_10(pcr_string **desc, pcr_exception ex)
 }
 
 
+static bool
+test_bind_11(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_sql_bind() respects reference counts";
+
+    pcr_exception_try (x) {
+        const pcr_string *psql = "SELECT * FROM users WHERE fname = @fname";
+        pcr_sql *test = pcr_sql_new(psql, x);
+        pcr_sql *copy = pcr_sql_copy(test, x);
+
+        const size_t refc = pcr_sql_refcount(test, x);
+        pcr_sql_bind_null(&test, "@fname", x);
+
+        return refc == 2 && pcr_sql_refcount(test, x) == 1
+               && pcr_sql_refcount(copy, x) == 1;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
 /******************************************************************************
  * pcr_sql_reset() test cases
  */
@@ -505,7 +527,7 @@ static pcr_unittest *unit_tests[] = {
     &test_copy_2, &test_copy_3, &test_refcount_1, &test_unbound_1,
     &test_bound_1, &test_bound_2, &test_bind_1, &test_bind_2, &test_bind_3,
     &test_bind_4, &test_bind_5, &test_bind_6, &test_bind_7, &test_bind_8,
-    &test_bind_9, &test_bind_10, &test_reset_1, &test_reset_2
+    &test_bind_9, &test_bind_10, &test_bind_11, &test_reset_1, &test_reset_2
 };
 
 
