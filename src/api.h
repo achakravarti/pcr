@@ -441,9 +441,21 @@ pcr_attribute_new_int(const pcr_string *key, int64_t value, pcr_exception ex)
 }
 
 inline pcr_attribute *
+pcr_attribute_new_int_2(const pcr_string *key, pcr_exception ex)
+{
+    return pcr_attribute_new_int(key, 0, ex);
+}
+
+inline pcr_attribute *
 pcr_attribute_new_float(const pcr_string *key, double value, pcr_exception ex)
 {
     return pcr_attribute_new(PCR_ATTRIBUTE_FLOAT, key, &value, ex);
+}
+
+inline pcr_attribute *
+pcr_attribute_new_float_2(const pcr_string *key, pcr_exception ex)
+{
+    return pcr_attribute_new_float(key, 0.0, ex);
 }
 
 inline pcr_attribute *
@@ -451,6 +463,12 @@ pcr_attribute_new_text(const pcr_string *key, const pcr_string *value,
                        pcr_exception ex)
 {
     return pcr_attribute_new(PCR_ATTRIBUTE_TEXT, key, value, ex);
+}
+
+inline pcr_attribute *
+pcr_attribute_new_text_2(const pcr_string *key, pcr_exception ex)
+{
+    return pcr_attribute_new_text(key, "", ex);
 }
 
 extern pcr_attribute *
