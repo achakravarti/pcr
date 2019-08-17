@@ -250,6 +250,9 @@ pcr_string_vector_new(pcr_exception ex)
 inline pcr_string_vector *
 pcr_string_vector_new_2(const pcr_string **arr, size_t len, pcr_exception ex)
 {
+    pcr_assert_handle(arr, ex);
+    pcr_assert_range(len, ex);
+
     pcr_string_vector *vec = pcr_string_vector_new(ex);
     for (register size_t i = 0; i < len; i++) {
         pcr_string *str = pcr_string_new(arr[i], ex);
@@ -291,8 +294,8 @@ pcr_string_vector_elem(const pcr_string_vector *ctx, size_t idx,
 }
 
 inline void
-pcr_string_vector_elem_set(pcr_vector **ctx, size_t idx, const pcr_string *elem,
-                           pcr_exception ex)
+pcr_string_vector_elem_set(pcr_string_vector **ctx, size_t idx,
+                           const pcr_string *elem, pcr_exception ex)
 {
     pcr_string *str = pcr_string_new(elem, ex);
     pcr_vector_setelem(ctx, &str, idx, ex);
@@ -335,7 +338,6 @@ pcr_string_vector_iterate(const pcr_string_vector *ctx, pcr_iterator *itr,
 {
     pcr_vector_iterate(ctx, itr, opt, ex);
 }
-
 
 inline void
 pcr_string_vector_muterate(pcr_string_vector **ctx, pcr_muterator *mtr,
@@ -409,10 +411,8 @@ pcr_testharness_run(pcr_exception ex);
 
 
 /******************************************************************************
- * INTERFACE: pcr_attrib
+ * INTERFACE: PCR_ATTRIBUTE
  */
-
-typedef struct pcr_attribute pcr_attribute;
 
 typedef enum PCR_ATTRIBUTE {
     PCR_ATTRIBUTE_NULL,
@@ -421,7 +421,91 @@ typedef enum PCR_ATTRIBUTE {
     PCR_ATTRIBUTE_TEXT
 } PCR_ATTRIBUTE;
 
+
+/******************************************************************************
+ * INTERFACE: PCR_ATTRIBUTE_VECTOR
+ */
+
 typedef pcr_vector PCR_ATTRIBUTE_VECTOR;
+
+inline PCR_ATTRIBUTE_VECTOR *
+PCR_ATTRIBUTE_VECTOR_NEW(pcr_exception ex)
+{
+    return pcr_vector_new(sizeof (PCR_ATTRIBUTE), ex);
+}
+
+inline PCR_ATTRIBUTE_VECTOR *
+PCR_ATTRIBUTE_VECTOR_NEW_2(const PCR_ATTRIBUTE *arr, size_t len,
+                           pcr_exception ex)
+{
+    pcr_assert_handle(arr, ex);
+    pcr_assert_range(len ,ex);
+
+    PCR_ATTRIBUTE_VECTOR *vec = PCR_ATTRIBUTE_VECTOR_NEW(ex);
+    for (register size_t i = 0; i < len; i++)
+        pcr_vector_push(&vec, &arr[i], ex);
+
+    return vec;
+}
+
+inline PCR_ATTRIBUTE_VECTOR *
+PCR_ATTRIBUTE_VECTOR_COPY(const PCR_ATTRIBUTE_VECTOR *ctx, pcr_exception ex)
+{
+    return pcr_vector_copy(ctx, ex);
+}
+
+inline size_t
+PCR_ATTRIBUTE_VECTOR_LEN(const PCR_ATTRIBUTE_VECTOR *ctx, pcr_exception ex)
+{
+    return pcr_vector_len(ctx, ex);
+}
+
+inline size_t
+PCR_ATTRIBUTE_VECTOR_REFCOUNT(const PCR_ATTRIBUTE_VECTOR *ctx, pcr_exception ex)
+{
+    return pcr_vector_refcount(ctx, ex);
+}
+
+inline PCR_ATTRIBUTE
+PCR_ATTRIBUTE_VECTOR_ELEM(const PCR_ATTRIBUTE_VECTOR *ctx, size_t idx,
+                          pcr_exception ex)
+{
+    return *((PCR_ATTRIBUTE *) pcr_vector_elem(ctx, idx, ex));
+}
+
+inline void
+PCR_ATTRIBUTE_VECTOR_ELEM_SET(PCR_ATTRIBUTE_VECTOR **ctx, size_t idx,
+                              PCR_ATTRIBUTE elem, pcr_exception ex)
+{
+    pcr_vector_setelem(ctx, &elem, idx, ex);
+}
+
+inline void
+PCR_ATTRIBUTE_VECTOR_PUSH(PCR_ATTRIBUTE_VECTOR **ctx, PCR_ATTRIBUTE elem,
+                          pcr_exception ex)
+{
+    pcr_vector_push(ctx, &elem, ex);
+}
+
+inline void
+PCR_ATTRIBUTE_VECTOR_ITERATE(const PCR_ATTRIBUTE_VECTOR *ctx, pcr_iterator *itr,
+                             void *opt, pcr_exception ex)
+{
+    pcr_vector_iterate(ctx, itr, opt, ex);
+}
+
+inline void
+PCR_ATTRIBUTE_VECTOR_MUTERATE(PCR_ATTRIBUTE_VECTOR **ctx, pcr_muterator *mtr,
+                              void *opt, pcr_exception ex)
+{
+    pcr_vector_muterate(ctx, mtr, opt, ex);
+}
+
+/******************************************************************************
+ * INTERFACE: pcr_attribute
+ */
+
+typedef struct pcr_attribute pcr_attribute;
 typedef pcr_vector pcr_attribute_vector;
 
 extern pcr_attribute *
@@ -502,6 +586,10 @@ typedef struct pcr_resultset pcr_resultset;
 extern pcr_resultset *
 pcr_resultset_new(const pcr_string *name, const pcr_string_vector *keys,
                   const PCR_ATTRIBUTE_VECTOR *types, pcr_exception ex);
+
+extern pcr_resultset *
+pcr_resultset_new_2(const pcr_string *name, const pcr_string **keys,
+                    const PCR_ATTRIBUTE *types, size_t len, pcr_exception ex);
 
 extern pcr_resultset *
 pcr_resultset_copy(const pcr_resultset *ctx, pcr_exception ex);

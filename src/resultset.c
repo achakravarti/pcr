@@ -33,6 +33,22 @@ pcr_resultset_new(const pcr_string *name, const pcr_string_vector *keys,
 
 
 extern pcr_resultset *
+pcr_resultset_new_2(const pcr_string *name, const pcr_string **keys,
+                    const PCR_ATTRIBUTE *types, size_t len, pcr_exception ex)
+{
+    pcr_assert_range(len, ex);
+
+    pcr_exception_try (x) {
+        return pcr_resultset_new(name, pcr_string_vector_new_2(keys, len, x),
+                                 PCR_ATTRIBUTE_VECTOR_NEW_2(types, len, x), x);
+    }
+
+    pcr_exception_unwind(ex);
+    return NULL;
+}
+
+
+extern pcr_resultset *
 pcr_resultset_copy(const pcr_resultset *ctx, pcr_exception ex)
 {
     pcr_assert_handle(ctx, ex);
