@@ -594,11 +594,14 @@ pcr_resultset_new_2(const pcr_string *name, const pcr_string **keys,
 extern pcr_resultset *
 pcr_resultset_copy(const pcr_resultset *ctx, pcr_exception ex);
 
+extern PCR_ATTRIBUTE_VECTOR *
+pcr_resultset_types(const pcr_resultset *ctx, pcr_exception ex);
+
 extern pcr_string_vector *
 pcr_resultset_keys(const pcr_resultset *ctx, pcr_exception ex);
 
-extern PCR_ATTRIBUTE_VECTOR *
-pcr_resultset_types(const pcr_resultset *ctx, pcr_exception ex);
+extern pcr_vector *
+pcr_resultset_values(const pcr_resultset *ctx, pcr_exception ex);
 
 extern size_t
 pcr_resultset_rows(const pcr_resultset *ctx, pcr_exception ex);
@@ -611,8 +614,20 @@ pcr_resultset_attrib(const pcr_resultset *ctx, size_t row, size_t col,
                      pcr_exception ex);
 
 extern void
-pcr_resultset_setattrib(pcr_resultset **ctx, const pcr_attribute *attr,
-                        size_t row, size_t col, pcr_exception ex);
+pcr_resultset_attrib_set(pcr_resultset **ctx, const pcr_attribute *attr,
+                         size_t row, size_t col, pcr_exception ex);
+
+extern PCR_ATTRIBUTE
+pcr_resultset_type(const pcr_resultset *ctx, size_t row, size_t col,
+                   pcr_exception ex);
+
+extern pcr_string *
+pcr_resultset_key(const pcr_resultset *ctx, size_t row, size_t col,
+                  pcr_exception ex);
+
+extern void *
+pcr_resultset_value(const pcr_resultset *ctx, size_t row, size_t col,
+                    pcr_exception ex);
 
 extern void
 pcr_resultset_push(pcr_resultset **ctx, const pcr_attribute *attr,

@@ -60,13 +60,13 @@ pcr_resultset_copy(const pcr_resultset *ctx, pcr_exception ex)
 }
 
 
-extern pcr_string_vector *
-pcr_resultset_keys(const pcr_resultset *ctx, pcr_exception ex)
+extern PCR_ATTRIBUTE_VECTOR *
+pcr_resultset_types(const pcr_resultset *ctx, pcr_exception ex)
 {
     pcr_assert_handle(ctx, ex);
 
     pcr_exception_try (x) {
-        return pcr_vector_copy(ctx->keys, x);
+        return PCR_ATTRIBUTE_VECTOR_COPY(ctx->types, x);
     }
 
     pcr_exception_unwind(ex);
@@ -74,13 +74,27 @@ pcr_resultset_keys(const pcr_resultset *ctx, pcr_exception ex)
 }
 
 
-extern PCR_ATTRIBUTE_VECTOR *
-pcr_resultset_types(const pcr_resultset *ctx, pcr_exception ex)
+extern pcr_string_vector *
+pcr_resultset_keys(const pcr_resultset *ctx, pcr_exception ex)
 {
     pcr_assert_handle(ctx, ex);
 
     pcr_exception_try (x) {
-        return pcr_vector_copy(ctx->types, x);
+        return pcr_string_vector_copy(ctx->keys, x);
+    }
+
+    pcr_exception_unwind(ex);
+    return NULL;
+}
+
+
+extern pcr_vector *
+pcr_resultset_values(const pcr_resultset *ctx, pcr_exception ex)
+{
+    pcr_assert_handle(ctx, ex);
+
+    pcr_exception_try (x) {
+        return pcr_vector_copy(ctx->values, x);
     }
 
     pcr_exception_unwind(ex);
@@ -134,29 +148,6 @@ pcr_resultset_attrib(const pcr_resultset *ctx, size_t row, size_t col,
     return NULL;
 }
 
-
-static pcr_resultset *
-rset_fork(pcr_resultset **ctx, pcr_exception ex)
-{
-    pcr_exception_try (x) {
-        pcr_resultset *hnd = *ctx;
-
-        if (hnd->ref > 1) {
-            hnd->ref--;
-
-            pcr_resultset *frk = pcr_resultset_new(hnd->name, hnd->keys,
-                                                   hnd->types, x);
-            frk->values = pcr_vector_copy(hnd->values, x);
-        }
-
-        return *ctx;
-    }
-
-    pcr_exception_unwind(ex);
-    return NULL;
-}
-
-
 static void
 attrib_check(const pcr_resultset *ctx, const pcr_attribute *attr, size_t col,
              pcr_exception ex)
@@ -181,9 +172,31 @@ attrib_check(const pcr_resultset *ctx, const pcr_attribute *attr, size_t col,
 }
 
 
+static pcr_resultset *
+rset_fork(pcr_resultset **ctx, pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        pcr_resultset *hnd = *ctx;
+
+        if (hnd->ref > 1) {
+            hnd->ref--;
+
+            pcr_resultset *frk = pcr_resultset_new(hnd->name, hnd->keys,
+                                                   hnd->types, x);
+            frk->values = pcr_vector_copy(hnd->values, x);
+        }
+
+        return *ctx;
+    }
+
+    pcr_exception_unwind(ex);
+    return NULL;
+}
+
+
 extern void
-pcr_resultset_setattrib(pcr_resultset **ctx, const pcr_attribute *attr,
-                        size_t row, size_t col, pcr_exception ex)
+pcr_resultset_attrib_set(pcr_resultset **ctx, const pcr_attribute *attr,
+                         size_t row, size_t col, pcr_exception ex)
 {
     pcr_assert_handle(ctx && *ctx && attr, ex);
     attrib_check(*ctx, attr, col, ex);
@@ -194,6 +207,45 @@ pcr_resultset_setattrib(pcr_resultset **ctx, const pcr_attribute *attr,
     }
 
     pcr_exception_unwind(ex);
+}
+
+
+extern PCR_ATTRIBUTE
+pcr_resultset_type(const pcr_resultset *ctx, size_t row, size_t col,
+                   pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        return pcr_attribute_type(pcr_resultset_attrib(ctx, row, col, x), x);
+    }
+
+    pcr_exception_unwind(ex);
+    return PCR_ATTRIBUTE_NULL;
+}
+
+
+extern pcr_string *
+pcr_resultset_key(const pcr_resultset *ctx, size_t row, size_t col,
+                  pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        return pcr_attribute_key(pcr_resultset_attrib(ctx, row, col, x), x);
+    }
+
+    pcr_exception_unwind(ex);
+    return NULL;
+}
+
+
+extern void *
+pcr_resultset_value(const pcr_resultset *ctx, size_t row, size_t col,
+                    pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        return pcr_attribute_value(pcr_resultset_attrib(ctx, row, col, x), x);
+    }
+
+    pcr_exception_unwind(ex);
+    return NULL;
 }
 
 
