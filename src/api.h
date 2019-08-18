@@ -256,7 +256,7 @@ pcr_string_vector_new_2(const pcr_string **arr, size_t len, pcr_exception ex)
     pcr_string_vector *vec = pcr_string_vector_new(ex);
     for (register size_t i = 0; i < len; i++) {
         pcr_string *str = pcr_string_new(arr[i], ex);
-        pcr_vector_push(&vec, &str, ex);
+        pcr_vector_push(&vec, str, ex);
     }
 
     return vec;
@@ -608,6 +608,9 @@ pcr_resultset_rows(const pcr_resultset *ctx, pcr_exception ex);
 
 extern size_t
 pcr_resultset_cols(const pcr_resultset *ctx, pcr_exception ex);
+
+extern size_t
+pcr_resultset_refcount(const pcr_resultset *ctx, pcr_exception ex);
 
 extern pcr_attribute *
 pcr_resultset_attrib(const pcr_resultset *ctx, size_t row, size_t col,

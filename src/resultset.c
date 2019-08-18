@@ -130,6 +130,14 @@ pcr_resultset_cols(const pcr_resultset *ctx, pcr_exception ex)
 }
 
 
+extern size_t
+pcr_resultset_refcount(const pcr_resultset *ctx, pcr_exception ex)
+{
+    pcr_assert_handle(ctx, ex);
+    return ctx->ref;
+}
+
+
 extern pcr_attribute *
 pcr_resultset_attrib(const pcr_resultset *ctx, size_t row, size_t col,
                      pcr_exception ex)
