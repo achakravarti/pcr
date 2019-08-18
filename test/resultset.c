@@ -89,6 +89,24 @@ new_2_test_1(pcr_string **desc, pcr_exception ex)
 static bool
 new_2_test_2(pcr_string **desc, pcr_exception ex)
 {
+    *desc = "pcr_resultset_new_2() creates a new result set with a reference"
+            " count of 1";
+
+    pcr_exception_try (x) {
+        pcr_resultset *rs = pcr_resultset_new_2(SAMPLE_NAME, SAMPLE_KEYS,
+                                                SAMPLE_TYPES, SAMPLE_LEN, x);
+
+        return pcr_resultset_refcount(rs, x) == 1;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+static bool
+new_2_test_3(pcr_string **desc, pcr_exception ex)
+{
     *desc = "pcr_resultset_new_2() throws PCR_EXCEPTION_STRING if passed a null"
             " pointer for @name";
 
@@ -107,7 +125,7 @@ new_2_test_2(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-new_2_test_3(pcr_string **desc, pcr_exception ex)
+new_2_test_4(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_resultset_new_2() throws PCR_EXCEPTION_STRING if passed an"
             " empty string for @name";
@@ -127,33 +145,13 @@ new_2_test_3(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-new_2_test_4(pcr_string **desc, pcr_exception ex)
-{
-    *desc = "pcr_resultset_new_2() throws PCR_EXCEPTION_HANDLE if passed a null"
-            " pointer for @keys";
-
-    pcr_exception_try (x) {
-        (void) pcr_resultset_new_2(SAMPLE_NAME, NULL, SAMPLE_TYPES, SAMPLE_LEN,
-                                   x);
-    }
-
-    pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
-        return true;
-    }
-
-    pcr_exception_unwind(ex);
-    return false;
-}
-
-
-static bool
 new_2_test_5(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_resultset_new_2() throws PCR_EXCEPTION_HANDLE if passed a null"
             " pointer for @keys";
 
     pcr_exception_try (x) {
-        (void) pcr_resultset_new_2(SAMPLE_NAME, SAMPLE_KEYS, NULL, SAMPLE_LEN,
+        (void) pcr_resultset_new_2(SAMPLE_NAME, NULL, SAMPLE_TYPES, SAMPLE_LEN,
                                    x);
     }
 
@@ -188,6 +186,26 @@ new_2_test_6(pcr_string **desc, pcr_exception ex)
 
 static bool
 new_2_test_7(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_resultset_new_2() throws PCR_EXCEPTION_HANDLE if passed a null"
+            " pointer for @keys";
+
+    pcr_exception_try (x) {
+        (void) pcr_resultset_new_2(SAMPLE_NAME, SAMPLE_KEYS, NULL, SAMPLE_LEN,
+                                   x);
+    }
+
+    pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        return true;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+static bool
+new_2_test_8(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_resultset_new_2() throws PCR_EXCEPTION_RANGE if passed zero"
             " @len";
@@ -278,8 +296,8 @@ copy_test_3(pcr_string **desc, pcr_exception ex)
 
 static pcr_unittest *unit_tests[] = {
     &new_2_test_1, &new_2_test_2, &new_2_test_3, &new_2_test_4, &new_2_test_5,
-    &new_2_test_6, &new_2_test_7, &copy_test_1, &copy_test_2, &copy_test_3
-
+    &new_2_test_6, &new_2_test_7, &new_2_test_8, &copy_test_1, &copy_test_2,
+    &copy_test_3
 };
 
 
