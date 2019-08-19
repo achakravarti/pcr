@@ -4,6 +4,7 @@
 
 
 static thread_local FILE *log_file = NULL;
+static thread_local bool log_enabled = true;
 
 
 extern void pcr_log_open(const char *path, bool flush)
@@ -26,8 +27,24 @@ extern void pcr_log_close(void)
 }
 
 
+extern void
+pcr_log_allow(void)
+{
+    log_enabled = true;
+}
+
+
+extern void
+pcr_log_suppress(void)
+{
+    log_enabled = false;
+}
+
+
 extern void pcr_log_write__(const char type, const char *msg, ...)
 {
+    if (pcr_hint_unlikely (!log_enabled))
+        return;
 
     time_t tm = time(NULL);
     char *ctm = ctime(&tm);

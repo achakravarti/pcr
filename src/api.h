@@ -39,6 +39,12 @@ extern void
 pcr_log_close(void);
 
 extern void
+pcr_log_allow(void);
+
+extern void
+pcr_log_suppress(void);
+
+extern void
 pcr_log_write__(const char, const char *, ...);
 
 #define pcr_log_trace(m, ...) \
@@ -197,7 +203,6 @@ pcr_vector_muterate(pcr_vector **ctx, pcr_muterator *mtr, void *opt,
  */
 
 typedef char pcr_string;
-typedef pcr_vector pcr_string_vector;
 
 extern pcr_string *
 pcr_string_new(const char *cstr, pcr_exception ex);
@@ -207,6 +212,9 @@ pcr_string_copy(const pcr_string *ctx, pcr_exception ex);
 
 extern size_t
 pcr_string_len(const pcr_string *ctx, pcr_exception ex);
+
+extern size_t
+pcr_string_sz(const pcr_string *ctx, pcr_exception ex);
 
 extern int
 pcr_string_cmp(const pcr_string *lhs, const pcr_string *rhs, pcr_exception ex);
@@ -234,16 +242,130 @@ pcr_string_float(double value, pcr_exception ex);
 
 
 /******************************************************************************
+ * INTERFACE: pcr_string_vector
+ */
+
+typedef pcr_vector pcr_string_vector;
+
+inline pcr_string_vector *
+pcr_string_vector_new(pcr_exception ex)
+{
+    return pcr_vector_new(sizeof (pcr_string *), ex);
+}
+
+inline pcr_string_vector *
+pcr_string_vector_new_2(const pcr_string **arr, size_t len, pcr_exception ex)
+{
+    pcr_assert_handle(arr, ex);
+    pcr_assert_range(len, ex);
+
+    pcr_string_vector *vec = pcr_string_vector_new(ex);
+
+    register pcr_string *str;
+    for (register size_t i = 0; i < len; i++) {
+        str = pcr_string_new(arr[i], ex);
+        pcr_vector_push(&vec, str, ex);
+    }
+
+    return vec;
+}
+
+inline pcr_string_vector *
+pcr_string_vector_copy(const pcr_string_vector *ctx, pcr_exception ex)
+{
+    return pcr_vector_copy(ctx, ex);
+}
+
+inline size_t
+pcr_string_vector_len(const pcr_string_vector *ctx, pcr_exception ex)
+{
+    return pcr_vector_len(ctx, ex);
+}
+
+inline size_t
+pcr_string_vector_refcount(const pcr_string_vector *ctx, pcr_exception ex)
+{
+    return pcr_vector_refcount(ctx, ex);
+}
+
+inline bool
+pcr_string_vector_sorted(const pcr_string_vector *ctx, pcr_exception ex)
+{
+    return pcr_vector_sorted(ctx, ex);
+}
+
+inline pcr_string *
+pcr_string_vector_elem(const pcr_string_vector *ctx, size_t idx,
+                       pcr_exception ex)
+{
+    return (pcr_string *) pcr_vector_elem(ctx, idx, ex);
+}
+
+inline void
+pcr_string_vector_elem_set(pcr_string_vector **ctx, size_t idx,
+                           const pcr_string *elem, pcr_exception ex)
+{
+    pcr_string *str = pcr_string_new(elem, ex);
+    pcr_vector_setelem(ctx, &str, idx, ex);
+}
+
+inline void
+pcr_string_vector_push(pcr_string_vector **ctx, const pcr_string *elem,
+                       pcr_exception ex)
+{
+    pcr_string *str = pcr_string_new(elem, ex);
+    pcr_vector_push(ctx, &str, ex);
+}
+
+inline int
+__pcr_string_vector_comparator(const void *ctx, const void *cmp)
+{
+    pcr_exception_try (x) {
+        return !pcr_string_cmp((pcr_string *) ctx, (pcr_string *) cmp, x);
+    }
+
+    return -1;
+}
+
+inline void
+pcr_string_vector_sort(pcr_string_vector **ctx, pcr_exception ex)
+{
+    pcr_vector_sort(ctx, &__pcr_string_vector_comparator, ex);
+}
+
+inline size_t
+pcr_string_vector_search(pcr_string_vector **ctx, const pcr_string *key,
+                         pcr_exception ex)
+{
+    return pcr_vector_search(ctx, key, &__pcr_string_vector_comparator, ex);
+}
+
+inline void
+pcr_string_vector_iterate(const pcr_string_vector *ctx, pcr_iterator *itr,
+                          void *opt, pcr_exception ex)
+{
+    pcr_vector_iterate(ctx, itr, opt, ex);
+}
+
+inline void
+pcr_string_vector_muterate(pcr_string_vector **ctx, pcr_muterator *mtr,
+                           void *opt, pcr_exception ex)
+{
+    pcr_vector_muterate(ctx, mtr, opt, ex);
+}
+
+
+/******************************************************************************
  * INTERFACE: pcr_testcase
  */
 
 typedef bool
-(pcr_unittest)(pcr_exception ex);
+(pcr_unittest)(pcr_string **desc, pcr_exception ex);
 
 typedef struct pcr_testcase pcr_testcase;
 
 extern pcr_testcase *
-pcr_testcase_new(pcr_unittest *test, const pcr_string *desc, pcr_exception ex);
+pcr_testcase_new(pcr_unittest *test, pcr_exception ex);
 
 extern pcr_testcase *
 pcr_testcase_copy(const pcr_testcase *ctx, pcr_exception ex);
@@ -260,6 +382,10 @@ typedef struct pcr_testsuite pcr_testsuite;
 
 extern pcr_testsuite *
 pcr_testsuite_new(const pcr_string *name, pcr_exception ex);
+
+extern pcr_testsuite *
+pcr_testsuite_new_2(const pcr_string *name, pcr_unittest **tests, size_t len,
+                    pcr_exception ex);
 
 extern pcr_testsuite *
 pcr_testsuite_copy(const pcr_testsuite *ctx, pcr_exception ex);
@@ -293,10 +419,8 @@ pcr_testharness_run(pcr_exception ex);
 
 
 /******************************************************************************
- * INTERFACE: pcr_attrib
+ * INTERFACE: PCR_ATTRIBUTE
  */
-
-typedef struct pcr_attribute pcr_attribute;
 
 typedef enum PCR_ATTRIBUTE {
     PCR_ATTRIBUTE_NULL,
@@ -305,12 +429,138 @@ typedef enum PCR_ATTRIBUTE {
     PCR_ATTRIBUTE_TEXT
 } PCR_ATTRIBUTE;
 
+
+/******************************************************************************
+ * INTERFACE: PCR_ATTRIBUTE_VECTOR
+ */
+
 typedef pcr_vector PCR_ATTRIBUTE_VECTOR;
-typedef pcr_vector pcr_attribute_vector;
+
+inline PCR_ATTRIBUTE_VECTOR *
+PCR_ATTRIBUTE_VECTOR_NEW(pcr_exception ex)
+{
+    return pcr_vector_new(sizeof (PCR_ATTRIBUTE), ex);
+}
+
+inline PCR_ATTRIBUTE_VECTOR *
+PCR_ATTRIBUTE_VECTOR_NEW_2(const PCR_ATTRIBUTE *arr, size_t len,
+                           pcr_exception ex)
+{
+    pcr_assert_handle(arr, ex);
+    pcr_assert_range(len ,ex);
+
+    PCR_ATTRIBUTE_VECTOR *vec = PCR_ATTRIBUTE_VECTOR_NEW(ex);
+    for (register size_t i = 0; i < len; i++)
+        pcr_vector_push(&vec, &arr[i], ex);
+
+    return vec;
+}
+
+inline PCR_ATTRIBUTE_VECTOR *
+PCR_ATTRIBUTE_VECTOR_COPY(const PCR_ATTRIBUTE_VECTOR *ctx, pcr_exception ex)
+{
+    return pcr_vector_copy(ctx, ex);
+}
+
+inline size_t
+PCR_ATTRIBUTE_VECTOR_LEN(const PCR_ATTRIBUTE_VECTOR *ctx, pcr_exception ex)
+{
+    return pcr_vector_len(ctx, ex);
+}
+
+inline size_t
+PCR_ATTRIBUTE_VECTOR_REFCOUNT(const PCR_ATTRIBUTE_VECTOR *ctx, pcr_exception ex)
+{
+    return pcr_vector_refcount(ctx, ex);
+}
+
+inline PCR_ATTRIBUTE
+PCR_ATTRIBUTE_VECTOR_ELEM(const PCR_ATTRIBUTE_VECTOR *ctx, size_t idx,
+                          pcr_exception ex)
+{
+    return *((PCR_ATTRIBUTE *) pcr_vector_elem(ctx, idx, ex));
+}
+
+inline void
+PCR_ATTRIBUTE_VECTOR_ELEM_SET(PCR_ATTRIBUTE_VECTOR **ctx, size_t idx,
+                              PCR_ATTRIBUTE elem, pcr_exception ex)
+{
+    pcr_vector_setelem(ctx, &elem, idx, ex);
+}
+
+inline void
+PCR_ATTRIBUTE_VECTOR_PUSH(PCR_ATTRIBUTE_VECTOR **ctx, PCR_ATTRIBUTE elem,
+                          pcr_exception ex)
+{
+    pcr_vector_push(ctx, &elem, ex);
+}
+
+inline void
+PCR_ATTRIBUTE_VECTOR_ITERATE(const PCR_ATTRIBUTE_VECTOR *ctx, pcr_iterator *itr,
+                             void *opt, pcr_exception ex)
+{
+    pcr_vector_iterate(ctx, itr, opt, ex);
+}
+
+inline void
+PCR_ATTRIBUTE_VECTOR_MUTERATE(PCR_ATTRIBUTE_VECTOR **ctx, pcr_muterator *mtr,
+                              void *opt, pcr_exception ex)
+{
+    pcr_vector_muterate(ctx, mtr, opt, ex);
+}
+
+/******************************************************************************
+ * INTERFACE: pcr_attribute
+ */
+
+typedef struct pcr_attribute pcr_attribute;
 
 extern pcr_attribute *
 pcr_attribute_new(PCR_ATTRIBUTE type, const pcr_string *key, const void *value,
                   pcr_exception ex);
+
+inline pcr_attribute *
+pcr_attribute_new_null(const pcr_string *key, pcr_exception ex)
+{
+    return pcr_attribute_new(PCR_ATTRIBUTE_NULL, key, NULL, ex);
+}
+
+inline pcr_attribute *
+pcr_attribute_new_int(const pcr_string *key, int64_t value, pcr_exception ex)
+{
+    return pcr_attribute_new(PCR_ATTRIBUTE_INT, key, &value, ex);
+}
+
+inline pcr_attribute *
+pcr_attribute_new_int_2(const pcr_string *key, pcr_exception ex)
+{
+    return pcr_attribute_new_int(key, 0, ex);
+}
+
+inline pcr_attribute *
+pcr_attribute_new_float(const pcr_string *key, double value, pcr_exception ex)
+{
+    return pcr_attribute_new(PCR_ATTRIBUTE_FLOAT, key, &value, ex);
+}
+
+inline pcr_attribute *
+pcr_attribute_new_float_2(const pcr_string *key, pcr_exception ex)
+{
+    return pcr_attribute_new_float(key, 0.0, ex);
+}
+
+inline pcr_attribute *
+pcr_attribute_new_text(const pcr_string *key, const pcr_string *value,
+                       pcr_exception ex)
+{
+    return pcr_attribute_new(PCR_ATTRIBUTE_TEXT, key, value, ex);
+}
+
+inline pcr_attribute *
+pcr_attribute_new_text_2(const pcr_string *key, pcr_exception ex)
+{
+    return pcr_attribute_new_text(key, "", ex);
+}
 
 extern pcr_attribute *
 pcr_attribute_copy(const pcr_attribute *ctx, pcr_exception ex);
@@ -335,6 +585,87 @@ pcr_attribute_json(const pcr_attribute *ctx, pcr_exception ex);
 
 
 /******************************************************************************
+ * INTERFACE: pcr_attribute_vector
+ */
+
+
+typedef pcr_vector pcr_attribute_vector;
+
+inline pcr_attribute_vector *
+pcr_attribute_vector_new(pcr_exception ex)
+{
+    return pcr_vector_new(sizeof (pcr_attribute *), ex);
+}
+
+inline pcr_attribute_vector *
+pcr_attribute_vector_new_2(const pcr_attribute **arr, size_t len,
+                           pcr_exception ex)
+{
+    pcr_assert_handle(arr, ex);
+    pcr_assert_range(len, ex);
+
+    pcr_attribute_vector *vec = pcr_attribute_vector_new(ex);
+    for (register size_t i = 0; i < len; i++)
+        pcr_vector_push(&vec, &arr[i], ex);
+
+    return vec;
+}
+
+inline pcr_attribute_vector *
+pcr_attribute_vector_copy(const pcr_attribute_vector *ctx, pcr_exception ex)
+{
+    return pcr_vector_copy(ctx, ex);
+}
+
+inline size_t
+pcr_attribute_vector_len(const pcr_attribute_vector *ctx, pcr_exception ex)
+{
+    return pcr_vector_len(ctx, ex);
+}
+
+inline size_t
+pcr_attribute_vector_refcount(const pcr_string_vector *ctx, pcr_exception ex)
+{
+    return pcr_vector_refcount(ctx, ex);
+}
+
+inline pcr_attribute *
+pcr_attribute_vector_elem(const pcr_attribute_vector *ctx, size_t idx,
+                          pcr_exception ex)
+{
+    return *((pcr_attribute **) pcr_vector_elem(ctx, idx, ex));
+}
+
+inline void
+pcr_attribute_vector_elem_set(pcr_attribute_vector **ctx, size_t idx,
+                              const pcr_attribute *elem, pcr_exception ex)
+{
+    pcr_vector_setelem(ctx, elem, idx, ex);
+}
+
+inline void
+pcr_attribute_vector_push(pcr_attribute_vector **ctx, const pcr_attribute *elem,
+                          pcr_exception ex)
+{
+    pcr_vector_push(ctx, &elem, ex);
+}
+
+inline void
+pcr_attribute_vector_iterate(const pcr_attribute_vector *ctx, pcr_iterator *itr,
+                             void *opt, pcr_exception ex)
+{
+    pcr_vector_iterate(ctx, itr, opt, ex);
+}
+
+inline void
+pcr_attribute_vector_muterate(pcr_attribute_vector **ctx, pcr_muterator *mtr,
+                              void *opt, pcr_exception ex)
+{
+    pcr_vector_muterate(ctx, mtr, opt, ex);
+}
+
+
+/******************************************************************************
  * INTERFACE: pcr_resultset
  */
 
@@ -345,13 +676,20 @@ pcr_resultset_new(const pcr_string *name, const pcr_string_vector *keys,
                   const PCR_ATTRIBUTE_VECTOR *types, pcr_exception ex);
 
 extern pcr_resultset *
+pcr_resultset_new_2(const pcr_string *name, const pcr_string **keys,
+                    const PCR_ATTRIBUTE *types, size_t len, pcr_exception ex);
+
+extern pcr_resultset *
 pcr_resultset_copy(const pcr_resultset *ctx, pcr_exception ex);
+
+extern PCR_ATTRIBUTE_VECTOR *
+pcr_resultset_types(const pcr_resultset *ctx, pcr_exception ex);
 
 extern pcr_string_vector *
 pcr_resultset_keys(const pcr_resultset *ctx, pcr_exception ex);
 
-extern PCR_ATTRIBUTE_VECTOR *
-pcr_resultset_types(const pcr_resultset *ctx, pcr_exception ex);
+extern pcr_vector *
+pcr_resultset_values(const pcr_resultset *ctx, pcr_exception ex);
 
 extern size_t
 pcr_resultset_rows(const pcr_resultset *ctx, pcr_exception ex);
@@ -359,17 +697,24 @@ pcr_resultset_rows(const pcr_resultset *ctx, pcr_exception ex);
 extern size_t
 pcr_resultset_cols(const pcr_resultset *ctx, pcr_exception ex);
 
+extern size_t
+pcr_resultset_refcount(const pcr_resultset *ctx, pcr_exception ex);
+
 extern pcr_attribute *
 pcr_resultset_attrib(const pcr_resultset *ctx, size_t row, size_t col,
                      pcr_exception ex);
 
 extern void
-pcr_resultset_setattrib(pcr_resultset **ctx, const pcr_attribute *attr,
-                        size_t row, size_t col, pcr_exception ex);
+pcr_resultset_attrib_set(pcr_resultset **ctx, const pcr_attribute *attr,
+                         size_t row, size_t col, pcr_exception ex);
 
 extern void
 pcr_resultset_push(pcr_resultset **ctx, const pcr_attribute *attr,
                    pcr_exception ex);
+
+extern void
+pcr_resultset_push_2(pcr_resultset **ctx, const pcr_attribute_vector *attrs,
+                     pcr_exception ex);
 
 extern pcr_string *
 pcr_resultset_json(const pcr_resultset *ctx, pcr_exception ex);
@@ -387,6 +732,9 @@ pcr_sql_new(const pcr_string *unbound, pcr_exception ex);
 extern pcr_sql *
 pcr_sql_copy(const pcr_sql *ctx, pcr_exception ex);
 
+extern size_t
+pcr_sql_refcount(const pcr_sql *ctx, pcr_exception ex);
+
 extern pcr_string *
 pcr_sql_unbound(const pcr_sql *ctx, pcr_exception ex);
 
@@ -395,6 +743,33 @@ pcr_sql_bound(const pcr_sql *ctx, pcr_exception ex);
 
 extern void
 pcr_sql_bind(pcr_sql **ctx, const pcr_attribute *attr, pcr_exception ex);
+
+inline void
+pcr_sql_bind_null(pcr_sql **ctx, const pcr_string *key, pcr_exception ex)
+{
+    pcr_sql_bind(ctx, pcr_attribute_new_null(key, ex), ex);
+}
+
+inline void
+pcr_sql_bind_int(pcr_sql **ctx, const pcr_string *key, int64_t value,
+                 pcr_exception ex)
+{
+    pcr_sql_bind(ctx, pcr_attribute_new_int(key, value, ex), ex);
+}
+
+inline void
+pcr_sql_bind_float(pcr_sql **ctx, const pcr_string *key, double value,
+                   pcr_exception ex)
+{
+    pcr_sql_bind(ctx, pcr_attribute_new_float(key, value, ex), ex);
+}
+
+inline void
+pcr_sql_bind_text(pcr_sql **ctx, const pcr_string *key, const pcr_string *value,
+                  pcr_exception ex)
+{
+    pcr_sql_bind(ctx, pcr_attribute_new_text(key, value, ex), ex);
+}
 
 extern void
 pcr_sql_reset(pcr_sql **ctx, pcr_exception ex);

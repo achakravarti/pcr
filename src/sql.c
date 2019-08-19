@@ -17,7 +17,7 @@ pcr_sql_new(const pcr_string *unbound, pcr_exception ex)
 
         ctx->ref = 1;
         ctx->unbound = pcr_string_copy(unbound, x);
-        ctx->bound = pcr_string_copy(unbound, x);
+        ctx->bound = pcr_string_new("", x);
 
         return ctx;
     }
@@ -57,6 +57,7 @@ extern pcr_string *
 pcr_sql_bound(const pcr_sql *ctx, pcr_exception ex)
 {
     pcr_assert_handle(ctx, ex);
+    pcr_assert_state(*ctx->bound, ex);
 
     pcr_exception_try (x) {
         return pcr_string_copy(ctx->bound, x);
@@ -107,8 +108,7 @@ pcr_sql_bind(pcr_sql **ctx, const pcr_attribute *attr, pcr_exception ex)
     pcr_assert_handle(ctx && (hnd = *ctx), ex);
 
     pcr_exception_try (x) {
-        pcr_string *param = pcr_string_new("@", x);
-        param = pcr_string_add(param, pcr_attribute_key(attr, x), x);
+        pcr_string *param = pcr_attribute_key(attr, x);
         pcr_assert_state(pcr_string_find(hnd->unbound, param, x), x);
 
         pcr_string *arg = pcr_attribute_string(attr, x);
@@ -122,7 +122,9 @@ pcr_sql_bind(pcr_sql **ctx, const pcr_attribute *attr, pcr_exception ex)
         }
 
         hnd = sql_fork(ctx, x);
-        hnd->bound = pcr_string_replaceall(hnd->bound, param, arg, x);
+        hnd->bound = pcr_string_replaceall(*hnd->bound ? hnd->bound
+                                                       : hnd->unbound,
+                                           param, arg, x);
     }
 
     pcr_exception_unwind(ex);
@@ -136,7 +138,7 @@ pcr_sql_reset(pcr_sql **ctx, pcr_exception ex)
 
     pcr_exception_try (x) {
         pcr_sql *hnd = sql_fork(ctx, x);
-        hnd->bound = pcr_string_copy(hnd->unbound, x);
+        hnd->bound = pcr_string_new("", x);
     }
 
     pcr_exception_unwind(ex);
