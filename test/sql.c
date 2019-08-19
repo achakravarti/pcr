@@ -47,10 +47,12 @@ test_new_3(pcr_string **desc, pcr_exception ex)
             " for @unbound";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_sql_new(NULL, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_STRING) {
+        pcr_log_allow();
         return true;
     }
 
@@ -66,10 +68,12 @@ test_new_4(pcr_string **desc, pcr_exception ex)
             " string for @unbound";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_sql_new("", x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_STRING) {
+        pcr_log_allow();
         return true;
     }
 
@@ -131,10 +135,12 @@ test_copy_3(pcr_string **desc, pcr_exception ex)
             " for @ctx";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_sql_copy(NULL, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -155,10 +161,12 @@ test_refcount_1(pcr_string **desc, pcr_exception ex)
             " pointer for @ctx";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_sql_refcount(NULL, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -179,10 +187,12 @@ test_unbound_1(pcr_string **desc, pcr_exception ex)
             " pointer for @ctx";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_sql_unbound(NULL, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -203,10 +213,12 @@ test_bound_1(pcr_string **desc, pcr_exception ex)
             " pointer for @ctx";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_sql_bound(NULL, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -224,10 +236,13 @@ test_bound_2(pcr_string **desc, pcr_exception ex)
     pcr_exception_try (x) {
         const pcr_string *psql = "SELECT * FROM users where fname = @fname";
         pcr_sql *test = pcr_sql_new(psql, x);
+
+        pcr_log_suppress();
         (void) pcr_sql_bound(test, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_STATE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -355,7 +370,6 @@ test_bind_6(pcr_string **desc, pcr_exception ex)
         pcr_sql_bind_text(&test, "@en",  "Hello, world!", x);
         pcr_sql_bind_text(&test, "@ru", "Привет, мир!", x);
 
-        pcr_log_trace("bound = %s", pcr_sql_bound(test, x));
         const pcr_string *sql = "SELECT * FROM foo WHERE user <> NULL AND"
                                 " attempts > 1024 AND time <= 123.456789 AND"
                                 " en = \'Hello, world!\' AND"
@@ -375,10 +389,12 @@ test_bind_7(pcr_string **desc, pcr_exception ex)
             " handle for @ctx";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         pcr_sql_bind_null(NULL, "key", x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -395,10 +411,13 @@ test_bind_8(pcr_string **desc, pcr_exception ex)
 
     pcr_exception_try (x) {
         pcr_sql *test = NULL;
+
+        pcr_log_suppress();
         pcr_sql_bind_null(&test, "key", x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -416,10 +435,13 @@ test_bind_9(pcr_string **desc, pcr_exception ex)
     pcr_exception_try (x) {
         const pcr_string *psql = "SELECT * FROM users WHERE fname = @fname";
         pcr_sql *test = pcr_sql_new(psql, x);
+
+        pcr_log_suppress();
         (void) pcr_sql_bind(&test, NULL, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -437,10 +459,13 @@ test_bind_10(pcr_string **desc, pcr_exception ex)
     pcr_exception_try (x) {
         const pcr_string *psql = "SELECT * FROM users WHERE fname = @fname";
         pcr_sql *test = pcr_sql_new(psql, x);
+
+        pcr_log_suppress();
         (void) pcr_sql_bind_null(&test, "@lname", x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_STATE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -485,11 +510,13 @@ test_reset_1(pcr_string **desc, pcr_exception ex)
         pcr_sql *test = pcr_sql_new(psql, x);
         pcr_sql_bind_text(&test, "@fname", "foo", x);
 
+        pcr_log_suppress();
         pcr_sql_reset(&test, x);
         (void) pcr_sql_bound(test, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_STATE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -505,10 +532,12 @@ test_reset_2(pcr_string **desc, pcr_exception ex)
             " pointer for @ctx";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_sql_reset(NULL, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 

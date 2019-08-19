@@ -130,10 +130,12 @@ test_new_6(pcr_string **desc, pcr_exception ex)
             " pointer for @key";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_attribute_new(PCR_ATTRIBUTE_NULL, NULL, NULL, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_STRING) {
+        pcr_log_allow();
         return true;
     }
 
@@ -149,10 +151,12 @@ test_new_7(pcr_string **desc, pcr_exception ex)
             " string for @key";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_attribute_new(PCR_ATTRIBUTE_NULL, "", NULL, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_STRING) {
+        pcr_log_allow();
         return true;
     }
 
@@ -184,10 +188,12 @@ test_new_9(pcr_string **desc, pcr_exception ex)
             " pointer for @value when @field is not PCR_ATTRIBUTE_NULL";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_attribute_new(PCR_ATTRIBUTE_INT, "foo", NULL, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -330,10 +336,12 @@ test_copy_6(pcr_string **desc, pcr_exception ex)
             " pointer for @ctx";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_attribute_copy(NULL, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -354,10 +362,12 @@ test_key_1(pcr_string **desc, pcr_exception ex)
             " pointer for @ctx";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_attribute_key(NULL, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -378,10 +388,12 @@ test_value_1(pcr_string **desc, pcr_exception ex)
             " pointer for @ctx";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_attribute_value(NULL, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -402,10 +414,12 @@ test_type_1(pcr_string **desc, pcr_exception ex)
             " pointer for @ctx";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_attribute_type(NULL, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -523,10 +537,12 @@ test_valuesz_6(pcr_string **desc, pcr_exception ex)
             " null pointer for @ctx";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_attribute_valuesz(NULL, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -639,10 +655,12 @@ test_string_6(pcr_string **desc, pcr_exception ex)
             " null pointer for @ctx";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_attribute_string(NULL, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -762,10 +780,12 @@ test_json_6(pcr_string **desc, pcr_exception ex)
             " pointer for @ctx";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_attribute_json(NULL, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 

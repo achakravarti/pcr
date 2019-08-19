@@ -15,6 +15,76 @@ static const PCR_ATTRIBUTE SAMPLE_TYPES[] = {PCR_ATTRIBUTE_INT,
 static const size_t SAMPLE_LEN = sizeof SAMPLE_TYPES / sizeof *SAMPLE_TYPES;
 
 
+static void
+sample_row_push(pcr_resultset **ctx, pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        const pcr_attribute *arr[] = {
+            pcr_attribute_new_int("id", 1024, x)
+            //pcr_attribute_new_text("fname", "John", x),
+            //pcr_attribute_new_text("lname", "Вороно́й", x),
+            //pcr_attribute_new_int("attempts", -111, x),
+            //pcr_attribute_new_float("time", 123.456789, x)
+        };
+        const size_t len = sizeof arr / sizeof *arr;
+
+        //pcr_attribute_vector *attrs = pcr_attribute_vector_new_2(arr, len, x);
+        //pcr_resultset_push_2(ctx, attrs, x);
+        //pcr_resultset_push_2(ctx, pcr_attribute_vector_new_2(arr, len, x), x);
+
+        pcr_attribute *attr = pcr_attribute_new_int("id", 1024, x);
+        pcr_resultset_push(ctx, attr, x);
+
+        attr = pcr_attribute_new_text("fname", "John", x);
+        pcr_resultset_push(ctx, attr, x);
+
+        attr = pcr_attribute_new_text("lname", "Вороно́й", x);
+        pcr_resultset_push(ctx, attr, x);
+
+        attr = pcr_attribute_new_int("attempts", -111, x);
+        pcr_resultset_push(ctx, attr, x);
+
+        attr = pcr_attribute_new_float("time", 123.456789, x);
+        pcr_resultset_push(ctx, attr, x);
+    }
+
+    pcr_exception_unwind(ex);
+}
+
+
+static bool
+sample_row_match(const pcr_resultset *ctx, pcr_exception ex)
+{
+    const size_t row = 1;
+    const pcr_string *values[] = {
+        "1024", "John", "Вороно́й", "-111", "123.456789"
+    };
+
+    pcr_exception_try (x) {
+        register pcr_attribute *attr;
+        register pcr_string *key, *value;
+        register PCR_ATTRIBUTE type;
+
+        for (register size_t i = 1; i <= SAMPLE_LEN; i++) {
+            attr = pcr_resultset_attrib(ctx, row, i, x);
+            type = pcr_attribute_type(attr, x);
+            key = pcr_attribute_key(attr, x);
+            value = pcr_attribute_string(attr, x);
+
+            if (pcr_string_cmp(key, SAMPLE_KEYS[i - 1], x)
+                || type != SAMPLE_TYPES[i - 1]
+                || pcr_string_cmp(value, values[i - 1], x))
+                return false;
+        }
+
+        return true;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
 static bool
 sample_types_match(const PCR_ATTRIBUTE_VECTOR *vec, pcr_exception ex)
 {
@@ -111,11 +181,13 @@ new_2_test_3(pcr_string **desc, pcr_exception ex)
             " pointer for @name";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_resultset_new_2(NULL, SAMPLE_KEYS, SAMPLE_TYPES, SAMPLE_LEN,
                                    x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_STRING) {
+        pcr_log_allow();
         return true;
     }
 
@@ -131,11 +203,13 @@ new_2_test_4(pcr_string **desc, pcr_exception ex)
             " empty string for @name";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_resultset_new_2("", SAMPLE_KEYS, SAMPLE_TYPES, SAMPLE_LEN,
                                    x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_STRING) {
+        pcr_log_allow();
         return true;
     }
 
@@ -151,11 +225,13 @@ new_2_test_5(pcr_string **desc, pcr_exception ex)
             " pointer for @keys";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_resultset_new_2(SAMPLE_NAME, NULL, SAMPLE_TYPES, SAMPLE_LEN,
                                    x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -171,11 +247,13 @@ new_2_test_6(pcr_string **desc, pcr_exception ex)
             " pointer for @keys";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_resultset_new_2(SAMPLE_NAME, SAMPLE_KEYS, NULL, SAMPLE_LEN,
                                    x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -191,11 +269,13 @@ new_2_test_7(pcr_string **desc, pcr_exception ex)
             " pointer for @keys";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_resultset_new_2(SAMPLE_NAME, SAMPLE_KEYS, NULL, SAMPLE_LEN,
                                    x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -211,11 +291,13 @@ new_2_test_8(pcr_string **desc, pcr_exception ex)
             " @len";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_resultset_new_2(SAMPLE_NAME, SAMPLE_KEYS, SAMPLE_TYPES, 0,
                                    x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_RANGE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -277,11 +359,36 @@ copy_test_3(pcr_string **desc, pcr_exception ex)
             " pointer for @ctx";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_resultset_copy(NULL, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+/******************************************************************************
+ * pcr_resultset_push() test cases
+ */
+
+
+static bool
+push_test_1(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_resultset_push() pushes attributes to a resultset";
+
+    pcr_exception_try (x) {
+        pcr_resultset *rs = pcr_resultset_new_2(SAMPLE_NAME, SAMPLE_KEYS,
+                                                SAMPLE_TYPES, SAMPLE_LEN, x);
+        sample_row_push(&rs, x);
+
+        return sample_row_match(rs, x);
     }
 
     pcr_exception_unwind(ex);
@@ -297,7 +404,7 @@ copy_test_3(pcr_string **desc, pcr_exception ex)
 static pcr_unittest *unit_tests[] = {
     &new_2_test_1, &new_2_test_2, &new_2_test_3, &new_2_test_4, &new_2_test_5,
     &new_2_test_6, &new_2_test_7, &new_2_test_8, &copy_test_1, &copy_test_2,
-    &copy_test_3
+    &copy_test_3, &push_test_1
 };
 
 

@@ -59,10 +59,12 @@ static bool test_new_4(pcr_string **desc, pcr_exception ex)
             " pointer for @cstr";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_string_new(NULL, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -132,10 +134,12 @@ static bool test_copy_4(pcr_string **desc, pcr_exception ex)
             " pointer for @ctx";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_string_copy(NULL, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -197,10 +201,12 @@ static bool test_len_4(pcr_string **desc, pcr_exception ex)
             " pointer for @ctx";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_string_len(NULL, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -266,10 +272,12 @@ static bool test_sz_4(pcr_string **desc, pcr_exception ex)
             " pointer for @ctx";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_string_sz(NULL, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -435,10 +443,12 @@ static bool test_cmp_10(pcr_string **desc, pcr_exception ex)
             " pointer for @lhs";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_string_cmp(NULL, "Hello, world!", x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -453,10 +463,12 @@ static bool test_cmp_11(pcr_string **desc, pcr_exception ex)
             " pointer for @rhs";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_string_cmp("Hello, world!", NULL, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -533,11 +545,13 @@ static bool test_add_4(pcr_string **desc, pcr_exception ex)
         pcr_string *test = pcr_string_new("Hello", x);
         (void) test;
 
+        pcr_log_suppress();
         test = pcr_string_add(NULL, ", ", x);
         (void) test;
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -553,11 +567,14 @@ static bool test_add_5(pcr_string **desc, pcr_exception ex)
 
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello", x);
+
+        pcr_log_suppress();
         test = pcr_string_add(test, NULL, x);
         (void) test;
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -706,10 +723,12 @@ static bool test_find_10(pcr_string **desc, pcr_exception ex)
             " pointer for @haystack";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_string_find(NULL, "Hello", x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -724,10 +743,12 @@ static bool test_find_11(pcr_string **desc, pcr_exception ex)
             " pointer for @needle";
 
     pcr_exception_try (x) {
+        pcr_log_suppress();
         (void) pcr_string_find("Hello", NULL, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -748,10 +769,13 @@ static bool test_replace_1(pcr_string **desc, pcr_exception ex)
 
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("", x);
+
+        pcr_log_suppress();
         (void) pcr_string_replace(test, "", "Hello, world!", x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_STRING) {
+        pcr_log_allow();
         return true;
     }
 
@@ -901,10 +925,13 @@ static bool test_replace_10(pcr_string **desc, pcr_exception ex)
 
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello, world!", x);
+
+        pcr_log_suppress();
         (void) pcr_string_replace(NULL, test, "", x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -920,10 +947,13 @@ static bool test_replace_11(pcr_string **desc, pcr_exception ex)
 
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello, world!", x);
+
+        pcr_log_suppress();
         (void) pcr_string_replace(test, NULL, "", x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_STRING) {
+        pcr_log_allow();
         return true;
     }
 
@@ -939,10 +969,13 @@ static bool test_replace_12(pcr_string **desc, pcr_exception ex)
 
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello, world!", x);
+
+        pcr_log_suppress();
         (void) pcr_string_replace(test, "Hello", NULL, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -963,10 +996,13 @@ static bool test_replaceall_1(pcr_string **desc, pcr_exception ex)
 
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("", x);
+
+        pcr_log_suppress();
         (void) pcr_string_replaceall(test, "", "Hello, world!", x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_STRING) {
+        pcr_log_allow();
         return true;
     }
 
@@ -1116,10 +1152,13 @@ static bool test_replaceall_10(pcr_string **desc, pcr_exception ex)
 
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello, world!", x);
+
+        pcr_log_suppress();
         (void) pcr_string_replaceall(NULL, test, "", x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
@@ -1135,10 +1174,13 @@ static bool test_replaceall_11(pcr_string **desc, pcr_exception ex)
 
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello, world!", x);
+
+        pcr_log_suppress();
         (void) pcr_string_replaceall(test, NULL, "", x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_STRING) {
+        pcr_log_allow();
         return true;
     }
 
@@ -1154,10 +1196,13 @@ static bool test_replaceall_12(pcr_string **desc, pcr_exception ex)
 
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello, world!", x);
+
+        pcr_log_suppress();
         (void) pcr_string_replaceall(test, "Hello", NULL, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
         return true;
     }
 
