@@ -9,6 +9,9 @@ all:
 	gcc -g -O2 -Wall $(LIB_SRC) $(TEST_SRC) -lgc -o $(TEST_OUT)
 	./$(TEST_OUT)
 
+doc:
+	doxygen Doxyfile
+
 clean:
-	rm -rfv bld
+	rm -rfv bld doc
 
