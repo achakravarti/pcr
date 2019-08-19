@@ -22,6 +22,28 @@ extern "C" {
 
 /**
  * @ingroup PCR Hints Module
+ * Hints that a function is pure
+ *
+ * The @c pcr_hint_pure macro is used to decorate the declaration of a pure
+ * function. A pure function is one that always returns the same value for the
+ * same arguments without any side effects. This hint follows the GCC attribute
+ * syntax, and is recommended to be placed in the function declaration just
+ * before the function return type.
+ *
+ * @warning This hint is available only on GCC and GCC-compatible compilers such
+ * as Clang; on other compilers, this macro degrades with a warning that it has
+ * no effect.
+ */
+#if (defined __GNUC__ || defined __clang__)
+#   define pcr_hint_pure __attribute__((pure))
+#else
+#   define pcr_hint_pure
+#   warning pcr_hint_pure has no effect on non GCC-compatible compilers
+#endif
+
+
+/**
+ * @ingroup PCR Hints Module
  * Hints that a function is called frequently.
  *
  * The @c pcr_hint_hot macro is used to decorate a function declaration in
@@ -59,7 +81,7 @@ extern "C" {
  * @see pcr_hint_hot
  */
 #if (defined __GNUC__ || defined __clang__)
-#   define pcr_hint_cold __attribute__((cold)
+#   define pcr_hint_cold __attribute__((cold))
 #else
 #   define pcr_hint_cold
 #   warning pcr_hint_cold has no effect on non GCC-compatible compilers
@@ -116,7 +138,8 @@ extern "C" {
 
 /**
  * @example hint.h
- * This is an example showing how the of the PCR Hints Module may be used.
+ * This is an example showing how to code against the PCR Hints Module
+ * interface.
  */
 
 
