@@ -260,8 +260,10 @@ pcr_string_vector_new_2(const pcr_string **arr, size_t len, pcr_exception ex)
     pcr_assert_range(len, ex);
 
     pcr_string_vector *vec = pcr_string_vector_new(ex);
+
+    register pcr_string *str;
     for (register size_t i = 0; i < len; i++) {
-        pcr_string *str = pcr_string_new(arr[i], ex);
+        str = pcr_string_new(arr[i], ex);
         pcr_vector_push(&vec, str, ex);
     }
 
@@ -603,9 +605,8 @@ pcr_attribute_vector_new_2(const pcr_attribute **arr, size_t len,
     pcr_assert_range(len, ex);
 
     pcr_attribute_vector *vec = pcr_attribute_vector_new(ex);
-    for (register size_t i = 0; i < len; i++) {
-        pcr_vector_push(&vec, arr[i], ex);
-    }
+    for (register size_t i = 0; i < len; i++)
+        pcr_vector_push(&vec, &arr[i], ex);
 
     return vec;
 }
@@ -632,7 +633,7 @@ inline pcr_attribute *
 pcr_attribute_vector_elem(const pcr_attribute_vector *ctx, size_t idx,
                           pcr_exception ex)
 {
-    return (pcr_attribute *) pcr_vector_elem(ctx, idx, ex);
+    return *((pcr_attribute **) pcr_vector_elem(ctx, idx, ex));
 }
 
 inline void
@@ -646,7 +647,7 @@ inline void
 pcr_attribute_vector_push(pcr_attribute_vector **ctx, const pcr_attribute *elem,
                           pcr_exception ex)
 {
-    pcr_vector_push(ctx, elem, ex);
+    pcr_vector_push(ctx, &elem, ex);
 }
 
 inline void

@@ -20,32 +20,15 @@ sample_row_push(pcr_resultset **ctx, pcr_exception ex)
 {
     pcr_exception_try (x) {
         const pcr_attribute *arr[] = {
-            pcr_attribute_new_int("id", 1024, x)
-            //pcr_attribute_new_text("fname", "John", x),
-            //pcr_attribute_new_text("lname", "Вороно́й", x),
-            //pcr_attribute_new_int("attempts", -111, x),
-            //pcr_attribute_new_float("time", 123.456789, x)
+            pcr_attribute_new_int("id", 1024, x),
+            pcr_attribute_new_text("fname", "John", x),
+            pcr_attribute_new_text("lname", "Вороно́й", x),
+            pcr_attribute_new_int("attempts", -111, x),
+            pcr_attribute_new_float("time", 123.456789, x)
         };
         const size_t len = sizeof arr / sizeof *arr;
 
-        //pcr_attribute_vector *attrs = pcr_attribute_vector_new_2(arr, len, x);
-        //pcr_resultset_push_2(ctx, attrs, x);
-        //pcr_resultset_push_2(ctx, pcr_attribute_vector_new_2(arr, len, x), x);
-
-        pcr_attribute *attr = pcr_attribute_new_int("id", 1024, x);
-        pcr_resultset_push(ctx, attr, x);
-
-        attr = pcr_attribute_new_text("fname", "John", x);
-        pcr_resultset_push(ctx, attr, x);
-
-        attr = pcr_attribute_new_text("lname", "Вороно́й", x);
-        pcr_resultset_push(ctx, attr, x);
-
-        attr = pcr_attribute_new_int("attempts", -111, x);
-        pcr_resultset_push(ctx, attr, x);
-
-        attr = pcr_attribute_new_float("time", 123.456789, x);
-        pcr_resultset_push(ctx, attr, x);
+        pcr_resultset_push_2(ctx, pcr_attribute_vector_new_2(arr, len, x), x);
     }
 
     pcr_exception_unwind(ex);
@@ -396,6 +379,70 @@ push_test_1(pcr_string **desc, pcr_exception ex)
 }
 
 
+static bool
+push_test_2(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_resultset_push() respects reference counts";
+
+    pcr_exception_try (x) {
+        pcr_resultset *rs = pcr_resultset_new_2(SAMPLE_NAME, SAMPLE_KEYS,
+                                                SAMPLE_TYPES, SAMPLE_LEN, x);
+        pcr_resultset *cp1 = pcr_resultset_copy(rs, x);
+        pcr_resultset *cp2 = pcr_resultset_copy(cp1, x);
+
+        sample_row_push(&cp2, x);
+        return pcr_resultset_refcount(cp2, x) == 1;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+static bool
+push_test_3(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_resultset_push() throws PCR_EXCEPTION_HANDLE if passed a null"
+            " handle for @ctx";
+
+    pcr_exception_try (x) {
+        pcr_log_suppress();
+        sample_row_push(NULL, x);
+    }
+
+    pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
+        return true;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+static bool
+push_test_4(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_resultset_push() throws PCR_EXCEPTION_HANDLE if passed a null"
+            " pointer for @ctx";
+
+    pcr_exception_try (x) {
+        pcr_log_suppress();
+
+        pcr_resultset *rs = NULL;
+        sample_row_push(&rs, x);
+    }
+
+    pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
+        pcr_log_allow();
+        return true;
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
 /******************************************************************************
  * pcr_resultset_testsuite() interface
  */
@@ -404,7 +451,7 @@ push_test_1(pcr_string **desc, pcr_exception ex)
 static pcr_unittest *unit_tests[] = {
     &new_2_test_1, &new_2_test_2, &new_2_test_3, &new_2_test_4, &new_2_test_5,
     &new_2_test_6, &new_2_test_7, &new_2_test_8, &copy_test_1, &copy_test_2,
-    &copy_test_3, &push_test_1
+    &copy_test_3, &push_test_1, &push_test_2, &push_test_3, &push_test_4
 };
 
 
