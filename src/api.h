@@ -476,6 +476,9 @@ typedef char pcr_string;
 
 /**
  * Creates a new string.
+ *
+ * @param cstr The raw C string.
+ * @param ex Handle to the exception stack.
  */
 extern pcr_string *
 pcr_string_new(const char *cstr, pcr_exception ex);
@@ -483,6 +486,9 @@ pcr_string_new(const char *cstr, pcr_exception ex);
 
 /**
  * Clones an existing string.
+ *
+ * @param ctx The contextual string instance.
+ * @param ex Handle to the exception stack.
  */
 extern pcr_string *
 pcr_string_copy(const pcr_string *ctx, pcr_exception ex);
@@ -490,6 +496,9 @@ pcr_string_copy(const pcr_string *ctx, pcr_exception ex);
 
 /**
  * Gets string length.
+ *
+ * @param ctx The contextual string instance.
+ * @param ex Handle to the exception stack.
  */
 extern size_t
 pcr_string_len(const pcr_string *ctx, pcr_exception ex);
@@ -497,6 +506,9 @@ pcr_string_len(const pcr_string *ctx, pcr_exception ex);
 
 /**
  * Gets string size.
+ *
+ * @param ctx The contextual string instance.
+ * @param ex Handle to the exception stack.
  */
 extern size_t
 pcr_string_sz(const pcr_string *ctx, pcr_exception ex);
@@ -504,6 +516,10 @@ pcr_string_sz(const pcr_string *ctx, pcr_exception ex);
 
 /**
  * Compares two strings.
+ *
+ * @param lhs The left hand side string to compare.
+ * @param rhs The right hand side string to compare.
+ * @param ex Handle to the exception stack.
  */
 extern int
 pcr_string_cmp(const pcr_string *lhs, const pcr_string *rhs, pcr_exception ex);
@@ -511,6 +527,9 @@ pcr_string_cmp(const pcr_string *lhs, const pcr_string *rhs, pcr_exception ex);
 
 /**
  * Adds two strings.
+ *
+ * @param ctx The contextual string instance.
+ * @param ex Handle to the exception stack.
  */
 extern pcr_string *
 pcr_string_add(const pcr_string *ctx, const pcr_string *add, pcr_exception ex);
@@ -518,29 +537,46 @@ pcr_string_add(const pcr_string *ctx, const pcr_string *add, pcr_exception ex);
 
 /**
  * Searches for a substring.
+ *
+ * @param haystack The string to search in.
+ * @param needle The substring to find.
+ * @param ex Handle to the exception stack.
  */
 extern size_t
 pcr_string_find(const pcr_string *haystack, const pcr_string *needle,
-                    pcr_exception ex);
+                pcr_exception ex);
 
 
 /**
  * Replaces first instance of substring.
+ *
+ * @param haystack The string to search in.
+ * @param needle The substring to replace.
+ * @param replace The replacement string.
+ * @param ex Handle to the exception stack.
  */
 extern pcr_string *
 pcr_string_replace(const pcr_string *haystack, const pcr_string *needle,
-                        const pcr_string *replace, pcr_exception ex);
+                   const pcr_string *replace, pcr_exception ex);
 
 
 /**
  * Replaces all instances of substring.
+ *
+ * @param haystack The string to search in.
+ * @param needle The substring to replace.
+ * @param replace The replacement string.
+ * @param ex Handle to the exception stack.
  */
 extern pcr_string *
 pcr_string_replaceall(const pcr_string *haystack, const pcr_string *needle,
-                            const pcr_string *replace, pcr_exception ex);
+                      const pcr_string *replace, pcr_exception ex);
 
 /**
  * Converts interger to string.
+ *
+ * @param value Integer to convert.
+ * @param ex Handle to the exception stack.
  */
 extern pcr_string *
 pcr_string_int(int64_t value, pcr_exception ex);
@@ -548,6 +584,9 @@ pcr_string_int(int64_t value, pcr_exception ex);
 
 /**
  * Converts floating point number to string.
+ *
+ * @param value Floating point number to convert.
+ * @param ex Handle to the exception stack.
  */
 extern pcr_string *
 pcr_string_float(double value, pcr_exception ex);
