@@ -6,6 +6,7 @@
 int main(void)
 {
     pcr_log_open("test.log", true);
+    pcr_log_trace("started PCR Library test runner...");
 
     pcr_exception_try (x) {
         pcr_testsuite *suites[] = {
