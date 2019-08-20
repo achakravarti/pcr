@@ -478,7 +478,9 @@ typedef char pcr_string;
  * Creates a new string.
  *
  * @param cstr The raw C string.
- * @param ex Handle to the exception stack.
+ * @param ex The exception stack.
+ *
+ * @return The new string.
  */
 extern pcr_string *
 pcr_string_new(const char *cstr, pcr_exception ex);
@@ -488,7 +490,9 @@ pcr_string_new(const char *cstr, pcr_exception ex);
  * Clones an existing string.
  *
  * @param ctx The contextual string instance.
- * @param ex Handle to the exception stack.
+ * @param ex The exception stack.
+ *
+ * @return The copy of @p ctx.
  */
 extern pcr_string *
 pcr_string_copy(const pcr_string *ctx, pcr_exception ex);
@@ -498,7 +502,9 @@ pcr_string_copy(const pcr_string *ctx, pcr_exception ex);
  * Gets string length.
  *
  * @param ctx The contextual string instance.
- * @param ex Handle to the exception stack.
+ * @param ex The exception stack.
+ *
+ * @return The length of @p ctx.
  */
 extern size_t
 pcr_string_len(const pcr_string *ctx, pcr_exception ex);
@@ -508,7 +514,9 @@ pcr_string_len(const pcr_string *ctx, pcr_exception ex);
  * Gets string size.
  *
  * @param ctx The contextual string instance.
- * @param ex Handle to the exception stack.
+ * @param ex The exception stack.
+ *
+ * @return The size of @p ctx.
  */
 extern size_t
 pcr_string_sz(const pcr_string *ctx, pcr_exception ex);
@@ -519,17 +527,23 @@ pcr_string_sz(const pcr_string *ctx, pcr_exception ex);
  *
  * @param lhs The left hand side string to compare.
  * @param rhs The right hand side string to compare.
- * @param ex Handle to the exception stack.
+ * @param ex The exception stack.
+ *
+ * @return -1 if @p lhs < @p rhs.
+ * @return 0 if @p == @p rhs.
+ * @return 1 if @p lhs > @p rhs.
  */
 extern int
 pcr_string_cmp(const pcr_string *lhs, const pcr_string *rhs, pcr_exception ex);
 
 
 /**
- * Adds two strings.
+ * Concatenates two strings.
  *
  * @param ctx The contextual string instance.
- * @param ex Handle to the exception stack.
+ * @param ex The exception stack.
+ *
+ * @return The concatenated string.
  */
 extern pcr_string *
 pcr_string_add(const pcr_string *ctx, const pcr_string *add, pcr_exception ex);
@@ -540,7 +554,10 @@ pcr_string_add(const pcr_string *ctx, const pcr_string *add, pcr_exception ex);
  *
  * @param haystack The string to search in.
  * @param needle The substring to find.
- * @param ex Handle to the exception stack.
+ * @param ex The exception stack.
+ *
+ * @return 0 if @p needle was not found.
+ * @return The index where @p needle is placed in @p haystack if it was found.
  */
 extern size_t
 pcr_string_find(const pcr_string *haystack, const pcr_string *needle,
@@ -553,7 +570,9 @@ pcr_string_find(const pcr_string *haystack, const pcr_string *needle,
  * @param haystack The string to search in.
  * @param needle The substring to replace.
  * @param replace The replacement string.
- * @param ex Handle to the exception stack.
+ * @param ex The exception stack.
+ *
+ * @return The replaced string.
  */
 extern pcr_string *
 pcr_string_replace(const pcr_string *haystack, const pcr_string *needle,
@@ -566,7 +585,9 @@ pcr_string_replace(const pcr_string *haystack, const pcr_string *needle,
  * @param haystack The string to search in.
  * @param needle The substring to replace.
  * @param replace The replacement string.
- * @param ex Handle to the exception stack.
+ * @param ex The exception stack.
+ *
+ * @return The replaced string.
  */
 extern pcr_string *
 pcr_string_replaceall(const pcr_string *haystack, const pcr_string *needle,
@@ -576,7 +597,9 @@ pcr_string_replaceall(const pcr_string *haystack, const pcr_string *needle,
  * Converts interger to string.
  *
  * @param value Integer to convert.
- * @param ex Handle to the exception stack.
+ * @param ex The exception stack.
+ *
+ * @return The string representation of @p value.
  */
 extern pcr_string *
 pcr_string_int(int64_t value, pcr_exception ex);
@@ -586,7 +609,9 @@ pcr_string_int(int64_t value, pcr_exception ex);
  * Converts floating point number to string.
  *
  * @param value Floating point number to convert.
- * @param ex Handle to the exception stack.
+ * @param ex The exception stack.
+ *
+ * @return The string representation of @p value.
  */
 extern pcr_string *
 pcr_string_float(double value, pcr_exception ex);
