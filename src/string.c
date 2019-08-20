@@ -4,6 +4,7 @@
 #include "./api.h"
 
 
+/* Implement the pcr_string_new() interface function. */
 extern pcr_string *
 pcr_string_new(const char *cstr, pcr_exception ex)
 {
@@ -22,6 +23,7 @@ pcr_string_new(const char *cstr, pcr_exception ex)
 }
 
 
+/* Implement the pcr_string_copy() interface function. */
 extern pcr_string *
 pcr_string_copy(const pcr_string *ctx, pcr_exception ex)
 {
@@ -34,6 +36,7 @@ pcr_string_copy(const pcr_string *ctx, pcr_exception ex)
 }
 
 
+/* Implement the pcr_string_len() interface function. */
 extern size_t
 pcr_string_len(const pcr_string *ctx, pcr_exception ex)
 {
@@ -42,6 +45,7 @@ pcr_string_len(const pcr_string *ctx, pcr_exception ex)
 }
 
 
+/* Implement the pcr_string_sz() interface function. */
 extern size_t
 pcr_string_sz(const pcr_string *ctx, pcr_exception ex)
 {
@@ -50,7 +54,7 @@ pcr_string_sz(const pcr_string *ctx, pcr_exception ex)
 }
 
 
-
+/* Implement the pcr_string_cmp() interface function. */
 extern int
 pcr_string_cmp(const pcr_string *lhs, const pcr_string *rhs, pcr_exception ex)
 {
@@ -59,6 +63,7 @@ pcr_string_cmp(const pcr_string *lhs, const pcr_string *rhs, pcr_exception ex)
 }
 
 
+/* Implement the pcr_string_add() interface function. */
 extern pcr_string *
 pcr_string_add(const pcr_string *ctx, const pcr_string *add, pcr_exception ex)
 {
@@ -81,6 +86,7 @@ pcr_string_add(const pcr_string *ctx, const pcr_string *add, pcr_exception ex)
 //1 2 3 4 5 6 7 8
 //a b c d e f g h
 //3     5         => 8
+/* Implement the pcr_string_find() interface function. */
 extern size_t
 pcr_string_find(const pcr_string *haystack, const pcr_string *needle,
                 pcr_exception ex)
@@ -100,6 +106,7 @@ pcr_string_find(const pcr_string *haystack, const pcr_string *needle,
 
 
 // https://gist.github.com/stanislaw/f62c36823242c4ffea1b
+/* Implement the pcr_string_replace() interface function. */
 extern pcr_string *
 pcr_string_replace(const pcr_string *haystack, const pcr_string *needle,
                    const pcr_string *replace, pcr_exception ex)
@@ -133,6 +140,7 @@ pcr_string_replace(const pcr_string *haystack, const pcr_string *needle,
 
 
 // https://gist.github.com/stanislaw/f62c36823242c4ffea1b
+/* Implement the pcr_string_replace_all() interface function. */
 extern pcr_string *
 pcr_string_replaceall(const pcr_string *haystack, const pcr_string *needle,
                       const pcr_string *replace, pcr_exception ex)
@@ -151,6 +159,7 @@ pcr_string_replaceall(const pcr_string *haystack, const pcr_string *needle,
 }
 
 
+/* Implement the pcr_string_int() interface function. */
 extern pcr_string *
 pcr_string_int(int64_t value, pcr_exception ex)
 {
@@ -167,6 +176,7 @@ pcr_string_int(int64_t value, pcr_exception ex)
 }
 
 
+/* Implement the pcr_string_float() interface function. */
 extern pcr_string *
 pcr_string_float(double value, pcr_exception ex)
 {
