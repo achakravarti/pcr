@@ -7,21 +7,21 @@ extern "C" {
 
 
 /**************************************************************************//**
- * @defgroup PCR Hints Module
+ * @defgroup hint PCR Hint Module
  * Compiler hints for optimisation.
  *
  * Compilers such as GCC have always focused aggressively on optimisation. Many
  * such optimisations have been introduced as compiler-specific extensions that
  * are @b not part of the C standards.
  *
- * The PCR Hints Module abstracts such optimisations as conditional macros so
+ * The PCR Hint Module abstracts such optimisations as conditional macros so
  * that they can be taken advantage of in GCC and GCC-compatible compilers such
  * as Clang, but at the same time degrade safely on other compilers.
+ * @{
  */
 
 
 /**
- * @ingroup PCR Hints Module
  * Hints that a function is pure
  *
  * The @c pcr_hint_pure macro is used to decorate the declaration of a pure
@@ -43,7 +43,6 @@ extern "C" {
 
 
 /**
- * @ingroup PCR Hints Module
  * Hints that a function is called frequently.
  *
  * The @c pcr_hint_hot macro is used to decorate a function declaration in
@@ -66,7 +65,6 @@ extern "C" {
 
 
 /**
- * @ingroup PCR Hints Module
  * Hints that a function is called infrequently.
  *
  * The @c pcr_hint_cold macro is used to decorate a function declaration in
@@ -89,7 +87,6 @@ extern "C" {
 
 
 /**
- * @ingroup PCR Hints Module
  * Hints that a predicate is likely to be true.
  *
  * The @c pcr_hint_likely() macro indicates that a predicate expression @p p is
@@ -102,7 +99,7 @@ extern "C" {
  * as Clang; on other compilers, this macro degrades with a warning that it has
  * no effect.
  *
- * @see pcr_hint_unlikely
+ * @see pcr_hint_unlikely()
  */
 #if (defined __GNUC__ || defined __clang__)
 #   define pcr_hint_likely(p) (__builtin_expect(!!(p), 1))
@@ -113,7 +110,6 @@ extern "C" {
 
 
 /**
- * @ingroup PCR Hints Module
  * Hints that a predicate is likely to be false.
  *
  * The @c pcr_hint_unlikely() macro indicates that a predicate expression @p p
@@ -126,7 +122,7 @@ extern "C" {
  * as Clang; on other compilers, this macro degrades with a warning that it has
  * no effect.
  *
- * @see pcr_hint_likely
+ * @see pcr_hint_likely()
  */
 #if (defined __GNUC__ || defined __clang__)
 #   define pcr_hint_unlikely(p) (__builtin_expect(!!(p), 0))
@@ -138,42 +134,190 @@ extern "C" {
 
 /**
  * @example hint.h
- * This is an example showing how to code against the PCR Hints Module
- * interface.
+ * This is an example showing how to code against the PCR Hint Module interface.
+ * @}
  */
 
 
-/******************************************************************************
- * INTERFACE: pcr_log
+/**************************************************************************//**
+ * @defgroup logging PCR Logging Module
+ * Runtime logging of events.
+ * @{
  */
+
 
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
 
-extern void
+
+/**
+ * Opens default log file.
+ *
+ * The @c pcr_log_open() function opens a log file with a given fully qualified
+ * @p path where all log messages will be saved by default. In case the log file
+ * specified by @p path does not exist, then it will be created. If the log file
+ * is opened with the flag @p flush set to @c true, then any existing data in
+ * the log file will be erased. Conversely, if the flag @p flush is set to be @c
+ * false, theny any existing data in the log file will be retained, and the new
+ * log messages will be appended after them.
+ *
+ * @param path Fully qualifed path of log file.
+ * @param flush Flag to flush log file on opening.
+ *
+ * @note There is no need to call @c pcr_log_allow() after calling this function
+ * as @c pcr_log_open() allows logging by default. Also note that calling the @c
+ * pcr_log_open() function is safe even if a default log file is currently open;
+ * in such a case, the currently open log file will be first closed before the
+ * new one is opened. In the unlikely event of @c pcr_log_open() failing to open
+ * the log file, then an appropriate warning is printed onto @c stdout.
+ *
+ * @warning Be sure to close the log file opened with @c pcr_log_open() once you
+ * are done with it by making a call to @c pcr_log_close() in order to prevent
+ * resource leaks. Unlike dynamically allocated pointers on the heap, the PCR
+ * Library does not manage the automatic clean-up of files.
+ *
+ * @see pcr_log_allow()
+ * @see pcr_log_close()
+ */
+extern pcr_hint_cold void
 pcr_log_open(const char *path, bool flush);
 
-extern void
+
+/**
+ * Closes default log file.
+ *
+ * The @c pcr_log_close() function closes the default log file that was opened
+ * earlier by a call to @c pcr_log_open(). Be sure to call this function after
+ * you are done using the log file in order to prevent resource leaks.
+ *
+ * @note It is safe to call this function even if the default log file has not
+ * been successfully opened. This is an intended feature to allow this function
+ * to be safely called in case an exception has occurred.
+ *
+ * @warning Unlike dynamically allocated pointers on the heap, the PCR Library
+ * does not manage the automatic clean-up of files.
+ *
+ * @see pcr_log_open()
+ */
+extern pcr_hint_cold void
 pcr_log_close(void);
 
-extern void
+
+/**
+ * Toggles on logging.
+ *
+ * The @c pcr_log_allow() function toggles on logging if it has been temporarily
+ * disabled by a call to @c pcr_log_suppress().
+ *
+ * @note A call to pcr_log_open() implies that logging is allowed by default.
+ *
+ * @see pcr_log_open()
+ * @see pcr_log_suppress()
+ */
+extern pcr_hint_cold void
 pcr_log_allow(void);
 
-extern void
-pcr_log_suppress(void);
 
+/**
+ * Toggles off logging.
+ *
+ * The @c pcr_log_suppress() function temporarily disables the logging of
+ * messages. There aren't many reasons why you would want to do this in the
+ * normal course of execution. However, it is useful to suppress log messages
+ * while running unit tests that check for some exception having been raised; in
+ * such a case, it prevents the log file from being cluttered with superfluous
+ * error messages.
+ *
+ * @warning Be sure to enable logging by calling @c pcr_log_allow() when you no
+ * longer need to suppress log messages. Although you could also achieve this by
+ * re-opening the log file through a call to @c pcr_log_open(), it is not the
+ * preferred way to do so.
+ *
+ * @see pcr_log_allow()
+ */
+extern void
+pcr_log_suppress(void); // TODO: why does pcr_hint_cold cause an error?
+
+
+/**
+ * @private
+ * Private helper function for the logging macros defined below.
+ */
 extern void
 pcr_log_write__(const char, const char *, ...);
 
+
+/**
+ * Logs trace message.
+ *
+ * The @c pcr_log_trace() macro writes a formatted trace message @p m in the
+ * currently open log file. The message is decorated with the current local
+ * system time and a [T] prefix to make it easily grep-able.
+ *
+ * @param m Formatted message to log.
+ * @param ... Format tokens.
+ *
+ * @note It is safe to call this macro even if the log file has not been opened
+ * by an earlier call to @c pcr_log_open(); however, no message will be logged.
+ * Also note that calling this macro has no effect in case logging has been
+ * suppressed by a call to @c pcr_log_suppress().
+ *
+ * @see pcr_log_warning()
+ * @see pcr_log_error()
+ */
 #define pcr_log_trace(m, ...) \
     pcr_log_write__('T', (m), ##__VA_ARGS__)
 
+
+/**
+ * Logs warning message.
+ *
+ * The @c pcr_log_warning() macro wirtes a formatted warning message @p m in the
+ * currently open log file. The message is decorated with the current local
+ * system time and a [W] prefix to make it easily grep-able.
+ *
+ * @param m Formatted message to log.
+ * @param ... Format tokens.
+ *
+ * @note It is safe to call this macro even if the log file has not been opened
+ * by an earlier call to @c pcr_log_open(); however, no message will be logged.
+ * Also note that calling this macro has no effect in case logging has been
+ * suppressed by a call to @c pcr_log_suppress().
+ *
+ * @see pcr_log_trace()
+ * @see pcr_log_error()
+ */
 #define pcr_log_warning(m, ...) \
     pcr_log_write__('W', (m), ##__VA_ARGS__)
 
+
+/**
+ * Logs error message.
+ *
+ * The @c pcr_log_error() macro wirtes a formatted error message @p m in the
+ * currently open log file. The message is decorated with the current local
+ * system time and a [E] prefix to make it easily grep-able.
+ *
+ * @param m Formatted message to log.
+ * @param ... Format tokens.
+ *
+ * @note It is safe to call this macro even if the log file has not been opened
+ * by an earlier call to @c pcr_log_open(); however, no message will be logged.
+ * Also note that calling this macro has no effect in case logging has been
+ * suppressed by a call to @c pcr_log_suppress().
+ *
+ * @see pcr_log_trace()
+ * @see pcr_log_warning()
+ */
 #define pcr_log_error(m, ...) \
     pcr_log_write__('E', (m), ##__VA_ARGS__)
+
+/**
+ * @example log.h
+ * This is an example showing how to code against the PCR Log Module interface.
+ * @}
+ */
 
 
 /******************************************************************************
