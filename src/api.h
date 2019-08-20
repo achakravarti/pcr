@@ -461,47 +461,98 @@ pcr_vector_muterate(pcr_vector **ctx, pcr_muterator *mtr, void *opt,
                         pcr_exception ex);
 
 
-/******************************************************************************
- * INTERFACE: pcr_string
+/**************************************************************************//**
+ * @defgroup pcr_string PCR String Module
+ * UTF-8 string management.
+ * @{
  */
 
+
+/**
+ * UTF-8 string.
+ */
 typedef char pcr_string;
 
+
+/**
+ * Creates a new string.
+ */
 extern pcr_string *
 pcr_string_new(const char *cstr, pcr_exception ex);
 
+
+/**
+ * Clones an existing string.
+ */
 extern pcr_string *
 pcr_string_copy(const pcr_string *ctx, pcr_exception ex);
 
+
+/**
+ * Gets string length.
+ */
 extern size_t
 pcr_string_len(const pcr_string *ctx, pcr_exception ex);
 
+
+/**
+ * Gets string size.
+ */
 extern size_t
 pcr_string_sz(const pcr_string *ctx, pcr_exception ex);
 
+
+/**
+ * Compares two strings.
+ */
 extern int
 pcr_string_cmp(const pcr_string *lhs, const pcr_string *rhs, pcr_exception ex);
 
+
+/**
+ * Adds two strings.
+ */
 extern pcr_string *
 pcr_string_add(const pcr_string *ctx, const pcr_string *add, pcr_exception ex);
 
+
+/**
+ * Searches for a substring.
+ */
 extern size_t
 pcr_string_find(const pcr_string *haystack, const pcr_string *needle,
                     pcr_exception ex);
 
+
+/**
+ * Replaces first instance of substring.
+ */
 extern pcr_string *
 pcr_string_replace(const pcr_string *haystack, const pcr_string *needle,
                         const pcr_string *replace, pcr_exception ex);
 
+
+/**
+ * Replaces all instances of substring.
+ */
 extern pcr_string *
 pcr_string_replaceall(const pcr_string *haystack, const pcr_string *needle,
                             const pcr_string *replace, pcr_exception ex);
 
+/**
+ * Converts interger to string.
+ */
 extern pcr_string *
 pcr_string_int(int64_t value, pcr_exception ex);
 
+
+/**
+ * Converts floating point number to string.
+ */
 extern pcr_string *
 pcr_string_float(double value, pcr_exception ex);
+
+/** @} */
 
 
 /******************************************************************************
