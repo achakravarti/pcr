@@ -940,7 +940,45 @@ static bool test_replace_10(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_replace_11(pcr_string **desc, pcr_exception ex)
+static bool
+test_replace_11(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_string_replace() returns @haystack if @haystack, @needle, and "
+            " @replace are all the same";
+
+    pcr_exception_try (x) {
+        const pcr_string *h = pcr_string_new("Hello, world!", x);
+        const pcr_string *n = pcr_string_new("Hello, world!", x);
+        const pcr_string *r = pcr_string_new("Hello, world!", x);
+
+        return !strcmp(h, pcr_string_replace(h, n, r, x));
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+static bool
+test_replace_12(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_string_replace() can replace the same sequence of characters";
+
+    pcr_exception_try (x) {
+        const pcr_string *test = pcr_string_new("Hello, world!", x);
+        const pcr_string *expect = pcr_string_new("Helllo, world!", x);
+
+        pcr_string *repl = pcr_string_replace(test, "l", "ll", x);
+        pcr_log_trace("repl = %s", repl);
+        return !pcr_string_cmp(repl, expect, x);
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+static bool test_replace_13(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_replace() throws PCR_EXCEPTION_STRING if passed a NULL"
             " pointer for @needle";
@@ -962,7 +1000,7 @@ static bool test_replace_11(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_replace_12(pcr_string **desc, pcr_exception ex)
+static bool test_replace_14(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_replace() throws PCR_EXCEPTION_HANDLE if passed a NULL"
             " pointer for @replace";
@@ -1321,7 +1359,9 @@ static pcr_unittest *unit_tests[] = {
     test_find_10, test_find_11, test_replace_1, test_replace_2, test_replace_3,
     test_replace_4, test_replace_5, test_replace_6, test_replace_6,
     test_replace_7, test_replace_7, test_replace_8, test_replace_9,
-    test_replace_10, test_replace_11, test_replace_12, test_replaceall_1,
+    test_replace_10, test_replace_11, test_replace_12, test_replace_13,
+    test_replace_14,
+    test_replaceall_1,
     test_replaceall_2, test_replaceall_3, test_replaceall_4, test_replaceall_5,
     test_replaceall_6, test_replaceall_7, test_replaceall_8, test_replaceall_9,
     test_replaceall_10, test_replaceall_11, test_replaceall_12, test_int_1,
