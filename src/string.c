@@ -1,7 +1,23 @@
 #include <inttypes.h>
 #include <string.h>
-#include "../lib/utf8.h"
 #include "./api.h"
+
+
+static inline bool utf8_continuation(char c) {
+    return (c & 0xC0) == 0x80;
+}
+
+
+static inline size_t utf8_strlen(const char *str) {
+    register size_t i = 0, len = 0;
+    while (str[i]) {
+        if (!utf8_continuation(str[i]))
+            len++;
+        i++;
+    }
+
+    return len;
+}
 
 
 /* Implement the pcr_string_new() interface function. */
@@ -27,12 +43,7 @@ pcr_string_new(const char *cstr, pcr_exception ex)
 extern pcr_string *
 pcr_string_copy(const pcr_string *ctx, pcr_exception ex)
 {
-    pcr_exception_try (x) {
-        return pcr_string_new(ctx, x);
-    }
-
-    pcr_exception_unwind(ex);
-    return NULL;
+    return pcr_string_new(ctx, ex);
 }
 
 
@@ -41,7 +52,7 @@ extern size_t
 pcr_string_len(const pcr_string *ctx, pcr_exception ex)
 {
     pcr_assert_handle(ctx, ex);
-    return utf8len(ctx);
+    return utf8_strlen(ctx);
 }
 
 
@@ -94,10 +105,10 @@ pcr_string_find(const pcr_string *haystack, const pcr_string *needle,
     pcr_assert_handle(haystack && needle, ex);
 
     pcr_exception_try (x) {
-        pcr_string *sub = utf8str(haystack, needle);
+        pcr_string *sub = strstr(haystack, needle);
 
         const size_t offset = 1;
-        return sub ? (utf8len(haystack) - utf8len(sub) + offset) : 0;
+        return sub ? (utf8_strlen(haystack) - utf8_strlen(sub) + offset) : 0;
     }
 
     pcr_exception_unwind(ex);
