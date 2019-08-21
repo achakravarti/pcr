@@ -149,8 +149,8 @@ pcr_string_find(const pcr_string *haystack, const pcr_string *needle,
 /* Implement the pcr_string_replace() interface function. */
 
 extern pcr_string *
-pcr_string_replace(const pcr_string *haystack, const pcr_string *needle,
-                   const pcr_string *replace, pcr_exception ex)
+pcr_string_replace_first(const pcr_string *haystack, const pcr_string *needle,
+                         const pcr_string *replace, pcr_exception ex)
 {
     pcr_assert_handle(haystack && replace, ex);
     pcr_assert_string(needle, ex);
@@ -188,12 +188,12 @@ pcr_string_replaceall(const pcr_string *haystack, const pcr_string *needle,
                       const pcr_string *replace, pcr_exception ex)
 {
     pcr_exception_try (x) {
-        pcr_string *repl = pcr_string_replace(haystack, needle, replace, x);
+        pcr_string *r = pcr_string_replace_first(haystack, needle, replace, x);
 
-        while (strstr(repl, needle))
-            repl = pcr_string_replace(repl, needle, replace, x);
+        while (strstr(r, needle))
+            r = pcr_string_replace_first(r, needle, replace, x);
 
-        return repl;
+        return r;
     }
 
     pcr_exception_unwind(ex);

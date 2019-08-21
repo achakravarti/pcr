@@ -575,8 +575,8 @@ pcr_string_find(const pcr_string *haystack, const pcr_string *needle,
  * @return The replaced string.
  */
 extern pcr_string *
-pcr_string_replace(const pcr_string *haystack, const pcr_string *needle,
-                   const pcr_string *replace, pcr_exception ex);
+pcr_string_replace_first(const pcr_string *haystack, const pcr_string *needle,
+                         const pcr_string *replace, pcr_exception ex);
 
 
 /**

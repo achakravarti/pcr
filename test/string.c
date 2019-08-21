@@ -806,16 +806,16 @@ find_test_11(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-replace_test_1(pcr_string **desc, pcr_exception ex)
+replace_first_test_1(pcr_string **desc, pcr_exception ex)
 {
-    *desc = "pcr_string_replace() throws PCR_EXCEPTION_STRING if passed a null"
-            " string for @needle";
+    *desc = "pcr_string_replace_first() throws PCR_EXCEPTION_STRING if passed a"
+            " null string for @needle";
 
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("", x);
 
         pcr_log_suppress();
-        (void) pcr_string_replace(test, "", "Hello, world!", x);
+        (void) pcr_string_replace_first(test, "", "Hello, world!", x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_STRING) {
@@ -829,14 +829,14 @@ replace_test_1(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-replace_test_2(pcr_string **desc, pcr_exception ex)
+replace_first_test_2(pcr_string **desc, pcr_exception ex)
 {
-    *desc = "pcr_string_replace() replaces an ASCII character with a null"
+    *desc = "pcr_string_replace_first() replaces an ASCII character with a null"
             " character";
 
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello, world!", x);
-        test = pcr_string_replace(test, "!", "", x);
+        test = pcr_string_replace_first(test, "!", "", x);
 
         return !strcmp(test, "Hello, world");
     }
@@ -847,14 +847,14 @@ replace_test_2(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-replace_test_3(pcr_string **desc, pcr_exception ex)
+replace_first_test_3(pcr_string **desc, pcr_exception ex)
 {
-    *desc = "pcr_string_replace() replaces a Unicode character with a null"
-            " character";
+    *desc = "pcr_string_replace_first() replaces a Unicode character with a"
+            " null character";
 
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Привет, мир!", x);
-        test = pcr_string_replace(test, "т", "", x);
+        test = pcr_string_replace_first(test, "т", "", x);
 
         return !strcmp(test, "Приве, мир!");
     }
@@ -865,14 +865,14 @@ replace_test_3(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-replace_test_4(pcr_string **desc, pcr_exception ex)
+replace_first_test_4(pcr_string **desc, pcr_exception ex)
 {
-    *desc = "pcr_string_replace() replaces only the first instance in an ASCII"
-            " string";
+    *desc = "pcr_string_replace_first() replaces only the first instance in an"
+            " ASCII string";
 
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello, world!", x);
-        test = pcr_string_replace(test, "l", "y", x);
+        test = pcr_string_replace_first(test, "l", "y", x);
 
         return !strcmp(test, "Heylo, world!");
     }
@@ -883,14 +883,14 @@ replace_test_4(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-replace_test_5(pcr_string **desc, pcr_exception ex)
+replace_first_test_5(pcr_string **desc, pcr_exception ex)
 {
-    *desc = "pcr_string_replace() replaces only the first instance in a Unicode"
-            " string";
+    *desc = "pcr_string_replace_first() replaces only the first instance in a"
+            " Unicode string";
 
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Привет, мир!", x);
-        test = pcr_string_replace(test, "р", "r", x);
+        test = pcr_string_replace_first(test, "р", "r", x);
 
         return !strcmp(test, "Пrивет, мир!");
     }
@@ -901,13 +901,13 @@ replace_test_5(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-replace_test_6(pcr_string **desc, pcr_exception ex)
+replace_first_test_6(pcr_string **desc, pcr_exception ex)
 {
-    *desc = "pcr_string_replace() replaces an ASCII substring";
+    *desc = "pcr_string_replace_first() replaces an ASCII substring";
 
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello, world!", x);
-        test = pcr_string_replace(test, "world", "moon", x);
+        test = pcr_string_replace_first(test, "world", "moon", x);
 
         return !strcmp(test, "Hello, moon!");
     }
@@ -918,13 +918,13 @@ replace_test_6(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-replace_test_7(pcr_string **desc, pcr_exception ex)
+replace_first_test_7(pcr_string **desc, pcr_exception ex)
 {
-    *desc = "pcr_string_replace() replaces a Unicode substring";
+    *desc = "pcr_string_replace_first() replaces a Unicode substring";
 
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Привет, мир!", x);
-        test = pcr_string_replace(test, "Привет", "До свидания", x);
+        test = pcr_string_replace_first(test, "Привет", "До свидания", x);
 
         return !strcmp(test, "До свидания, мир!");
     }
@@ -935,14 +935,14 @@ replace_test_7(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-replace_test_8(pcr_string **desc, pcr_exception ex)
+replace_first_test_8(pcr_string **desc, pcr_exception ex)
 {
-    *desc = "pcr_string_replace() replaces an entire ASCII string";
+    *desc = "pcr_string_replace_first() replaces an entire ASCII string";
 
     pcr_exception_try (x) {
         const pcr_string *expect = "Goodbye, moon?";
         pcr_string *test = pcr_string_new("Hello, world!", x);
-        test = pcr_string_replace(test, "Hello, world!", expect, x);
+        test = pcr_string_replace_first(test, "Hello, world!", expect, x);
 
         return !strcmp(test, expect);
     }
@@ -953,14 +953,14 @@ replace_test_8(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-replace_test_9(pcr_string **desc, pcr_exception ex)
+replace_first_test_9(pcr_string **desc, pcr_exception ex)
 {
-    *desc = "pcr_string_replace() replaces an entire Unicode string";
+    *desc = "pcr_string_replace_first() replaces an entire Unicode string";
 
     pcr_exception_try (x) {
         const pcr_string *expect = "До свидания, луна?";
         pcr_string *test = pcr_string_new("Привет, мир!", x);
-        test = pcr_string_replace(test, "Привет, мир!", expect, x);
+        test = pcr_string_replace_first(test, "Привет, мир!", expect, x);
 
         return !strcmp(test, expect);
     }
@@ -971,16 +971,16 @@ replace_test_9(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-replace_test_10(pcr_string **desc, pcr_exception ex)
+replace_first_test_10(pcr_string **desc, pcr_exception ex)
 {
-    *desc = "pcr_string_replace() throws PCR_EXCEPTION_HANDLE if passed a NULL"
-            " pointer for @haystack";
+    *desc = "pcr_string_replace_first() throws PCR_EXCEPTION_HANDLE if passed a"
+            " NULL pointer for @haystack";
 
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello, world!", x);
 
         pcr_log_suppress();
-        (void) pcr_string_replace(NULL, test, "", x);
+        (void) pcr_string_replace_first(NULL, test, "", x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
@@ -994,17 +994,17 @@ replace_test_10(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-replace_test_11(pcr_string **desc, pcr_exception ex)
+replace_first_test_11(pcr_string **desc, pcr_exception ex)
 {
-    *desc = "pcr_string_replace() returns @haystack if @haystack, @needle, and "
-            " @replace are all the same";
+    *desc = "pcr_string_replace_first() returns @haystack if @haystack,"
+            " @needle, and @replace are all the same";
 
     pcr_exception_try (x) {
         const pcr_string *h = pcr_string_new("Hello, world!", x);
         const pcr_string *n = pcr_string_new("Hello, world!", x);
         const pcr_string *r = pcr_string_new("Hello, world!", x);
 
-        return !strcmp(h, pcr_string_replace(h, n, r, x));
+        return !strcmp(h, pcr_string_replace_first(h, n, r, x));
     }
 
     pcr_exception_unwind(ex);
@@ -1013,15 +1013,16 @@ replace_test_11(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-replace_test_12(pcr_string **desc, pcr_exception ex)
+replace_first_test_12(pcr_string **desc, pcr_exception ex)
 {
-    *desc = "pcr_string_replace() can replace the same sequence of characters";
+    *desc = "pcr_string_replace_first() can replace the first instance of the"
+            " same sequence of characters";
 
     pcr_exception_try (x) {
         const pcr_string *test = pcr_string_new("Hello, world!", x);
         const pcr_string *expect = pcr_string_new("Helllo, world!", x);
 
-        pcr_string *repl = pcr_string_replace(test, "l", "ll", x);
+        pcr_string *repl = pcr_string_replace_first(test, "l", "ll", x);
         pcr_log_trace("repl = %s", repl);
         return !pcr_string_cmp(repl, expect, x);
     }
@@ -1032,16 +1033,16 @@ replace_test_12(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-replace_test_13(pcr_string **desc, pcr_exception ex)
+replace_first_test_13(pcr_string **desc, pcr_exception ex)
 {
-    *desc = "pcr_string_replace() throws PCR_EXCEPTION_STRING if passed a NULL"
-            " pointer for @needle";
+    *desc = "pcr_string_replace_first() throws PCR_EXCEPTION_STRING if passed a"
+            " NULL pointer for @needle";
 
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello, world!", x);
 
         pcr_log_suppress();
-        (void) pcr_string_replace(test, NULL, "", x);
+        (void) pcr_string_replace_first(test, NULL, "", x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_STRING) {
@@ -1055,16 +1056,16 @@ replace_test_13(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-replace_test_14(pcr_string **desc, pcr_exception ex)
+replace_first_test_14(pcr_string **desc, pcr_exception ex)
 {
-    *desc = "pcr_string_replace() throws PCR_EXCEPTION_HANDLE if passed a NULL"
-            " pointer for @replace";
+    *desc = "pcr_string_replace_first() throws PCR_EXCEPTION_HANDLE if passed a"
+            " NULL pointer for @replace";
 
     pcr_exception_try (x) {
         pcr_string *test = pcr_string_new("Hello, world!", x);
 
         pcr_log_suppress();
-        (void) pcr_string_replace(test, "Hello", NULL, x);
+        (void) pcr_string_replace_first(test, "Hello", NULL, x);
     }
 
     pcr_exception_catch (PCR_EXCEPTION_HANDLE) {
@@ -1426,11 +1427,11 @@ static pcr_unittest *unit_tests[] = {
     &add_test_2, &add_test_3, &add_test_4, &add_test_5,
     &find_test_1, &find_test_2, &find_test_3, &find_test_4,
     &find_test_5, &find_test_6, &find_test_7, &find_test_8,
-    &find_test_9, &find_test_10, &find_test_11, &replace_test_1,
-    &replace_test_2, &replace_test_3, &replace_test_4, &replace_test_5,
-    &replace_test_6, &replace_test_6, &replace_test_7, &replace_test_7,
-    &replace_test_8, &replace_test_9, &replace_test_10, &replace_test_11,
-    &replace_test_12, &replace_test_13, &replace_test_14, &replaceall_test_1,
+    &find_test_9, &find_test_10, &find_test_11, &replace_first_test_1,
+    &replace_first_test_2, &replace_first_test_3, &replace_first_test_4, &replace_first_test_5,
+    &replace_first_test_6, &replace_first_test_6, &replace_first_test_7, &replace_first_test_7,
+    &replace_first_test_8, &replace_first_test_9, &replace_first_test_10, &replace_first_test_11,
+    &replace_first_test_12, &replace_first_test_13, &replace_first_test_14, &replaceall_test_1,
     &replaceall_test_2, &replaceall_test_3, &replaceall_test_4, &replaceall_test_5,
     &replaceall_test_6, &replaceall_test_7, &replaceall_test_8, &replaceall_test_9,
     &replaceall_test_10, &replaceall_test_11, &replaceall_test_12, &int_test_1,
