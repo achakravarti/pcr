@@ -7,7 +7,8 @@
  */
 
 
-static bool test_new_1(pcr_string **desc, pcr_exception ex)
+static bool
+new_test_1(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_new() can create an empty string";
 
@@ -21,7 +22,8 @@ static bool test_new_1(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_new_2(pcr_string **desc, pcr_exception ex)
+static bool
+new_test_2(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_new() can create an ASCII string";
 
@@ -37,7 +39,8 @@ static bool test_new_2(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_new_3(pcr_string **desc, pcr_exception ex)
+static bool
+new_test_3(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_new() can create a Unicode string";
 
@@ -53,7 +56,8 @@ static bool test_new_3(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_new_4(pcr_string **desc, pcr_exception ex)
+static bool
+new_test_4(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_new() throws PCR_EXCEPTION_HANDLE if passed a NULL"
             " pointer for @cstr";
@@ -78,7 +82,8 @@ static bool test_new_4(pcr_string **desc, pcr_exception ex)
  */
 
 
-static bool test_copy_1(pcr_string **desc, pcr_exception ex)
+static bool
+copy_test_1(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_copy() can copy an empty string";
 
@@ -94,7 +99,8 @@ static bool test_copy_1(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_copy_2(pcr_string **desc, pcr_exception ex)
+static bool
+copy_test_2(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_copy() can copy an ASCII string";
 
@@ -111,7 +117,8 @@ static bool test_copy_2(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_copy_3(pcr_string **desc, pcr_exception ex)
+static bool
+copy_test_3(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_copy() can copy a Unicode string";
 
@@ -128,7 +135,8 @@ static bool test_copy_3(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_copy_4(pcr_string **desc, pcr_exception ex)
+static bool
+copy_test_4(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_copy() throws PCR_EXCEPTION_HANDLE if passed a NULL"
             " pointer for @ctx";
@@ -153,7 +161,8 @@ static bool test_copy_4(pcr_string **desc, pcr_exception ex)
  */
 
 
-static bool test_len_1(pcr_string **desc, pcr_exception ex)
+static bool
+len_test_1(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_len() reports 0 for a null string";
 
@@ -167,7 +176,8 @@ static bool test_len_1(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_len_2(pcr_string **desc, pcr_exception ex)
+static bool
+len_test_2(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_len() reports the length of an ASCII string";
 
@@ -181,7 +191,8 @@ static bool test_len_2(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_len_3(pcr_string **desc, pcr_exception ex)
+static bool
+len_test_3(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_len() reports the length of a Unicode string";
 
@@ -195,7 +206,8 @@ static bool test_len_3(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_len_4(pcr_string **desc, pcr_exception ex)
+static bool
+len_test_4(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_len() throws PCR_EXCEPTION_HANDLE if passed a NULL"
             " pointer for @ctx";
@@ -220,7 +232,8 @@ static bool test_len_4(pcr_string **desc, pcr_exception ex)
  */
 
 
-static bool test_sz_1(pcr_string **desc, pcr_exception ex)
+static bool
+sz_test_1(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_sz() reports 1 for a null string";
 
@@ -234,7 +247,8 @@ static bool test_sz_1(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_sz_2(pcr_string **desc, pcr_exception ex)
+static bool
+sz_test_2(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_sz() reports the size of an ASCII string";
 
@@ -250,7 +264,8 @@ static bool test_sz_2(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_sz_3(pcr_string **desc, pcr_exception ex)
+static bool
+sz_test_3(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_sz() reports the size of a Unicode string";
 
@@ -266,7 +281,8 @@ static bool test_sz_3(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_sz_4(pcr_string **desc, pcr_exception ex)
+static bool
+sz_test_4(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_sz() throws PCR_EXCEPTION_HANDLE if passed a NULL"
             " pointer for @ctx";
@@ -291,7 +307,8 @@ static bool test_sz_4(pcr_string **desc, pcr_exception ex)
  */
 
 
-static bool test_cmp_1(pcr_string **desc, pcr_exception ex)
+static bool
+cmp_test_1(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_cmp() detects two equal null strings";
 
@@ -307,7 +324,8 @@ static bool test_cmp_1(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_cmp_2(pcr_string **desc, pcr_exception ex)
+static bool
+cmp_test_2(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_cmp() detects two equal ASCII strings";
 
@@ -323,7 +341,8 @@ static bool test_cmp_2(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_cmp_3(pcr_string **desc, pcr_exception ex)
+static bool
+cmp_test_3(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_cmp() detects two equal Unicode strings";
 
@@ -339,7 +358,8 @@ static bool test_cmp_3(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_cmp_4(pcr_string **desc, pcr_exception ex)
+static bool
+cmp_test_4(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_cmp() detects two unequal ASCII strings";
 
@@ -355,7 +375,8 @@ static bool test_cmp_4(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_cmp_5(pcr_string **desc, pcr_exception ex)
+static bool
+cmp_test_5(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_cmp() detects two unequal Unicode strings";
 
@@ -371,7 +392,8 @@ static bool test_cmp_5(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_cmp_6(pcr_string **desc, pcr_exception ex)
+static bool
+cmp_test_6(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_cmp() detects a lexicographically smaller ASCII string";
 
@@ -387,7 +409,8 @@ static bool test_cmp_6(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_cmp_7(pcr_string **desc, pcr_exception ex)
+static bool
+cmp_test_7(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_cmp() detects a lexicographically smaller Unicode"
             " string";
@@ -404,7 +427,8 @@ static bool test_cmp_7(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_cmp_8(pcr_string **desc, pcr_exception ex)
+static bool
+cmp_test_8(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_cmp() detects a lexicographically greater ASCII string";
 
@@ -420,7 +444,8 @@ static bool test_cmp_8(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_cmp_9(pcr_string **desc, pcr_exception ex)
+static bool
+cmp_test_9(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_cmp() detects a lexicographically greater Unicode"
             " string";
@@ -437,7 +462,8 @@ static bool test_cmp_9(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_cmp_10(pcr_string **desc, pcr_exception ex)
+static bool
+cmp_test_10(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_cmp() throws PCR_EXCEPTION_HANDLE if passed a NULL"
             " pointer for @lhs";
@@ -457,7 +483,8 @@ static bool test_cmp_10(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_cmp_11(pcr_string **desc, pcr_exception ex)
+static bool
+cmp_test_11(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_cmp() throws PCR_EXCEPTION_HANDLE if passed a NULL"
             " pointer for @rhs";
@@ -482,7 +509,8 @@ static bool test_cmp_11(pcr_string **desc, pcr_exception ex)
  */
 
 
-static bool test_add_1(pcr_string **desc, pcr_exception ex)
+static bool
+add_test_1(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_add() adds two null strings";
 
@@ -498,7 +526,8 @@ static bool test_add_1(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_add_2(pcr_string **desc, pcr_exception ex)
+static bool
+add_test_2(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_add() adds two ASCII strings";
 
@@ -516,7 +545,8 @@ static bool test_add_2(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_add_3(pcr_string **desc, pcr_exception ex)
+static bool
+add_test_3(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_add() adds two Unicode strings";
 
@@ -536,7 +566,8 @@ static bool test_add_3(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_add_4(pcr_string **desc, pcr_exception ex)
+static bool
+add_test_4(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_add() throws PCR_EXCEPTION_HANDLE if passed a NULL"
             " pointer for @ctx";
@@ -560,7 +591,8 @@ static bool test_add_4(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_add_5(pcr_string **desc, pcr_exception ex)
+static bool
+add_test_5(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_add() throws PCR_EXCEPTION_HANDLE if passed a NULL"
             " pointer for @add";
@@ -588,7 +620,8 @@ static bool test_add_5(pcr_string **desc, pcr_exception ex)
  */
 
 
-static bool test_find_1(pcr_string **desc, pcr_exception ex)
+static bool
+find_test_1(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_find() can find a null string";
 
@@ -602,7 +635,8 @@ static bool test_find_1(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_find_2(pcr_string **desc, pcr_exception ex)
+static bool
+find_test_2(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_find() can find an ASCII string with 1 character";
 
@@ -616,7 +650,8 @@ static bool test_find_2(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_find_3(pcr_string **desc, pcr_exception ex)
+static bool
+find_test_3(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_find() can find a Unicode string with 1 character";
 
@@ -630,7 +665,8 @@ static bool test_find_3(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_find_4(pcr_string **desc, pcr_exception ex)
+static bool
+find_test_4(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_find() can find an ASCII string";
 
@@ -644,7 +680,8 @@ static bool test_find_4(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_find_5(pcr_string **desc, pcr_exception ex)
+static bool
+find_test_5(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_find() can find a Unicode string";
 
@@ -659,7 +696,8 @@ static bool test_find_5(pcr_string **desc, pcr_exception ex)
 
 
 
-static bool test_find_6(pcr_string **desc, pcr_exception ex)
+static bool
+find_test_6(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_find() can detect the absence of an ASCII string with 1"
             " character";
@@ -674,7 +712,8 @@ static bool test_find_6(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_find_7(pcr_string **desc, pcr_exception ex)
+static bool
+find_test_7(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_find() can detect the absence of a Unicode string with"
             " 1 character";
@@ -689,7 +728,8 @@ static bool test_find_7(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_find_8(pcr_string **desc, pcr_exception ex)
+static bool
+find_test_8(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_find() can detect the absence of an ASCII string";
 
@@ -703,7 +743,8 @@ static bool test_find_8(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_find_9(pcr_string **desc, pcr_exception ex)
+static bool
+find_test_9(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_find() can detect the absence of a Unicode string";
 
@@ -717,7 +758,8 @@ static bool test_find_9(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_find_10(pcr_string **desc, pcr_exception ex)
+static bool
+find_test_10(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_find() throws PCR_EXCEPTION_HANDLE if passed a NULL"
             " pointer for @haystack";
@@ -737,7 +779,8 @@ static bool test_find_10(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_find_11(pcr_string **desc, pcr_exception ex)
+static bool
+find_test_11(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_find() throws PCR_EXCEPTION_HANDLE if passed a NULL"
             " pointer for @needle";
@@ -762,7 +805,8 @@ static bool test_find_11(pcr_string **desc, pcr_exception ex)
  */
 
 
-static bool test_replace_1(pcr_string **desc, pcr_exception ex)
+static bool
+replace_test_1(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_replace() throws PCR_EXCEPTION_STRING if passed a null"
             " string for @needle";
@@ -784,7 +828,8 @@ static bool test_replace_1(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_replace_2(pcr_string **desc, pcr_exception ex)
+static bool
+replace_test_2(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_replace() replaces an ASCII character with a null"
             " character";
@@ -801,7 +846,8 @@ static bool test_replace_2(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_replace_3(pcr_string **desc, pcr_exception ex)
+static bool
+replace_test_3(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_replace() replaces a Unicode character with a null"
             " character";
@@ -818,7 +864,8 @@ static bool test_replace_3(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_replace_4(pcr_string **desc, pcr_exception ex)
+static bool
+replace_test_4(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_replace() replaces only the first instance in an ASCII"
             " string";
@@ -835,7 +882,8 @@ static bool test_replace_4(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_replace_5(pcr_string **desc, pcr_exception ex)
+static bool
+replace_test_5(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_replace() replaces only the first instance in a Unicode"
             " string";
@@ -852,7 +900,8 @@ static bool test_replace_5(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_replace_6(pcr_string **desc, pcr_exception ex)
+static bool
+replace_test_6(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_replace() replaces an ASCII substring";
 
@@ -868,7 +917,8 @@ static bool test_replace_6(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_replace_7(pcr_string **desc, pcr_exception ex)
+static bool
+replace_test_7(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_replace() replaces a Unicode substring";
 
@@ -884,7 +934,8 @@ static bool test_replace_7(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_replace_8(pcr_string **desc, pcr_exception ex)
+static bool
+replace_test_8(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_replace() replaces an entire ASCII string";
 
@@ -901,7 +952,8 @@ static bool test_replace_8(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_replace_9(pcr_string **desc, pcr_exception ex)
+static bool
+replace_test_9(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_replace() replaces an entire Unicode string";
 
@@ -918,7 +970,8 @@ static bool test_replace_9(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_replace_10(pcr_string **desc, pcr_exception ex)
+static bool
+replace_test_10(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_replace() throws PCR_EXCEPTION_HANDLE if passed a NULL"
             " pointer for @haystack";
@@ -941,7 +994,7 @@ static bool test_replace_10(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_replace_11(pcr_string **desc, pcr_exception ex)
+replace_test_11(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_replace() returns @haystack if @haystack, @needle, and "
             " @replace are all the same";
@@ -960,7 +1013,7 @@ test_replace_11(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_replace_12(pcr_string **desc, pcr_exception ex)
+replace_test_12(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_replace() can replace the same sequence of characters";
 
@@ -978,7 +1031,8 @@ test_replace_12(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_replace_13(pcr_string **desc, pcr_exception ex)
+static bool
+replace_test_13(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_replace() throws PCR_EXCEPTION_STRING if passed a NULL"
             " pointer for @needle";
@@ -1000,7 +1054,8 @@ static bool test_replace_13(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_replace_14(pcr_string **desc, pcr_exception ex)
+static bool
+replace_test_14(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_replace() throws PCR_EXCEPTION_HANDLE if passed a NULL"
             " pointer for @replace";
@@ -1027,7 +1082,8 @@ static bool test_replace_14(pcr_string **desc, pcr_exception ex)
  */
 
 
-static bool test_replaceall_1(pcr_string **desc, pcr_exception ex)
+static bool
+replaceall_test_1(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_replaceall() throws PCR_EXCEPTION_STRING if passed a"
             " null string for @needle";
@@ -1049,7 +1105,8 @@ static bool test_replaceall_1(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_replaceall_2(pcr_string **desc, pcr_exception ex)
+static bool
+replaceall_test_2(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_replaceall() replaces an ASCII character with a null"
             " character";
@@ -1066,7 +1123,8 @@ static bool test_replaceall_2(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_replaceall_3(pcr_string **desc, pcr_exception ex)
+static bool
+replaceall_test_3(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_replaceall() replaces a Unicode character with a null"
             " character";
@@ -1083,7 +1141,8 @@ static bool test_replaceall_3(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_replaceall_4(pcr_string **desc, pcr_exception ex)
+static bool
+replaceall_test_4(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_replaceall() replaces all the instances in an ASCII"
             " string";
@@ -1100,7 +1159,8 @@ static bool test_replaceall_4(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_replaceall_5(pcr_string **desc, pcr_exception ex)
+static bool
+replaceall_test_5(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_replaceall() replaces all the instances in a Unicode"
             " string";
@@ -1117,7 +1177,8 @@ static bool test_replaceall_5(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_replaceall_6(pcr_string **desc, pcr_exception ex)
+static bool
+replaceall_test_6(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_replaceall() replaces an ASCII substring";
 
@@ -1133,7 +1194,8 @@ static bool test_replaceall_6(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_replaceall_7(pcr_string **desc, pcr_exception ex)
+static bool
+replaceall_test_7(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_replaceall() replaces a Unicode substring";
 
@@ -1149,7 +1211,8 @@ static bool test_replaceall_7(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_replaceall_8(pcr_string **desc, pcr_exception ex)
+static bool
+replaceall_test_8(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_replaceall() replaces an entire ASCII string";
 
@@ -1166,7 +1229,8 @@ static bool test_replaceall_8(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_replaceall_9(pcr_string **desc, pcr_exception ex)
+static bool
+replaceall_test_9(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_replaceall() replaces an entire Unicode string";
 
@@ -1183,7 +1247,8 @@ static bool test_replaceall_9(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_replaceall_10(pcr_string **desc, pcr_exception ex)
+static bool
+replaceall_test_10(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_replaceall() throws PCR_EXCEPTION_HANDLE if passed a"
             " NULL pointer for @haystack";
@@ -1205,7 +1270,8 @@ static bool test_replaceall_10(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_replaceall_11(pcr_string **desc, pcr_exception ex)
+static bool
+replaceall_test_11(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_replaceall() throws PCR_EXCEPTION_STRING if passed a"
             " NULL pointer for @needle";
@@ -1227,7 +1293,8 @@ static bool test_replaceall_11(pcr_string **desc, pcr_exception ex)
 }
 
 
-static bool test_replaceall_12(pcr_string **desc, pcr_exception ex)
+static bool
+replaceall_test_12(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_replaceall() throws PCR_EXCEPTION_HANDLE if passed a"
             " NULL pointer for @replace";
@@ -1255,7 +1322,7 @@ static bool test_replaceall_12(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_int_1(pcr_string **desc, pcr_exception ex)
+int_test_1(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_int() stringifies 0";
 
@@ -1269,7 +1336,7 @@ test_int_1(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_int_2(pcr_string **desc, pcr_exception ex)
+int_test_2(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_int() stringifies a negative integer";
 
@@ -1283,7 +1350,7 @@ test_int_2(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_int_3(pcr_string **desc, pcr_exception ex)
+int_test_3(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_int() stringifies a positive integer";
 
@@ -1302,7 +1369,7 @@ test_int_3(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_float_1(pcr_string **desc, pcr_exception ex)
+float_test_1(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_float() stringifies 0";
 
@@ -1316,7 +1383,7 @@ test_float_1(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_float_2(pcr_string **desc, pcr_exception ex)
+float_test_2(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_float() stringifies a negative floating point number";
 
@@ -1330,7 +1397,7 @@ test_float_2(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_float_3(pcr_string **desc, pcr_exception ex)
+float_test_3(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_string_float() stringifies a positive floating point number";
 
@@ -1349,23 +1416,26 @@ test_float_3(pcr_string **desc, pcr_exception ex)
 
 
 static pcr_unittest *unit_tests[] = {
-    test_new_1, test_new_2, test_new_3, test_new_4, test_copy_1, test_copy_2,
-    test_copy_3, test_copy_4, test_len_1, test_len_2, test_len_3, test_len_4,
-    test_sz_1, test_sz_2, test_sz_3, test_sz_4, test_cmp_1, test_cmp_2,
-    test_cmp_3, test_cmp_4, test_cmp_5, test_cmp_6, test_cmp_7, test_cmp_8,
-    test_cmp_9, test_cmp_10, test_cmp_11, test_add_1, test_add_2, test_add_3,
-    test_add_4, test_add_5, test_find_1, test_find_2, test_find_3, test_find_4,
-    test_find_5, test_find_6, test_find_7, test_find_8, test_find_9,
-    test_find_10, test_find_11, test_replace_1, test_replace_2, test_replace_3,
-    test_replace_4, test_replace_5, test_replace_6, test_replace_6,
-    test_replace_7, test_replace_7, test_replace_8, test_replace_9,
-    test_replace_10, test_replace_11, test_replace_12, test_replace_13,
-    test_replace_14,
-    test_replaceall_1,
-    test_replaceall_2, test_replaceall_3, test_replaceall_4, test_replaceall_5,
-    test_replaceall_6, test_replaceall_7, test_replaceall_8, test_replaceall_9,
-    test_replaceall_10, test_replaceall_11, test_replaceall_12, test_int_1,
-    test_int_2, test_int_3, test_float_1, test_float_2, test_float_3
+    &new_test_1, &new_test_2, &new_test_3, &new_test_4,
+    &copy_test_1, &copy_test_2, &copy_test_3, &copy_test_4,
+    &len_test_1, &len_test_2, &len_test_3, &len_test_4,
+    &sz_test_1, &sz_test_2, &sz_test_3, &sz_test_4,
+    &cmp_test_1, &cmp_test_2, &cmp_test_3, &cmp_test_4,
+    &cmp_test_5, &cmp_test_6, &cmp_test_7, &cmp_test_8,
+    &cmp_test_9, &cmp_test_10, &cmp_test_11, &add_test_1,
+    &add_test_2, &add_test_3, &add_test_4, &add_test_5,
+    &find_test_1, &find_test_2, &find_test_3, &find_test_4,
+    &find_test_5, &find_test_6, &find_test_7, &find_test_8,
+    &find_test_9, &find_test_10, &find_test_11, &replace_test_1,
+    &replace_test_2, &replace_test_3, &replace_test_4, &replace_test_5,
+    &replace_test_6, &replace_test_6, &replace_test_7, &replace_test_7,
+    &replace_test_8, &replace_test_9, &replace_test_10, &replace_test_11,
+    &replace_test_12, &replace_test_13, &replace_test_14, &replaceall_test_1,
+    &replaceall_test_2, &replaceall_test_3, &replaceall_test_4, &replaceall_test_5,
+    &replaceall_test_6, &replaceall_test_7, &replaceall_test_8, &replaceall_test_9,
+    &replaceall_test_10, &replaceall_test_11, &replaceall_test_12, &int_test_1,
+    &int_test_2,         &int_test_3, &float_test_1, &float_test_2,
+    &float_test_3
 };
 
 
