@@ -3,6 +3,9 @@
 #include "./api.h"
 
 
+#define NULLCHAR_OFFSET 1
+
+
 /* Define the utf8_continuation() helper function. This function is responsible
  * for determining whether a given character byte `c` represents a Unicode
  * continuation byte. This code is adapted from the GitHub gist available at
@@ -41,7 +44,7 @@ pcr_string_new(const char *cstr, pcr_exception ex)
     pcr_assert_handle(cstr, ex);
 
     pcr_exception_try (x) {
-        const size_t sz = strlen(cstr) + 1;
+        const size_t sz = strlen(cstr) + NULLCHAR_OFFSET;
         pcr_string *ctx = pcr_mempool_alloc(sz, x);
         (void) strncpy(ctx, cstr, sz);
 
@@ -109,8 +112,8 @@ pcr_string_add(const pcr_string *ctx, const pcr_string *add, pcr_exception ex)
     pcr_assert_handle(ctx && add, ex);
 
     pcr_exception_try (x) {
-        const size_t llen = strlen(ctx) + 1;
-        const size_t rlen = strlen(add) + 1;
+        const size_t llen = strlen(ctx) + NULLCHAR_OFFSET;
+        const size_t rlen = strlen(add) + NULLCHAR_OFFSET;
 
         pcr_string *cat = pcr_mempool_alloc(sizeof *cat * (llen + rlen), x);
         (void) strncpy(cat, ctx, llen);
@@ -164,7 +167,8 @@ pcr_string_replace_first(const pcr_string *haystack, const pcr_string *needle,
         const size_t replen = strlen(replace);
         const size_t needlen = strlen(needle);
         const size_t diff = replen - needlen;
-        pcr_string *str = pcr_mempool_alloc(sizeof *str * (len + diff + 1), x);
+        pcr_string *str = pcr_mempool_alloc((len + diff + NULLCHAR_OFFSET)
+                                            * sizeof *str, x);
 
         size_t shifts = pos - haystack;
         memcpy(str, haystack, shifts);
@@ -210,7 +214,7 @@ extern pcr_string *
 pcr_string_int(int64_t value, pcr_exception ex)
 {
     pcr_exception_try (x) {
-        size_t len = snprintf(NULL, 0, "%"PRId64, value) + 1;
+        size_t len = snprintf(NULL, 0, "%"PRId64, value) + NULLCHAR_OFFSET;
         pcr_string *str = pcr_mempool_alloc(sizeof *str * len, x);
         (void) snprintf(str, len, "%"PRId64, value);
 
@@ -231,7 +235,7 @@ extern pcr_string *
 pcr_string_float(double value, pcr_exception ex)
 {
     pcr_exception_try (x) {
-        size_t len = snprintf(NULL, 0, "%lf", value) + 1;
+        size_t len = snprintf(NULL, 0, "%lf", value) + NULLCHAR_OFFSET;
         pcr_string *str = pcr_mempool_alloc(sizeof *str * len, x);
         snprintf(str, len, "%lf", value);
 
