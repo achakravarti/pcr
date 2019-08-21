@@ -3,6 +3,10 @@
 #include "./api.h"
 
 
+/* Define the null char symbolic constant. This offset is required in order to
+ * correctly account for the offset caused by the terminating null character in
+ * string instances. */
+
 #define NULLCHAR_OFFSET 1
 
 
@@ -125,10 +129,12 @@ pcr_string_add(const pcr_string *ctx, const pcr_string *add, pcr_exception ex)
 }
 
 
-//1 2 3 4 5 6 7 8
-//a b c d e f g h
-//3     5         => 8
-/* Implement the pcr_string_find() interface function. */
+/* Implement the pcr_string_find() interface function. Since UTF-8 characters
+ * are of variable length, we cannot reliably determine the index where @needle
+ * is found simply through the pointer returned by strstr(). Instead, we need to
+ * compute the index by subtracting the lexicographical length of the substring
+ * from the lexicographical length of the string, accounting for the fact that
+ * pcr_string indices are 1-based. */
 
 extern size_t
 pcr_string_find(const pcr_string *haystack, const pcr_string *needle,
@@ -148,8 +154,8 @@ pcr_string_find(const pcr_string *haystack, const pcr_string *needle,
 }
 
 
-// https://gist.github.com/stanislaw/f62c36823242c4ffea1b
-/* Implement the pcr_string_replace() interface function. */
+/* Implement the pcr_string_replace_first() interface function. This code is
+ * adapted from https://gist.github.com/stanislaw/f62c36823242c4ffea1b. */
 
 extern pcr_string *
 pcr_string_replace_first(const pcr_string *haystack, const pcr_string *needle,
