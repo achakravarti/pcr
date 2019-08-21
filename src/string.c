@@ -184,8 +184,8 @@ pcr_string_replace_first(const pcr_string *haystack, const pcr_string *needle,
 /* Implement the pcr_string_replace_all() interface function. */
 
 extern pcr_string *
-pcr_string_replaceall(const pcr_string *haystack, const pcr_string *needle,
-                      const pcr_string *replace, pcr_exception ex)
+pcr_string_replace(const pcr_string *haystack, const pcr_string *needle,
+                   const pcr_string *replace, pcr_exception ex)
 {
     pcr_exception_try (x) {
         pcr_string *r = pcr_string_replace_first(haystack, needle, replace, x);

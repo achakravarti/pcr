@@ -114,7 +114,7 @@ pcr_sql_bind(pcr_sql **ctx, const pcr_attribute *attr, pcr_exception ex)
         pcr_string *arg = pcr_attribute_string(attr, x);
 
         if (pcr_attribute_type(attr, x) == PCR_ATTRIBUTE_TEXT) {
-            pcr_string *sane = pcr_string_replaceall(arg, "\'", "\'\'", x);
+            pcr_string *sane = pcr_string_replace(arg, "\'", "\'\'", x);
 
             arg = pcr_string_new("\'", x);
             arg = pcr_string_add(arg, sane, x);
@@ -122,9 +122,9 @@ pcr_sql_bind(pcr_sql **ctx, const pcr_attribute *attr, pcr_exception ex)
         }
 
         hnd = sql_fork(ctx, x);
-        hnd->bound = pcr_string_replaceall(*hnd->bound ? hnd->bound
-                                                       : hnd->unbound,
-                                           param, arg, x);
+        hnd->bound = pcr_string_replace(*hnd->bound ? hnd->bound
+                                                    : hnd->unbound,
+                                        param, arg, x);
     }
 
     pcr_exception_unwind(ex);
