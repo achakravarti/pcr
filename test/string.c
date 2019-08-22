@@ -1023,7 +1023,6 @@ replace_first_test_12(pcr_string **desc, pcr_exception ex)
         const pcr_string *expect = pcr_string_new("Helllo, world!", x);
 
         pcr_string *repl = pcr_string_replace_first(test, "l", "ll", x);
-        pcr_log_trace("repl = %s", repl);
         return !pcr_string_cmp(repl, expect, x);
     }
 
@@ -1317,6 +1316,45 @@ replace_test_12(pcr_string **desc, pcr_exception ex)
 }
 
 
+static bool
+replace_test_13(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_string_replace() returns @haystack if @haystack, @needle, and"
+            " @replace are all the same";
+
+    pcr_exception_try (x) {
+        const pcr_string *h = pcr_string_new("Hello, world!", x);
+        const pcr_string *n = pcr_string_new("Hello, world!", x);
+        const pcr_string *r = pcr_string_new("Hello, world!", x);
+
+        return !strcmp(h, pcr_string_replace(h, n, r, x));
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+static bool
+replace_test_14(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_string_replace() can replace all instance of the same sequence"
+            " of characters";
+
+    pcr_exception_try (x) {
+        const pcr_string *test = pcr_string_new("Hello, world!", x);
+        const pcr_string *expect = pcr_string_new("Hellllo, worlld!", x);
+
+        pcr_string *repl = pcr_string_replace(test, "l", "ll", x);
+        return !pcr_string_cmp(repl, expect, x);
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+
 /******************************************************************************
  * pcr_string_int() test cases
  */
@@ -1417,25 +1455,32 @@ float_test_3(pcr_string **desc, pcr_exception ex)
 
 
 static pcr_unittest *unit_tests[] = {
-    &new_test_1, &new_test_2, &new_test_3, &new_test_4,
-    &copy_test_1, &copy_test_2, &copy_test_3, &copy_test_4,
-    &len_test_1, &len_test_2, &len_test_3, &len_test_4,
-    &sz_test_1, &sz_test_2, &sz_test_3, &sz_test_4,
-    &cmp_test_1, &cmp_test_2, &cmp_test_3, &cmp_test_4,
-    &cmp_test_5, &cmp_test_6, &cmp_test_7, &cmp_test_8,
-    &cmp_test_9, &cmp_test_10, &cmp_test_11, &add_test_1,
-    &add_test_2, &add_test_3, &add_test_4, &add_test_5,
-    &find_test_1, &find_test_2, &find_test_3, &find_test_4,
-    &find_test_5, &find_test_6, &find_test_7, &find_test_8,
-    &find_test_9, &find_test_10, &find_test_11, &replace_first_test_1,
-    &replace_first_test_2, &replace_first_test_3, &replace_first_test_4, &replace_first_test_5,
-    &replace_first_test_6, &replace_first_test_6, &replace_first_test_7, &replace_first_test_7,
-    &replace_first_test_8, &replace_first_test_9, &replace_first_test_10, &replace_first_test_11,
-    &replace_first_test_12, &replace_first_test_13, &replace_first_test_14, &replace_test_1,
-    &replace_test_2, &replace_test_3, &replace_test_4, &replace_test_5,
-    &replace_test_6, &replace_test_7, &replace_test_8, &replace_test_9,
-    &replace_test_10, &replace_test_11, &replace_test_12, &int_test_1,
-    &int_test_2,         &int_test_3, &float_test_1, &float_test_2,
+    &new_test_1,            &new_test_2,            &new_test_3,
+    &new_test_4,            &copy_test_1,           &copy_test_2,
+    &copy_test_3,           &copy_test_4,           &len_test_1,
+    &len_test_2,            &len_test_3,            &len_test_4,
+    &sz_test_1,             &sz_test_2,             &sz_test_3,
+    &sz_test_4,             &cmp_test_1,            &cmp_test_2,
+    &cmp_test_3,            &cmp_test_4,            &cmp_test_5,
+    &cmp_test_6,            &cmp_test_7,            &cmp_test_8,
+    &cmp_test_9,            &cmp_test_10,           &cmp_test_11,
+    &add_test_1,            &add_test_2,            &add_test_3,
+    &add_test_4,            &add_test_5,            &find_test_1,
+    &find_test_2,           &find_test_3,           &find_test_4,
+    &find_test_5,           &find_test_6,           &find_test_7,
+    &find_test_8,           &find_test_9,           &find_test_10,
+    &find_test_11,          &replace_first_test_1,  &replace_first_test_2,
+    &replace_first_test_3,  &replace_first_test_4,  &replace_first_test_5,
+    &replace_first_test_6,  &replace_first_test_6,  &replace_first_test_7,
+    &replace_first_test_7,  &replace_first_test_8,  &replace_first_test_9,
+    &replace_first_test_10, &replace_first_test_11, &replace_first_test_12,
+    &replace_first_test_13, &replace_first_test_14, &replace_test_1,
+    &replace_test_2,        &replace_test_3,        &replace_test_4,
+    &replace_test_5,        &replace_test_6,        &replace_test_7,
+    &replace_test_8,        &replace_test_9,        &replace_test_10,
+    &replace_test_11,       &replace_test_12,       &replace_test_13,
+    &replace_test_14,       &int_test_1,            &int_test_2,
+    &int_test_3,            &float_test_1,          &float_test_2,
     &float_test_3
 };
 
