@@ -142,6 +142,16 @@ extern "C" {
 /**************************************************************************//**
  * @defgroup logging PCR Logging Module
  * Runtime logging of events.
+ *
+ * Logging is an essential component for any sizable application. The PCR
+ * Logging Module provides an interface for writing timestamped log messages.
+ * These messages can be decorated as trace, warning or error messages in order
+ * to make the context apparent and the message easily grep-able.
+ *
+ * The logging module attempts to be as thread-safe as possible, but this has
+ * not been confirmed as yet. The logging module has been intentionally designed
+ * to not throw any exceptions, and instead, handle failure conditions either
+ * silently, or at most, with a warning message printed on to @c stdout.
  * @{
  */
 
