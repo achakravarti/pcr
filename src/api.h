@@ -491,6 +491,10 @@ typedef char pcr_string;
  * @param ex The exception stack.
  *
  * @return The new string.
+ *
+ * @warning Don't call the standard @c free() function on the string instance
+ * created by this function; the heap memory allocated to the string is managed
+ * internally by the PCR Library through the Boehm Garbage Collector.
  */
 extern pcr_string *
 pcr_string_new(const char *cstr, pcr_exception ex);
@@ -503,6 +507,10 @@ pcr_string_new(const char *cstr, pcr_exception ex);
  * @param ex The exception stack.
  *
  * @return The copy of @p ctx.
+ *
+ * @warning Don't call the standard @c free() function on the string instance
+ * created by this function; the heap memory allocated to the string is managed
+ * internally by the PCR Library through the Boehm Garbage Collector.
  */
 extern pcr_string *
 pcr_string_copy(const pcr_string *ctx, pcr_exception ex);
@@ -583,6 +591,10 @@ pcr_string_find(const pcr_string *haystack, const pcr_string *needle,
  * @param ex The exception stack.
  *
  * @return The replaced string.
+ *
+ * @warning Don't call the standard @c free() function on the string instance
+ * created by this function; the heap memory allocated to the string is managed
+ * internally by the PCR Library through the Boehm Garbage Collector.
  */
 extern pcr_string *
 pcr_string_replace_first(const pcr_string *haystack, const pcr_string *needle,
@@ -598,6 +610,10 @@ pcr_string_replace_first(const pcr_string *haystack, const pcr_string *needle,
  * @param ex The exception stack.
  *
  * @return The replaced string.
+ *
+ * @warning Don't call the standard @c free() function on the string instance
+ * created by this function; the heap memory allocated to the string is managed
+ * internally by the PCR Library through the Boehm Garbage Collector.
  */
 extern pcr_string *
 pcr_string_replace(const pcr_string *haystack, const pcr_string *needle,
@@ -610,6 +626,10 @@ pcr_string_replace(const pcr_string *haystack, const pcr_string *needle,
  * @param ex The exception stack.
  *
  * @return The string representation of @p value.
+ *
+ * @warning Don't call the standard @c free() function on the string instance
+ * created by this function; the heap memory allocated to the string is managed
+ * internally by the PCR Library through the Boehm Garbage Collector.
  */
 extern pcr_string *
 pcr_string_int(int64_t value, pcr_exception ex);
@@ -622,6 +642,10 @@ pcr_string_int(int64_t value, pcr_exception ex);
  * @param ex The exception stack.
  *
  * @return The string representation of @p value.
+ *
+ * @warning Don't call the standard @c free() function on the string instance
+ * created by this function; the heap memory allocated to the string is managed
+ * internally by the PCR Library through the Boehm Garbage Collector.
  */
 extern pcr_string *
 pcr_string_float(double value, pcr_exception ex);
