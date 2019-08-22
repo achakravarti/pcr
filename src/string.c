@@ -38,6 +38,35 @@ static inline size_t utf8_strlen(const char *str) {
 }
 
 
+static pcr_string *
+replace_first(const pcr_string *h, const pcr_string *n, const pcr_string *r,
+              pcr_exception ex)
+{
+    pcr_exception_try (x) {
+        char *pos = strstr(h, n);
+        if (!pos)
+            return pcr_string_copy(h, ex);
+
+        const size_t hsz = strlen(h);
+        const size_t nsz = strlen(n);
+        const size_t rsz = strlen(r);
+        const size_t diff = rsz - nsz;
+        pcr_string *s = pcr_mempool_alloc(hsz + diff + NULLCHAR_OFFSET, ex);
+
+        size_t shifts = pos - h;
+        memcpy(s, h, shifts);
+        memcpy(s + shifts, r, rsz);
+        memcpy(s + shifts + rsz, pos + nsz, hsz - shifts - nsz);
+
+        s[hsz + diff] = '\0';
+        return s;
+    }
+
+    pcr_exception_unwind(ex);
+    return NULL;
+}
+
+
 /* Implement the pcr_string_new() interface function. We use the Boehm garbage
  * collector (through pcr_mempool_alloc() to manage the heap memory allocated to
  * PCR string instances. */
@@ -164,29 +193,7 @@ pcr_string_replace_first(const pcr_string *haystack, const pcr_string *needle,
     pcr_assert_handle(haystack && replace, ex);
     pcr_assert_string(needle, ex);
 
-    pcr_exception_try (x) {
-        char *pos = strstr(haystack, needle);
-        if (!pos)
-            return pcr_string_copy(haystack, x);
-
-        const size_t len = strlen(haystack);
-        const size_t replen = strlen(replace);
-        const size_t needlen = strlen(needle);
-        const size_t diff = replen - needlen;
-        pcr_string *str = pcr_mempool_alloc((len + diff + NULLCHAR_OFFSET)
-                                            * sizeof *str, x);
-
-        size_t shifts = pos - haystack;
-        memcpy(str, haystack, shifts);
-        memcpy(str + shifts, replace, replen);
-        memcpy(str + shifts + replen, pos + needlen, len - shifts - needlen);
-
-        str[len + diff] = '\0';
-        return str;
-    }
-
-    pcr_exception_unwind(ex);
-    return NULL;
+    return replace_first(haystack, needle, replace, ex);
 }
 
 
@@ -197,11 +204,27 @@ extern pcr_string *
 pcr_string_replace(const pcr_string *haystack, const pcr_string *needle,
                    const pcr_string *replace, pcr_exception ex)
 {
-    pcr_exception_try (x) {
-        pcr_string *r = pcr_string_replace_first(haystack, needle, replace, x);
+    pcr_assert_handle(haystack && replace, ex);
+    pcr_assert_string(needle, ex);
 
+    pcr_exception_try (x) {
+        register pcr_string *r;
+        if (pcr_hint_likely (!strstr(replace, needle))) {
+            r = replace_first(haystack, needle, replace, x);
+            while (strstr(r, needle))
+                r = replace_first(r, needle, replace, x);
+
+            return r;
+        }
+
+        const char placeholder[] = {0x1, 0x0};
+        r = replace_first(haystack, needle, placeholder, x);
         while (strstr(r, needle))
-            r = pcr_string_replace_first(r, needle, replace, x);
+            r = replace_first(r, needle, placeholder, x);
+
+        r = replace_first(r, placeholder, replace, x);
+        while (strstr(r, placeholder))
+            r = replace_first(r, placeholder, replace, x);
 
         return r;
     }
