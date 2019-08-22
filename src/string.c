@@ -38,6 +38,14 @@ static inline size_t utf8_strlen(const char *str) {
 }
 
 
+/* Define the replace_first() helper function. This function performs the core
+ * process of replacing the first instance of a needle @n in a haystack @h with
+ * a replacement @r. The logic of this function is adapted from the gist at
+ * https://gist.github.com/stanislaw/f62c36823242c4ffea1b. This logic has been
+ * separated out from the pcr_string_replace_first() interface function because
+ * it is looped through in pcr_string_replace(). This function is complex enough
+ * to warrant it being passed the exception stack @ex. */
+
 static pcr_string *
 replace_first(const pcr_string *h, const pcr_string *n, const pcr_string *r,
               pcr_exception ex)
@@ -183,8 +191,8 @@ pcr_string_find(const pcr_string *haystack, const pcr_string *needle,
 }
 
 
-/* Implement the pcr_string_replace_first() interface function. This code is
- * adapted from https://gist.github.com/stanislaw/f62c36823242c4ffea1b. */
+/* Implement the pcr_string_replace_first() interface function. The replacement
+ * logic is handled by the replace_first() helper function. */
 
 extern pcr_string *
 pcr_string_replace_first(const pcr_string *haystack, const pcr_string *needle,
@@ -197,8 +205,15 @@ pcr_string_replace_first(const pcr_string *haystack, const pcr_string *needle,
 }
 
 
-// https://gist.github.com/stanislaw/f62c36823242c4ffea1b
-/* Implement the pcr_string_replace_all() interface function. */
+/* Implement the pcr_string_replace() interface function. This function
+ * essentially loops the logic of the replace_first() helper function until all
+ * instances of @needle in @haystack are replaced with @replace. There is an
+ * important edge case that needs to be considered: when @needle is a substring
+ * of @replace. In this case, in order to prevent an infinite loop, we need to
+ * do the replacement in two steps:
+ *   1. replace all instances of @needle in @haystack with a safe placeholder
+ *      string which is almost guaranteed to never be encountered, and
+ *   2. replace all instances of the placeholder in @haystack with @replace. */
 
 extern pcr_string *
 pcr_string_replace(const pcr_string *haystack, const pcr_string *needle,
