@@ -325,7 +325,8 @@ pcr_log_write__(const char, const char *, ...);
 
 /**
  * @example log.h
- * This is an example showing how to code against the PCR Log Module interface.
+ * This is an example showing how to code against the PCR Logging Module
+ * interface.
  * @}
  */
 
@@ -742,7 +743,13 @@ pcr_string_int(int64_t value, pcr_exception ex);
 extern pcr_string *
 pcr_string_float(double value, pcr_exception ex);
 
-/** @} */
+
+/**
+ * @example string.h
+ * This is an example showing how to code against the PCR String Module
+ * interface.
+ * @}
+ */
 
 
 /******************************************************************************
