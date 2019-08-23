@@ -474,12 +474,27 @@ pcr_vector_muterate(pcr_vector **ctx, pcr_muterator *mtr, void *opt,
 /**************************************************************************//**
  * @defgroup pcr_string PCR String Module
  * UTF-8 string management.
+ *
+ * UTF-8 is the de-facto character representation used nowadays across the globe
+ * in computing contexts. In contrast to other Unicode schemes (such as UTF-16),
+ * UTF-8 uses variable bytes sizes as required for Unicode code points, the
+ * smallest being 1 byte. This makes it both efficient and backward compatible
+ * with ASCII.
+ *
+ * The PCR String Module takes this into account, and uses UTF-8 as its encoding
+ * scheme. This module provides the most important string manipulation routines,
+ * and its interface is expected to grow over time.
  * @{
  */
 
 
 /**
  * UTF-8 string.
+ *
+ * The pcr_string type represents a UTF-8 string. A pcr_string may be used
+ * interchangably with a raw @c char string in most (but not all) cases. The
+ * heap memory allocated to PCR string instances is managed internally through
+ * the Boehm Garbage Collector.
  */
 typedef char pcr_string;
 
@@ -487,14 +502,24 @@ typedef char pcr_string;
 /**
  * Creates a new string.
  *
+ * The pcr_string_new() function creates a new instance of a PCR string from a
+ * raw C string @p cstr. The raw string @p cstr may either be an ASCII string or
+ * a UTF-8 string.
+ *
  * @param cstr The raw C string.
  * @param ex The exception stack.
  *
  * @return The new string.
  *
+ * @note Since PCR strings and raw C strings may be used interchangably in most
+ * (but not all) cases, it is also possible to create a new PCR string using the
+ * pcr_string_copy() function.
+ *
  * @warning Don't call the standard @c free() function on the string instance
  * created by this function; the heap memory allocated to the string is managed
  * internally by the PCR Library through the Boehm Garbage Collector.
+ *
+ * @see pcr_string_copy()
  */
 extern pcr_string *
 pcr_string_new(const char *cstr, pcr_exception ex);
@@ -503,10 +528,17 @@ pcr_string_new(const char *cstr, pcr_exception ex);
 /**
  * Clones an existing string.
  *
+ * The pcr_string_copy() function creates an identical copy of an existing PCR
+ * string @p ctx.
+ *
  * @param ctx The contextual string instance.
  * @param ex The exception stack.
  *
  * @return The copy of @p ctx.
+ *
+ * @note Since PCR strings and raw C strings may be used interchangably in most
+ * (but not all) cases, it is also possible to create a copy of @p ctx by using
+ * the pcr_string_new() function.
  *
  * @warning Don't call the standard @c free() function on the string instance
  * created by this function; the heap memory allocated to the string is managed
@@ -519,10 +551,22 @@ pcr_string_copy(const pcr_string *ctx, pcr_exception ex);
 /**
  * Gets string length.
  *
+ * The pcr_string_len() function computes the lexicographical length of a PCR
+ * string @p ctx. The lexicographical length is the number of characters in @p
+ * ctx, and this function correctly accounts for the variable size of UTF-8
+ * characters.
+ *
  * @param ctx The contextual string instance.
  * @param ex The exception stack.
  *
  * @return The length of @p ctx.
+ *
+ * @warning There are as many bytes as there are characters only in ASCII
+ * strings, and this is not necessarily true for UTF-8 strings. Use the
+ * pcr_string_sz() function instead if you need to compute the number of bytes
+ * in @p ctx.
+ *
+ * @see pcr_string_sz()
  */
 extern size_t
 pcr_string_len(const pcr_string *ctx, pcr_exception ex);
@@ -531,10 +575,20 @@ pcr_string_len(const pcr_string *ctx, pcr_exception ex);
 /**
  * Gets string size.
  *
+ * The pcr_string_sz() function computes the size in bytes of a PCR string @p
+ * ctx, @b including its terminating null character.
+ *
  * @param ctx The contextual string instance.
  * @param ex The exception stack.
  *
  * @return The size of @p ctx.
+ *
+ * @warning There are as many bytes as there are characters only in ASCII
+ * strings, and this is not necessarily true fro UTF-8 strings. Use the
+ * pcr_string_len() function instead if you need to compute the lexicographical
+ * length of @p ctx.
+ *
+ * @see pcr_string_len()
  */
 extern size_t
 pcr_string_sz(const pcr_string *ctx, pcr_exception ex);
@@ -543,6 +597,11 @@ pcr_string_sz(const pcr_string *ctx, pcr_exception ex);
 /**
  * Compares two strings.
  *
+ * The pcr_string_cmp() function performs a lexicographical comparison of two
+ * pcr_string instances @p lhs and @p rhs. This function uses the same return
+ * values as the standard @c strcmp() function to indicate the comparison
+ * result.
+ *
  * @param lhs The left hand side string to compare.
  * @param rhs The right hand side string to compare.
  * @param ex The exception stack.
@@ -550,6 +609,8 @@ pcr_string_sz(const pcr_string *ctx, pcr_exception ex);
  * @return -1 if @p lhs < @p rhs.
  * @return 0 if @p == @p rhs.
  * @return 1 if @p lhs > @p rhs.
+ *
+ * @note The lexicographical comparison is case sensitive, so "HELLO" < "hello".
  */
 extern int
 pcr_string_cmp(const pcr_string *lhs, const pcr_string *rhs, pcr_exception ex);
@@ -558,10 +619,17 @@ pcr_string_cmp(const pcr_string *lhs, const pcr_string *rhs, pcr_exception ex);
 /**
  * Concatenates two strings.
  *
+ * The pcr_string_add() function creates a new string instance that is made by
+ * concatenating @p add on to @p ctx.
+ *
  * @param ctx The contextual string instance.
  * @param ex The exception stack.
  *
  * @return The concatenated string.
+ *
+ * @warning Don't call the standard @c free() function on the string instance
+ * created by this function; the heap memory allocated to the string is managed
+ * internally by the PCR Library through the Boehm Garbage Collector.
  */
 extern pcr_string *
 pcr_string_add(const pcr_string *ctx, const pcr_string *add, pcr_exception ex);
@@ -570,12 +638,17 @@ pcr_string_add(const pcr_string *ctx, const pcr_string *add, pcr_exception ex);
 /**
  * Searches for a substring.
  *
+ * The pcr_string_find() function searches for the first instance of a substring
+ * @p needle in a string @p haystack, and returns the lexicographical 1-based
+ * index where the substring @p needle was first found. In case @p needle is not
+ * found, then 0 is returned by this function.
+ *
  * @param haystack The string to search in.
  * @param needle The substring to find.
  * @param ex The exception stack.
  *
- * @return 0 if @p needle was not found.
- * @return The index where @p needle is placed in @p haystack if it was found.
+ * @return If not found, 0.
+ * @return If found, the 1-based index of @p needle in @p haystack.
  */
 extern size_t
 pcr_string_find(const pcr_string *haystack, const pcr_string *needle,
@@ -584,6 +657,12 @@ pcr_string_find(const pcr_string *haystack, const pcr_string *needle,
 
 /**
  * Replaces first instance of substring.
+ *
+ * The pcr_string_replace_first() function replaces the first instace of a
+ * substring @p needle in a string @p haystack with another substring @p
+ * replace. The origin string @p haystack is not affected, and a new string with
+ * the necessary replacement is returned. In case there is no replacement to be
+ * made, then a copy of @p haystack is returned.
  *
  * @param haystack The string to search in.
  * @param needle The substring to replace.
@@ -604,6 +683,12 @@ pcr_string_replace_first(const pcr_string *haystack, const pcr_string *needle,
 /**
  * Replaces all instances of substring.
  *
+ * The pcr_string_replace() function replaces all instances of a substring @p
+ * needle in a string @p haystack with another substring @p replace. The
+ * original string @p haystack is not affected, and a new string with the
+ * necessary replacements is returned. In case there is no replacement to be
+ * made, then a copy of @p haystack is returned.
+ *
  * @param haystack The string to search in.
  * @param needle The substring to replace.
  * @param replace The replacement string.
@@ -619,8 +704,12 @@ extern pcr_string *
 pcr_string_replace(const pcr_string *haystack, const pcr_string *needle,
                    const pcr_string *replace, pcr_exception ex);
 
+
 /**
  * Converts interger to string.
+ *
+ * The pcr_string_int() function generates the string representation of an
+ * integer @p value.
  *
  * @param value Integer to convert.
  * @param ex The exception stack.
@@ -637,6 +726,9 @@ pcr_string_int(int64_t value, pcr_exception ex);
 
 /**
  * Converts floating point number to string.
+ *
+ * The pcr_string_float() function generates the string representation of a
+ * floating point number @p value.
  *
  * @param value Floating point number to convert.
  * @param ex The exception stack.
