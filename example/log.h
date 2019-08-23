@@ -40,5 +40,7 @@ int main(void)
     /* This is how you would close the currently open log file after you are
      * done. */
     pcr_log_close();
+
+    return 0;
 }
 
