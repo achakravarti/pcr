@@ -22,7 +22,7 @@ extern "C" {
 
 
 /**
- * Hints that a function is pure
+ * Hints that a function is pure.
  *
  * The @c pcr_hint_pure macro is used to decorate the declaration of a pure
  * function. A pure function is one that always returns the same value for the
@@ -1231,36 +1231,198 @@ extern pcr_string *
 pcr_resultset_json(const pcr_resultset *ctx, pcr_exception ex);
 
 
-/******************************************************************************
- * INTERFACE: pcr_sql
+/**************************************************************************//**
+ * @defgroup pcr_sql PCR SQL Module
+ * Manage the preparation of safe SQL statements.
+ *
+ * SQL statements are the interface to relational databases, and it is often
+ * necessary to be able to prepare SQL statements dynamically at runtime. The
+ * PCR SQL Module provides this functionality, and also takes into account the
+ * sanitisation of SQL statements so that SQL injection attacks are mitigated.
+ * @{
  */
 
+
+/**
+ * An SQL statement.
+ *
+ * The pcr_sql type represents an SQL statement with parameters that may be
+ * bound dynamically. This is an abstract data type that can be manipulate only
+ * through its interface. The heap memory allocated to pcr_sql instances is
+ * managed internally by the PCR Library through the Boehm Garbage Collector.
+ * pcr_sql instances are reference counted for performance reasons.
+ */
 typedef struct pcr_sql pcr_sql;
 
-extern pcr_sql *
+
+/**
+ * Create new SQL statement.
+ *
+ * The pcr_sql_new() iterface function creates a new instance of a PCR SQL
+ * statement, initialised with its parameterised unbound form @p unbound.
+ *
+ * @param unbound
+ * @param ex The exception stack.
+ *
+ * @return The new SQL statement.
+ *
+ * @warning Don't call the standard @c free() function on the SQL statement
+ * instance created by this function; the heap memory allocated to the instance
+ * is managed internally by the PCR Library through the Boehm Garbage Collector.
+ *
+ * @see pcr_sql_copy()
+ * @see pcr_sql_refcount()
+ */
+extern pcr_hint_hot pcr_sql *
 pcr_sql_new(const pcr_string *unbound, pcr_exception ex);
 
-extern pcr_sql *
+
+/**
+ * Clone existing SQL statement.
+ *
+ * The pcr_sql_copy() interface function creates an identical copy of an
+ * existing SQL statement instance @p ctx.
+ *
+ * @param ctx The contextual SQL statement instance.
+ * @param ex The exception stack.
+ *
+ * @return The copy of @p ctx.
+ *
+ * @note Since pcr_sql instances are reference counted, this function performs a
+ * lazy copy.
+ *
+ * @warning Don't call the standard @c free() function on the SQL statement
+ * instance created by this function; the heap memory allocated to the instance
+ * is managed internally by the PCR Library through the Boehm Garbage Collector.
+ *
+ * @see pcr_sql_new()
+ * @see pcr_sql_refcount()
+ */
+extern pcr_hint_hot pcr_sql *
 pcr_sql_copy(const pcr_sql *ctx, pcr_exception ex);
 
+
+/**
+ * Get reference count of SQL statement.
+ *
+ * The pcr_sql_refcount() interface function gets the number of references
+ * currently existing in memory of a given SQL statement instance @p ctx.
+ *
+ * @param ctx The contextual SQL statement instance.
+ * @param ex The exception stack.
+ *
+ * @return The reference count of @p ctx.
+ *
+ * @note In practice, this function is not required by client code, and has been
+ * provided mainly for the purpose of unit testing the PCR SQL Module.
+ *
+ * @see pcr_sql_new()
+ * @see pcr_sql_copy()
+ */
 extern size_t
 pcr_sql_refcount(const pcr_sql *ctx, pcr_exception ex);
 
+
+/**
+ * Get unbound parameterised SQL statement.
+ *
+ * The pcr_sql_unbound() interface function returns the unbound form of an SQL
+ * statement instance in which its SQL parameters have not been provided.
+ *
+ * @param ctx The contextual SQL statement instance.
+ * @param ex The exception stack.
+ *
+ * @return The unbound parameterised SQL statement.
+ *
+ * @see pcr_sql_bound()
+ */
 extern pcr_string *
 pcr_sql_unbound(const pcr_sql *ctx, pcr_exception ex);
 
-extern pcr_string *
+
+/**
+ * Get bound SQL statement.
+ *
+ * The pcr_sql_bound() interface function returns the bound form of an SQL
+ * statement instance @p ctx in which its SQL parameters have been replaced by
+ * their corresponding arguments.
+ *
+ * @param ctx The contextual SQL statement instance.
+ * @param ex The exception stack.
+ *
+ * @return The bound SQL statement.
+ *
+ * @see pcr_sql_bind()
+ * @see pcr_sql_unbound()
+ * @see pcr_sql_reset()
+ */
+extern pcr_hint_hot pcr_string *
 pcr_sql_bound(const pcr_sql *ctx, pcr_exception ex);
 
-extern void
+
+/**
+ * Bind parameter in SQL statement.
+ *
+ * The pcr_sql_bind() interface function binds a parameter in an SQL statement
+ * @p ctx with its corresponding value. The parameter, its corresponding value,
+ * and its type are all specified through the attribute @p attr. This function
+ * takes care to ensure that potential SQL injection attacks through text
+ * parameter bindings are mitigated.
+ *
+ * @param ctx The contextual SQL statement instance.
+ * @param attr The parameter binding mapping.
+ * @param ex The exception stack.
+ *
+ * @note In practice, it might be more convenient to use the overloaded forms of
+ * this function.
+ *
+ * @see pcr_sql_bind_null()
+ * @see pcr_sql_bind_int()
+ * @see pcr_sql_bind_float()
+ * @see pcr_sql_bind_text()
+ */
+extern pcr_hint_hot void
 pcr_sql_bind(pcr_sql **ctx, const pcr_attribute *attr, pcr_exception ex);
 
-inline void
+
+/**
+ * Bind null parameter in SQL statement.
+ *
+ * The pcr_sql_bind_null() interface function is an overloaded version of the
+ * pcr_sql_bind() interface function. This function binds the SQL @c NULL value
+ * to a parameter @p key in an SQL statement @p ctx.
+ *
+ * @param ctx The contextual SQL statement instance.
+ * @param key The SQL parameter to bind.
+ * @param ex The exception stack.
+ *
+ * @note This function is simply a convenience wrapper around pcr_sql_bind().
+ *
+ * @see pcr_sql_bind()
+ */
+inline pcr_hint_hot void
 pcr_sql_bind_null(pcr_sql **ctx, const pcr_string *key, pcr_exception ex)
 {
     pcr_sql_bind(ctx, pcr_attribute_new_null(key, ex), ex);
 }
 
+
+/**
+ * Bind integer parameter in SQL statement.
+ *
+ * The pcr_sql_bind_int() interface function is an overloaded version of the
+ * pcr_sql_bind() interface function. This function binds the integer @p value
+ * to a parameter @p key in an SQL statement @p ctx.
+ *
+ * @param ctx The contextual SQL statement instance.
+ * @param key The SQL parameter to bind.
+ * @param value The value to bind.
+ * @param ex The exception stack.
+ *
+ * @note This function is simply a convenience wrapper around pcr_sql_bind().
+ *
+ * @see pcr_sql_bind()
+ */
 inline void
 pcr_sql_bind_int(pcr_sql **ctx, const pcr_string *key, int64_t value,
                  pcr_exception ex)
@@ -1268,6 +1430,23 @@ pcr_sql_bind_int(pcr_sql **ctx, const pcr_string *key, int64_t value,
     pcr_sql_bind(ctx, pcr_attribute_new_int(key, value, ex), ex);
 }
 
+
+/**
+ * Bind floating point parameter in SQL statement.
+ *
+ * The pcr_sql_bind_float() interface function is an overloaded version of the
+ * pcr_sql_bind() interface function. This function binds the floating point @p
+ * value to a parameter @p key in an SQL statement @p ctx.
+ *
+ * @param ctx The contextual SQL statement instance.
+ * @param key The SQL parameter to bind.
+ * @param value The value to bind.
+ * @param ex The exception stack.
+ *
+ * @note This function is simply a convenience wrapper around pcr_sql_bind().
+ *
+ * @see pcr_sql_bind()
+ */
 inline void
 pcr_sql_bind_float(pcr_sql **ctx, const pcr_string *key, double value,
                    pcr_exception ex)
@@ -1275,6 +1454,23 @@ pcr_sql_bind_float(pcr_sql **ctx, const pcr_string *key, double value,
     pcr_sql_bind(ctx, pcr_attribute_new_float(key, value, ex), ex);
 }
 
+
+/**
+ * Bind text parameter in SQL statement.
+ *
+ * The pcr_sql_bind_text() interface function is an overloaded version of the
+ * pcr_sql_bind() interface function. This function binds the string @p value to
+ * a parameter @p key in an SQL statement @p ctx.
+ *
+ * @param ctx The contextual SQL statement instance.
+ * @param key The SQL parameter to bind.
+ * @param value The value to bind.
+ * @param ex The exception stack.
+ *
+ * @note This function is simply a convenience wrapper around pcr_sql_bind().
+ *
+ * @see pcr_sql_bind()
+ */
 inline void
 pcr_sql_bind_text(pcr_sql **ctx, const pcr_string *key, const pcr_string *value,
                   pcr_exception ex)
@@ -1282,8 +1478,28 @@ pcr_sql_bind_text(pcr_sql **ctx, const pcr_string *key, const pcr_string *value,
     pcr_sql_bind(ctx, pcr_attribute_new_text(key, value, ex), ex);
 }
 
+
+/**
+ * Reset SQL statement.
+ *
+ * The pcr_sql_reset() interface function resets an SQL statement instance @p
+ * ctx back to its unbound state.
+ *
+ * @param ctx The contextual SQL statement instance.
+ * @param ex The exception stack.
+ *
+ * @note It is safe, albeit pointless, to call this function even if no SQL
+ * parameters have been bound in @p ctx.
+ */
 extern void
 pcr_sql_reset(pcr_sql **ctx, pcr_exception ex);
+
+
+/**
+ * @example sql.h
+ * This is an example showing how to code against the PCR SQL Module interface.
+ * @}
+ */
 
 
 /******************************************************************************
