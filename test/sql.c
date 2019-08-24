@@ -7,7 +7,7 @@
 
 
 static bool
-test_new_1(pcr_string **desc, pcr_exception ex)
+new_test_1(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_sql_new() creates an unbound parameterised SQL statement";
 
@@ -24,7 +24,7 @@ test_new_1(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_new_2(pcr_string **desc, pcr_exception ex)
+new_test_2(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_sql_new() creates an SQL object with a refcount of 1";
 
@@ -41,7 +41,7 @@ test_new_2(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_new_3(pcr_string **desc, pcr_exception ex)
+new_test_3(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_sql_new() throws PCR_EXCEPTION_STRING if passed a null pointer"
             " for @unbound";
@@ -62,7 +62,7 @@ test_new_3(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_new_4(pcr_string **desc, pcr_exception ex)
+new_test_4(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_sql_new() throws PCR_EXCEPTION_STRING if passed an empty"
             " string for @unbound";
@@ -88,7 +88,7 @@ test_new_4(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_copy_1(pcr_string **desc, pcr_exception ex)
+copy_test_1(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_sql_copy() clones an existing SQL instance";
 
@@ -108,7 +108,7 @@ test_copy_1(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_copy_2(pcr_string **desc, pcr_exception ex)
+copy_test_2(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_sql_copy() updates the reference count of an SQL instance";
 
@@ -129,7 +129,7 @@ test_copy_2(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_copy_3(pcr_string **desc, pcr_exception ex)
+copy_test_3(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_sql_copy() throws PCR_EXCEPTION_HANDLE if passed a null"
             " for @ctx";
@@ -155,7 +155,7 @@ test_copy_3(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_refcount_1(pcr_string **desc, pcr_exception ex)
+refcount_test_1(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_sql_refcount() throws PCR_EXCEPTION_HANDLE if passed a null"
             " pointer for @ctx";
@@ -181,7 +181,7 @@ test_refcount_1(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_unbound_1(pcr_string **desc, pcr_exception ex)
+unbound_test_1(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_sql_unbound() throws PCR_EXCEPTION_HANDLE if passed a null"
             " pointer for @ctx";
@@ -207,7 +207,7 @@ test_unbound_1(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_bound_1(pcr_string **desc, pcr_exception ex)
+bound_test_1(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_sql_bound() throws PCR_EXCEPTION_HANDLE if passed a null"
             " pointer for @ctx";
@@ -228,7 +228,7 @@ test_bound_1(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_bound_2(pcr_string **desc, pcr_exception ex)
+bound_test_2(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_sql_bound() throws PCR_EXCEPTION_STATE if called without bound"
             " parameters";
@@ -257,7 +257,7 @@ test_bound_2(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_bind_1(pcr_string **desc, pcr_exception ex)
+bind_test_1(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_sql_bind() binds a null parameter";
 
@@ -276,7 +276,7 @@ test_bind_1(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_bind_2(pcr_string **desc, pcr_exception ex)
+bind_test_2(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_sql_bind() binds an int parameter";
 
@@ -295,7 +295,7 @@ test_bind_2(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_bind_3(pcr_string **desc, pcr_exception ex)
+bind_test_3(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_sql_bind() binds a float parameter";
 
@@ -314,7 +314,7 @@ test_bind_3(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_bind_4(pcr_string **desc, pcr_exception ex)
+bind_test_4(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_sql_bind() binds an ASCII text parameter";
 
@@ -334,7 +334,7 @@ test_bind_4(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_bind_5(pcr_string **desc, pcr_exception ex)
+bind_test_5(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_sql_bind() binds a Unicode text parameter";
 
@@ -354,7 +354,7 @@ test_bind_5(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_bind_6(pcr_string **desc, pcr_exception ex)
+bind_test_6(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_sql_bind() binds multiple parameters of different types";
 
@@ -383,7 +383,25 @@ test_bind_6(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_bind_7(pcr_string **desc, pcr_exception ex)
+bind_test_7(pcr_string **desc, pcr_exception ex)
+{
+    *desc = "pcr_sql_bind() sanitises text bindings";
+
+    pcr_exception_try (x) {
+        pcr_sql *test = pcr_sql_new("SELECT * FROM foo WHERE user = @user", x);
+        pcr_sql_bind_text(&test, "@user", "N\'go", x);
+
+        const pcr_string *sql = "SELECT * FROM foo WHERE user = \'N\'\'go\'";
+        return !pcr_string_cmp(sql, pcr_sql_bound(test, x), x);
+    }
+
+    pcr_exception_unwind(ex);
+    return false;
+}
+
+
+static bool
+bind_test_8(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_sql_bind() throws PCR_EXCEPTION_HANDLE if passed a null"
             " handle for @ctx";
@@ -404,7 +422,7 @@ test_bind_7(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_bind_8(pcr_string **desc, pcr_exception ex)
+bind_test_9(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_sql_bind() throws PCR_EXCEPTION_HANDLE if passed a null"
             " pointer for @ctx";
@@ -427,7 +445,7 @@ test_bind_8(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_bind_9(pcr_string **desc, pcr_exception ex)
+bind_test_10(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_sql_bind() throws PCR_EXCEPTION_HANDLE if passed a null"
             " pointer for @attr";
@@ -451,7 +469,7 @@ test_bind_9(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_bind_10(pcr_string **desc, pcr_exception ex)
+bind_test_11(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_sql_bind() throws PCR_EXCEPTION_STATE if passed a parameter"
             " that does not exist";
@@ -475,7 +493,7 @@ test_bind_10(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_bind_11(pcr_string **desc, pcr_exception ex)
+bind_test_12(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_sql_bind() respects reference counts";
 
@@ -501,7 +519,7 @@ test_bind_11(pcr_string **desc, pcr_exception ex)
  */
 
 static bool
-test_reset_1(pcr_string **desc, pcr_exception ex)
+reset_test_1(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_sql_reset() resets the bound SQL statement";
 
@@ -526,7 +544,7 @@ test_reset_1(pcr_string **desc, pcr_exception ex)
 
 
 static bool
-test_reset_2(pcr_string **desc, pcr_exception ex)
+reset_test_2(pcr_string **desc, pcr_exception ex)
 {
     *desc = "pcr_sql_reset() throws PCR_EXCEPTION_HANDLE if passed a null"
             " pointer for @ctx";
@@ -552,11 +570,13 @@ test_reset_2(pcr_string **desc, pcr_exception ex)
 
 
 static pcr_unittest *unit_tests[] = {
-    &test_new_1, &test_new_2, &test_new_3, &test_new_4, &test_copy_1,
-    &test_copy_2, &test_copy_3, &test_refcount_1, &test_unbound_1,
-    &test_bound_1, &test_bound_2, &test_bind_1, &test_bind_2, &test_bind_3,
-    &test_bind_4, &test_bind_5, &test_bind_6, &test_bind_7, &test_bind_8,
-    &test_bind_9, &test_bind_10, &test_bind_11, &test_reset_1, &test_reset_2
+    &new_test_1,     &new_test_2,   &new_test_3,   &new_test_4,
+    &copy_test_1,    &copy_test_2,  &copy_test_3,  &refcount_test_1,
+    &unbound_test_1, &bound_test_1, &bound_test_2, &bind_test_1,
+    &bind_test_2,    &bind_test_3,  &bind_test_4,  &bind_test_5,
+    &bind_test_6,    &bind_test_7,  &bind_test_8,  &bind_test_9,
+    &bind_test_10,   &bind_test_11, &bind_test_12, &reset_test_1,
+    &reset_test_2
 };
 
 
