@@ -403,6 +403,12 @@ typedef int PCR_EXCEPTION;
 #define pcr_assert_range(p, x) \
     pcr_assert_generic((p), (x), PCR_EXCEPTION_RANGE)
 
+#define pcr_assert_file(p, x) \
+    pcr_assert_generic((p), (x), PCR_EXCEPTION_FILE)
+
+#define pcr_assert_parse(p, x) \
+    pcr_assert_generic((p), (x), PCR_EXCEPTION_PARSE)
+
 
 /******************************************************************************
  * INTERFACE: pcr_mempool
