@@ -346,6 +346,8 @@ typedef int PCR_EXCEPTION;
 #define PCR_EXCEPTION_RANGE 0x3
 #define PCR_EXCEPTION_MEMPOOL 0x4
 #define PCR_EXCEPTION_STRING 0x5
+#define PCR_EXCEPTION_FILE 0x6
+#define PCR_EXCEPTION_PARSE 0x7
 
 #define pcr_exception_try(x)                        \
     pcr_exception x;                                \
@@ -1533,6 +1535,29 @@ pcr_dbase_commit(pcr_dbase *ctx, pcr_exception ex);
 extern void
 pcr_dbase_rollback(pcr_dbase *ctx, pcr_exception ex);
 
+
+/* Lua Script */
+
+typedef struct pcr_lua pcr_lua;
+
+extern pcr_lua *
+pcr_lua_open(const pcr_string *path, pcr_exception ex);
+
+extern void
+pcr_lua_close(pcr_lua *ctx);
+
+extern bool
+pcr_lua_bool(const pcr_lua *lua, const pcr_string *var, pcr_exception ex);
+
+extern int64_t
+pcr_lua_int(const pcr_lua *lua, const pcr_string *var, pcr_exception ex);
+
+extern double
+pcr_lua_float(const pcr_lua *lua, const pcr_string *var, pcr_exception ex);
+
+/* Evaluates a Lua string variable */
+extern pcr_string *
+pcr_lua_string(const pcr_lua *lua, const pcr_string *var, pcr_exception ex);
 
 #if defined (__cplusplus)
 }
