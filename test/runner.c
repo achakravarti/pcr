@@ -11,7 +11,8 @@ int main(void)
     pcr_exception_try (x) {
         pcr_testsuite *suites[] = {
             pcr_string_testsuite(x), pcr_attribute_testsuite(x),
-            pcr_sql_testsuite(x), pcr_resultset_testsuite(x)
+            pcr_sql_testsuite(x),    pcr_resultset_testsuite(x),
+            pcr_lua_testsuite(x)
         };
 
         pcr_testharness_init("bld/test.log", x);
