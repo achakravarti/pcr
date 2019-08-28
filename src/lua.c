@@ -4,11 +4,21 @@
 #include "api.h"
 
 
+/** @private */
+/* Define the pcr_lua struct; this structure was forward-declared in the API
+ * header file as an abstract data type. I'm considering replacing this struct
+ * with a void pointer as there is only one field in this struct. */
 struct pcr_lua {
     lua_State *lua;
 };
 
 
+/* https://www.lua.org/pil/24.2.2.html */
+#define INDEX_TOP -1
+#define INDEX_FIRST 1
+
+
+/* Define the var_parse() helper function. */
 static void
 var_parse(const pcr_lua *ctx, const pcr_string *var, pcr_exception ex)
 {
@@ -24,14 +34,16 @@ var_parse(const pcr_lua *ctx, const pcr_string *var, pcr_exception ex)
 }
 
 
+/* Define the error_parse() helper function. */
 static inline void
 error_parse(const pcr_lua *ctx, const pcr_string *var)
 {
     pcr_log_error("Failed to parse Lua var: %s", var);
-    pcr_log_error("Lua says: %s", lua_tostring(ctx->lua, -1));
+    pcr_log_error("Lua says: %s", lua_tostring(ctx->lua, INDEX_TOP));
 }
 
 
+/* Implement the pcr_lua_open() interface function. */
 extern pcr_lua *
 pcr_lua_open(const pcr_string *path, pcr_exception ex)
 {
@@ -56,6 +68,7 @@ pcr_lua_open(const pcr_string *path, pcr_exception ex)
 }
 
 
+/* Implement the pcr_lua_close() interface function. */
 extern void
 pcr_lua_close(pcr_lua *ctx)
 {
@@ -64,15 +77,16 @@ pcr_lua_close(pcr_lua *ctx)
 }
 
 
+/* Implement the pcr_lua_bool() interface function. */
 extern bool
 pcr_lua_bool(const pcr_lua *ctx, const pcr_string *var, pcr_exception ex)
 {
     pcr_exception_try (x) {
         var_parse(ctx, var, x);
-        pcr_assert_parse(lua_isboolean(ctx->lua, -1), x);
+        pcr_assert_parse(lua_isboolean(ctx->lua, INDEX_TOP), x);
 
-        bool val = lua_toboolean(ctx->lua, -1);
-        lua_pop(ctx->lua, 1);
+        bool val = lua_toboolean(ctx->lua, INDEX_TOP);
+        lua_pop(ctx->lua, INDEX_FIRST);
 
         return val;
     }
@@ -86,15 +100,16 @@ pcr_lua_bool(const pcr_lua *ctx, const pcr_string *var, pcr_exception ex)
 }
 
 
+/* Implement the pcr_lua_int() interface function. */
 extern int64_t
 pcr_lua_int(const pcr_lua *ctx, const pcr_string *var, pcr_exception ex)
 {
     pcr_exception_try (x) {
         var_parse(ctx, var, x);
-        pcr_assert_parse(lua_isnumber(ctx->lua, -1), x);
+        pcr_assert_parse(lua_type(ctx->lua, INDEX_TOP) == LUA_TNUMBER, x);
 
-        int64_t val = (int64_t) lua_tonumber(ctx->lua, -1);
-        lua_pop(ctx->lua, 1);
+        int64_t val = (int64_t) lua_tonumber(ctx->lua, INDEX_TOP);
+        lua_pop(ctx->lua, INDEX_FIRST);
 
         return val;
     }
@@ -108,15 +123,16 @@ pcr_lua_int(const pcr_lua *ctx, const pcr_string *var, pcr_exception ex)
 }
 
 
+/* Implement the pcr_lua_float() interface function. */
 extern double
 pcr_lua_float(const pcr_lua *ctx, const pcr_string *var, pcr_exception ex)
 {
     pcr_exception_try (x) {
         var_parse(ctx, var, x);
-        pcr_assert_parse(lua_isnumber(ctx->lua, -1), x);
+        pcr_assert_parse(lua_type(ctx->lua, INDEX_TOP) == LUA_TNUMBER, x);
 
-        double val = lua_tonumber(ctx->lua, -1);
-        lua_pop(ctx->lua, 1);
+        double val = lua_tonumber(ctx->lua, INDEX_TOP);
+        lua_pop(ctx->lua, INDEX_FIRST);
 
         return val;
     }
@@ -130,15 +146,16 @@ pcr_lua_float(const pcr_lua *ctx, const pcr_string *var, pcr_exception ex)
 }
 
 
+/* Implement the pcr_lua_string() interface function. */
 extern pcr_string *
 pcr_lua_string(const pcr_lua *ctx, const pcr_string *var, pcr_exception ex)
 {
     pcr_exception_try (x) {
         var_parse(ctx, var, x);
-        pcr_assert_parse(lua_isstring(ctx->lua, -1), x);
+        pcr_assert_parse(lua_type(ctx->lua, INDEX_TOP) == LUA_TSTRING, x);
 
-        pcr_string *val = pcr_string_copy(lua_tostring(ctx->lua, -1), x);
-        lua_pop(ctx->lua, 1);
+        pcr_string *val = pcr_string_copy(lua_tostring(ctx->lua, INDEX_TOP), x);
+        lua_pop(ctx->lua, INDEX_FIRST);
 
         return val;
     }
