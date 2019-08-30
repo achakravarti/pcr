@@ -1408,7 +1408,7 @@ pcr_sql_bind(pcr_sql **ctx, const pcr_attribute *attr, pcr_exception ex);
  *
  * @see pcr_sql_bind()
  */
-inline pcr_hint_hot void
+inline void
 pcr_sql_bind_null(pcr_sql **ctx, const pcr_string *key, pcr_exception ex)
 {
     pcr_sql_bind(ctx, pcr_attribute_new_null(key, ex), ex);

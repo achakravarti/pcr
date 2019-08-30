@@ -177,3 +177,27 @@ pcr_sql_reset(pcr_sql **ctx, pcr_exception ex)
     pcr_exception_unwind(ex);
 }
 
+
+/*******************************************************************************
+ * Inline Declarations
+ */
+
+
+extern inline void
+pcr_sql_bind_null(pcr_sql **ctx, const pcr_string *key, pcr_exception ex);
+
+
+extern inline void
+pcr_sql_bind_int(pcr_sql **ctx, const pcr_string *key, int64_t value,
+                 pcr_exception ex);
+
+
+extern inline void
+pcr_sql_bind_float(pcr_sql **ctx, const pcr_string *key, double value,
+                   pcr_exception ex);
+
+
+extern inline void
+pcr_sql_bind_text(pcr_sql **ctx, const pcr_string *key, const pcr_string *value,
+                  pcr_exception ex);
+
