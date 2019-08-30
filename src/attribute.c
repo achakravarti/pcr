@@ -183,6 +183,35 @@ pcr_attribute_json(const pcr_attribute *ctx, pcr_exception ex)
  */
 
 
+extern inline pcr_attribute *
+pcr_attribute_new_null(const pcr_string *key, pcr_exception ex);
+
+
+extern inline pcr_attribute *
+pcr_attribute_new_int(const pcr_string *key, int64_t value, pcr_exception ex);
+
+
+extern inline pcr_attribute *
+pcr_attribute_new_int_2(const pcr_string *key, pcr_exception ex);
+
+
+extern inline pcr_attribute *
+pcr_attribute_new_float(const pcr_string *key, double value, pcr_exception ex);
+
+
+extern inline pcr_attribute *
+pcr_attribute_new_float_2(const pcr_string *key, pcr_exception ex);
+
+
+extern inline pcr_attribute *
+pcr_attribute_new_text(const pcr_string *key, const pcr_string *value,
+                       pcr_exception ex);
+
+
+extern inline pcr_attribute *
+pcr_attribute_new_text_2(const pcr_string *key, pcr_exception ex);
+
+
 /*******************************************************************************
  * PCR_ATTRIBUTE_VECTOR Inline Declarations
  */
