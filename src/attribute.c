@@ -177,3 +177,65 @@ pcr_attribute_json(const pcr_attribute *ctx, pcr_exception ex)
     return NULL;
 }
 
+
+/*******************************************************************************
+ * pcr_attribute Inline Declarations
+ */
+
+
+/*******************************************************************************
+ * PCR_ATTRIBUTE_VECTOR Inline Declarations
+ */
+
+
+extern inline PCR_ATTRIBUTE_VECTOR *
+PCR_ATTRIBUTE_VECTOR_NEW(pcr_exception ex);
+
+
+extern inline PCR_ATTRIBUTE_VECTOR *
+PCR_ATTRIBUTE_VECTOR_NEW_2(const PCR_ATTRIBUTE *arr, size_t len,
+                           pcr_exception ex);
+
+
+extern inline PCR_ATTRIBUTE_VECTOR *
+PCR_ATTRIBUTE_VECTOR_COPY(const PCR_ATTRIBUTE_VECTOR *ctx, pcr_exception ex);
+
+
+extern inline size_t
+PCR_ATTRIBUTE_VECTOR_LEN(const PCR_ATTRIBUTE_VECTOR *ctx, pcr_exception ex);
+
+
+extern inline size_t
+PCR_ATTRIBUTE_VECTOR_REFCOUNT(const PCR_ATTRIBUTE_VECTOR *ctx,
+                              pcr_exception ex);
+
+
+extern inline PCR_ATTRIBUTE
+PCR_ATTRIBUTE_VECTOR_ELEM(const PCR_ATTRIBUTE_VECTOR *ctx, size_t idx,
+                          pcr_exception ex);
+
+
+extern inline void
+PCR_ATTRIBUTE_VECTOR_ELEM_SET(PCR_ATTRIBUTE_VECTOR **ctx, size_t idx,
+                              PCR_ATTRIBUTE elem, pcr_exception ex);
+
+
+extern inline void
+PCR_ATTRIBUTE_VECTOR_PUSH(PCR_ATTRIBUTE_VECTOR **ctx, PCR_ATTRIBUTE elem,
+                          pcr_exception ex);
+
+
+extern inline void
+PCR_ATTRIBUTE_VECTOR_ITERATE(const PCR_ATTRIBUTE_VECTOR *ctx, pcr_iterator *itr,
+                             void *opt, pcr_exception ex);
+
+
+extern inline void
+PCR_ATTRIBUTE_VECTOR_MUTERATE(PCR_ATTRIBUTE_VECTOR **ctx, pcr_muterator *mtr,
+                              void *opt, pcr_exception ex);
+
+
+/*******************************************************************************
+ * pcr_attribute_vector Inline Declarations
+ */
+
