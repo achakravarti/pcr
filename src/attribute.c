@@ -268,3 +268,49 @@ PCR_ATTRIBUTE_VECTOR_MUTERATE(PCR_ATTRIBUTE_VECTOR **ctx, pcr_muterator *mtr,
  * pcr_attribute_vector Inline Declarations
  */
 
+
+extern inline pcr_attribute_vector *
+pcr_attribute_vector_new(pcr_exception ex);
+
+
+extern inline pcr_attribute_vector *
+pcr_attribute_vector_new_2(const pcr_attribute **arr, size_t len,
+                           pcr_exception ex);
+
+
+extern inline pcr_attribute_vector *
+pcr_attribute_vector_copy(const pcr_attribute_vector *ctx, pcr_exception ex);
+
+
+extern inline size_t
+pcr_attribute_vector_len(const pcr_attribute_vector *ctx, pcr_exception ex);
+
+
+extern inline size_t
+pcr_attribute_vector_refcount(const pcr_string_vector *ctx, pcr_exception ex);
+
+
+extern inline pcr_attribute *
+pcr_attribute_vector_elem(const pcr_attribute_vector *ctx, size_t idx,
+                          pcr_exception ex);
+
+
+extern inline void
+pcr_attribute_vector_elem_set(pcr_attribute_vector **ctx, size_t idx,
+                              const pcr_attribute *elem, pcr_exception ex);
+
+
+extern inline void
+pcr_attribute_vector_push(pcr_attribute_vector **ctx, const pcr_attribute *elem,
+                          pcr_exception ex);
+
+
+extern inline void
+pcr_attribute_vector_iterate(const pcr_attribute_vector *ctx, pcr_iterator *itr,
+                             void *opt, pcr_exception ex);
+
+
+extern inline void
+pcr_attribute_vector_muterate(pcr_attribute_vector **ctx, pcr_muterator *mtr,
+                              void *opt, pcr_exception ex);
+
